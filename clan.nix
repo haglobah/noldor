@@ -6,6 +6,7 @@
   inventory.machines = {
     # Define machines here.
     formenos = {
+      deploy.targetHost = "root@49.12.12.164";
       tags = [  ];
     };
   };
