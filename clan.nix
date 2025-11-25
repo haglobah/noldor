@@ -1,11 +1,13 @@
 {
   # Ensure this is unique among all clans you want to use.
-  meta.name = "__CHANGE_ME__";
-  meta.tld = "changeme";
+  meta.name = "noldor";
+  meta.tld = "noldor";
 
   inventory.machines = {
     # Define machines here.
-    # jon = { };
+    formenos = {
+      tags = [  ];
+    };
   };
 
   # Docs: See https://docs.clan.lol/reference/clanServices
@@ -20,7 +22,7 @@
         # Insert the public key that you want to use for SSH access.
         # All keys will have ssh access to all machines ("tags.all" means 'all machines').
         # Alternatively set 'users.users.root.openssh.authorizedKeys.keys' in each machine
-        "admin-machine-1" = "__YOUR_PUBLIC_KEY__";
+        "beat" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILD4jhHznn3K7uZGhNTu3En3vDyiLmbColfok2Qm/MKS beat@gondor";
       };
     };
 
@@ -33,7 +35,7 @@
       # Replace with the name (string) of your machine that you will use as zerotier-controller
       # See: https://docs.zerotier.com/controller/
       # Deploy this machine first to create the network secrets
-      roles.controller.machines."__YOUR_CONTROLLER__" = { };
+      roles.controller.machines."formenos" = { };
       # Peers of the network
       # tags.all means 'all machines' will joined
       roles.peer.tags.all = { };
@@ -51,8 +53,8 @@
   # machines/jon/configuration.nix will be automatically imported.
   # See: https://docs.clan.lol/guides/more-machines/#automatic-registration
   machines = {
-    # jon = { config, ... }: {
-    #   environment.systemPackages = [ pkgs.asciinema ];
-    # };
+    formenos = { config, pkgs, ... }: {
+      environment.systemPackages = [ pkgs.git ];
+    };
   };
 }
