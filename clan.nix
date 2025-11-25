@@ -56,6 +56,19 @@
   machines = {
     formenos = { _config, pkgs, ... }: {
       environment.systemPackages = [ pkgs.git ];
+
+      networking.firewall.allowedTCPPorts = [ 80 443 ];
+
+      services.caddy = {
+        enable = true;
+        virtualHosts."paperless.hagenlocher.me" = {
+          extraConfig = ''
+            reverse_proxy 127.0.0.1:28981
+          '';
+        };
+      };
+
+      # https://wiki.nixos.org/wiki/Paperless-ngx
       services.paperless = {
         enable = true;
         consumptionDirIsPublic = true;
