@@ -66,6 +66,19 @@
             reverse_proxy 127.0.0.1:28981
           '';
         };
+        virtualHosts."finances.hagenlocher.me" = {
+          extraConfig = ''
+            reverse_proxy 127.0.0.1:5006
+          '';
+        };
+      };
+
+      # https://search.nixos.org/options?channel=unstable&query=services.actual
+      services.actual = {
+        enable = true;
+        settings = {
+          port = 5006;
+        };
       };
 
       # https://wiki.nixos.org/wiki/Paperless-ngx
