@@ -27,6 +27,19 @@
       };
     };
 
+    # https://docs.clan.lol/services/official/borgbackup/
+    borgbackup = {
+      module = {
+        name = "borgbackup";
+        input = "clan-core";
+      };
+      roles.client.machines."formenos".settings = {
+        destinations."storagebox" = {
+          repo = "u366465-sub5@u366465-sub5.your-storagebox.de:/./borgbackup";
+          rsh = ''ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/borgbackup/borgbackup.ssh'';
+        };
+      };
+    };
     # Docs: https://docs.clan.lol/reference/clanServices/zerotier/
     # The lines below will define a zerotier network and add all machines as 'peer' to it.
     # !!! Manual steps required:
@@ -73,6 +86,12 @@
         };
       };
 
+      # https://docs.clan.lol/guides/backups/backup-intro/
+      clan.core.state.actual = {
+        folders = [
+          "/var/lib/actual"
+        ];
+      };
       # https://search.nixos.org/options?channel=unstable&query=services.actual
       services.actual = {
         enable = true;
@@ -81,6 +100,12 @@
         };
       };
 
+      # https://docs.clan.lol/guides/backups/backup-intro/
+      clan.core.state.paperless = {
+        folders = [
+          "/var/lib/paperless"
+        ];
+      };
       # https://wiki.nixos.org/wiki/Paperless-ngx
       services.paperless = {
         enable = true;
