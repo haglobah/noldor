@@ -47,10 +47,11 @@
     log-driver = "journald";
     extraOptions = [
       "--entrypoint=[\"npm\", \"start\"]"
-      "--health-cmd=[\"wget\", \"--quiet\", \"--tries=1\", \"--spider\", \"http://localhost:3001/api/status\"]"
+      "--health-cmd=[\"wget\", \"--quiet\", \"--tries=1\", \"--spider\", \"http://localhost:3001/health\"]"
+      "--health-start-period=60s"
       "--health-interval=10s"
-      "--health-retries=3"
-      "--health-timeout=5s"
+      "--health-timeout=3s"
+      "--health-retries=5"
       "--network-alias=app"
       "--network=logto_default"
     ];
