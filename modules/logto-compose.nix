@@ -27,6 +27,9 @@
   virtualisation.oci-containers.backend = "podman";
 
   # Containers
+  # This needs a seed script to work correctly.
+  # So what we need to run _once_ a few seconds into startup:
+  # `podman exec -it sh -c "npm run cli db seed -- --swe"`
   virtualisation.oci-containers.containers."logto-app" = {
     image = "svhd/logto:latest";
     environmentFiles = [
