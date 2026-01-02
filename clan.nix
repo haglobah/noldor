@@ -68,6 +68,9 @@
   # See: https://docs.clan.lol/guides/more-machines/#automatic-registration
   machines = {
     formenos = { _config, pkgs, ... }: {
+      imports = [
+        ./modules/logto-postgres-password.nix
+      ];
       environment.systemPackages = [ pkgs.git ];
 
       networking.firewall.allowedTCPPorts = [ 80 443 ];
