@@ -70,7 +70,7 @@
     formenos = { _config, pkgs, ... }: {
       imports = [
         ./modules/logto-compose.nix
-        ./modules/logto-postgres-password.nix
+        ./modules/logto-postgres-login.nix
       ];
       environment.systemPackages = [ pkgs.git ];
 
