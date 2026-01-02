@@ -36,8 +36,8 @@
       config.clan.core.vars.generators.logto-postgres-login.files."envFile".path
     ];
     environment = {
-      "ADMIN_ENDPOINT" = "https://auth.todos.hagenlocher.me";
-      "ENDPOINT" = "https://admin.todos.hagenlocher.me";
+      "ADMIN_ENDPOINT" = "https://admin-todos.hagenlocher.me";
+      "ENDPOINT" = "https://auth-todos.hagenlocher.me";
       "TRUST_PROXY_HEADER" = "1";
     };
     ports = [
