@@ -23,9 +23,9 @@
   virtualisation.oci-containers.containers."logto-app" = {
     image = "svhd/logto:latest";
     environment = {
-      "ADMIN_ENDPOINT" = "${admin_endpoint}";
-      "DB_URL" = "postgres://postgres:${postgres_password}@postgres:5432/logto";
-      "ENDPOINT" = "${endpoint}";
+      "ADMIN_ENDPOINT" = "https://auth.todos.hagenlocher.me";
+      "DB_URL" = "postgres://postgres:${builtins.readFile config.clan.core.vars.generators.logto-postgres-password.files."password".path}@postgres:5432/logto";
+      "ENDPOINT" = "https://admin.todos.hagenlocher.me";
       "TRUST_PROXY_HEADER" = "1";
     };
     ports = [
@@ -67,7 +67,7 @@
     image = "postgres:17-alpine";
     environment = {
       "POSTGRES_DB" = "logto";
-      "POSTGRES_PASSWORD" = "${postgres_password}";
+      "POSTGRES_PASSWORD" = "${builtins.readFile config.clan.core.vars.generators.logto-postgres-password.files."password".path}";
       "POSTGRES_USER" = "postgres";
     };
     volumes = [

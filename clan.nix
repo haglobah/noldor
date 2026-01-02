@@ -69,6 +69,7 @@
   machines = {
     formenos = { _config, pkgs, ... }: {
       imports = [
+        ./modules/logto-compose.nix
         ./modules/logto-postgres-password.nix
       ];
       environment.systemPackages = [ pkgs.git ];
