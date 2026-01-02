@@ -1,39 +1,58 @@
 {
-  inputs.clan-core.url = "https://git.clan.lol/clan/clan-core/archive/main.tar.gz";
-  inputs.nixpkgs.follows = "clan-core/nixpkgs";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+
+    clan-core = {
+      url = "https://git.clan.lol/clan/clan-core/archive/main.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
+  };
 
   outputs =
     {
       self,
       clan-core,
       nixpkgs,
+      flake-parts,
       ...
     }@inputs:
-    let
-      # Usage see: https://docs.clan.lol
-      clan = clan-core.lib.clan {
-        inherit self;
-        imports = [ ./clan.nix ];
-        specialArgs = { inherit inputs; };
-      };
-    in
-    {
-      inherit (clan.config) nixosConfigurations nixosModules clanInternals;
-      clan = clan.config;
-      # Add the Clan cli tool to the dev shell.
-      # Use "nix develop" to enter the dev shell.
-      devShells =
-        nixpkgs.lib.genAttrs
-          [
-            "x86_64-linux"
-            "aarch64-linux"
-            "aarch64-darwin"
-            "x86_64-darwin"
-          ]
-          (system: {
-            default = clan-core.inputs.nixpkgs.legacyPackages.${system}.mkShell {
-              packages = [ clan-core.packages.${system}.clan-cli ];
+    flake-parts.lib.mkFlake { inherit inputs; } (
+      { self, pkgs, ... }:
+      {
+        imports = [
+          inputs.clan-core.flakeModules.default
+        ];
+
+        systems = [
+          "x86_64-linux"
+        ];
+
+        clan = {
+          imports = [
+            ./clan.nix
+          ];
+        };
+
+        perSystem =
+          {
+            config,
+            system,
+            self',
+            pkgs,
+            ...
+          }:
+          {
+            devShells.default = pkgs.mkShell {
+              packages = [
+                pkgs.nixfmt-rfc-style
+                clan-core.packages.${system}.clan-cli
+              ];
             };
-          });
-    };
+          };
+      }
+    );
 }
