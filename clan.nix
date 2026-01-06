@@ -17,6 +17,23 @@
     # Docs: https://docs.clan.lol/reference/clanServices/admin/
     # Admin service for managing machines
     # This service adds a root password and SSH access.
+    beat = {
+      module.name = "users";
+
+      roles.default.tags.all = { };
+
+      roles.default.settings = {
+        user = "beat";
+        groups = [
+          "networkmanager"
+          "wheel"
+          "docker"
+          "dialout"
+          "tty"
+        ];
+      };
+      roles.default.extraModules = [ ./users/beat/home.nix ];
+    };
     admin = {
       roles.default.tags.all = { };
       roles.default.settings.allowedKeys = {
@@ -69,35 +86,43 @@
   # See: https://docs.clan.lol/guides/more-machines/#automatic-registration
   machines = {
     numenor =
-      { config, pkgs, agenix, ... }:
       {
-      nixpkgs.hostPlatform = "x86_64-linux";
-      # inherit system;
-      imports = [
-        ./modules/configuration.nix
-        ./modules/hardware/numenor.nix
-        ./modules/numenor.nix
-        agenix.nixosModules.default
-      ];
-    };
+        self,
+        config,
+        pkgs,
+        ...
+      }:
+      {
+        nixpkgs.hostPlatform = "x86_64-linux";
+        # inherit system;
+        imports = [
+          ./modules/configuration.nix
+          ./modules/hardware/numenor.nix
+          ./modules/numenor.nix
+          self.inputs.agenix.nixosModules.default
+        ];
+      };
     gondor =
-      { config, pkgs, agenix, home-manager, inputs, ... }:
       {
-      # inherit system pkgs;
-      specialArgs = { inherit inputs; };
-      imports = [
-        ./modules/configuration.nix
-        ./modules/hardware/gondor.nix
-        ./modules/gondor.nix
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.users."beat" = ./modules/home/home.nix;
-          home-manager.extraSpecialArgs = { inherit inputs; };
-        }
-        agenix.nixosModules.default
-      ];
-    };
+        self,
+        config,
+        pkgs,
+        ...
+      }:
+      {
+        nixpkgs.hostPlatform = "x86_64-linux";
+        # inherit system pkgs;
+        imports = [
+          ./modules/configuration.nix
+          ./modules/hardware/gondor.nix
+          ./modules/gondor.nix
+          self.inputs.agenix.nixosModules.default
+        ];
+
+        # # Configure home-manager (module imported at flake level)
+        # home-manager.useGlobalPkgs = true;
+        # home-manager.users."beat" = ./modules/home/home.nix;
+      };
     formenos =
       { _config, pkgs, ... }:
       {
