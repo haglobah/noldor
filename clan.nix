@@ -68,6 +68,36 @@
   # machines/jon/configuration.nix will be automatically imported.
   # See: https://docs.clan.lol/guides/more-machines/#automatic-registration
   machines = {
+    numenor =
+      { config, pkgs, agenix, ... }:
+      {
+      nixpkgs.hostPlatform = "x86_64-linux";
+      # inherit system;
+      imports = [
+        ./modules/configuration.nix
+        ./modules/hardware/numenor.nix
+        ./modules/numenor.nix
+        agenix.nixosModules.default
+      ];
+    };
+    gondor =
+      { config, pkgs, agenix, home-manager, inputs, ... }:
+      {
+      # inherit system pkgs;
+      specialArgs = { inherit inputs; };
+      imports = [
+        ./modules/configuration.nix
+        ./modules/hardware/gondor.nix
+        ./modules/gondor.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.users."beat" = ./modules/home/home.nix;
+          home-manager.extraSpecialArgs = { inherit inputs; };
+        }
+        agenix.nixosModules.default
+      ];
+    };
     formenos =
       { _config, pkgs, ... }:
       {

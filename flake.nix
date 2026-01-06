@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+    nixpkgs-24-11.url = "github:nixos/nixpkgs?ref=nixos-24.11";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
@@ -10,6 +11,33 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
+
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
+
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    catppuccin.url = "github:catppuccin/nix";
+
+    alles = {
+      url = "github:haglobah/alles";
+    };
+
+    nix-starter-kit = {
+      url = "github:active-group/nix-starter-kit";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    vimium-options.url = "github:uimataso/vimium-nixos";
   };
 
   outputs =
@@ -46,6 +74,10 @@
             ...
           }:
           {
+            # _module.args.pkgs = import self.inputs.nixpkgs {
+            #   inherit system;
+            #   config.allowUnfree = true;
+            # };
             devShells.default = pkgs.mkShell {
               packages = [
                 pkgs.nixfmt-rfc-style
