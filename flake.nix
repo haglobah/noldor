@@ -63,10 +63,6 @@
           imports = [
             ./clan.nix
           ];
-          # # Import home-manager at the clan level
-          # extraModules = [
-          #   inputs.home-manager.nixosModules.home-manager
-          # ];
         };
 
         perSystem =

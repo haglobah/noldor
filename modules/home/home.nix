@@ -1,16 +1,16 @@
 {
-  self,
   config,
   pkgs,
+  inputs,
   ...
 }:
 {
   imports = [
-    self.inputs.nix-index-database.homeModules.nix-index
-    self.inputs.catppuccin.homeModules.catppuccin
-    self.inputs.agenix.homeManagerModules.default
-    self.inputs.nix-starter-kit.homeModules.timetracking
-    self.inputs.vimium-options.homeManagerModules.vimium-options
+    inputs.nix-index-database.homeModules.nix-index
+    inputs.catppuccin.homeModules.catppuccin
+    inputs.agenix.homeManagerModules.default
+    inputs.nix-starter-kit.homeModules.timetracking
+    inputs.vimium-options.homeManagerModules.vimium-options
 
     ./modules/registry.nix
     ./modules/email.nix
@@ -149,7 +149,7 @@
         # '')
       ]
       ++ [
-        self.inputs.nixpkgs-24-11.legacyPackages."x86_64-linux".linphone
+inputs.nixpkgs-24-11.legacyPackages."x86_64-linux".linphone
       ];
 
     home.file = {
@@ -287,7 +287,7 @@
           "layout.spellcheckDefault" = "0";
         };
 
-        extensions.packages = with self.inputs.firefox-addons.packages."x86_64-linux"; [
+        extensions.packages = with inputs.firefox-addons.packages."x86_64-linux"; [
           bitwarden
           darkreader
           videospeed

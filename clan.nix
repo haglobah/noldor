@@ -1,3 +1,4 @@
+{ inputs, ... }:
 {
   # Ensure this is unique among all clans you want to use.
   meta.name = "noldor";
@@ -86,42 +87,26 @@
   # See: https://docs.clan.lol/guides/more-machines/#automatic-registration
   machines = {
     numenor =
-      {
-        self,
-        config,
-        pkgs,
-        ...
-      }:
+      { config, pkgs, ... }:
       {
         nixpkgs.hostPlatform = "x86_64-linux";
-        # inherit system;
         imports = [
           ./modules/configuration.nix
           ./modules/hardware/numenor.nix
           ./modules/numenor.nix
-          self.inputs.agenix.nixosModules.default
         ];
       };
     gondor =
-      {
-        self,
-        config,
-        pkgs,
-        ...
-      }:
+      { config, pkgs, ... }:
       {
         nixpkgs.hostPlatform = "x86_64-linux";
-        # inherit system pkgs;
         imports = [
           ./modules/configuration.nix
           ./modules/hardware/gondor.nix
           ./modules/gondor.nix
-          self.inputs.agenix.nixosModules.default
         ];
 
-        # # Configure home-manager (module imported at flake level)
-        # home-manager.useGlobalPkgs = true;
-        # home-manager.users."beat" = ./modules/home/home.nix;
+        # Home-manager configuration temporarily removed to test basic setup
       };
     formenos =
       { _config, pkgs, ... }:
