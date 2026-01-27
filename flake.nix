@@ -50,7 +50,12 @@
               packages = [
                 pkgs.nixfmt-rfc-style
                 clan-core.packages.${system}.clan-cli
+                pkgs.kanidm_1_8
               ];
+
+              shellHook = ''
+                export KANIDM_URL=https://idm.hagenlocher.me
+              '';
             };
           };
       }

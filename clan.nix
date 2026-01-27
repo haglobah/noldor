@@ -72,10 +72,13 @@
       { _config, pkgs, ... }:
       {
         imports = [
-          ./modules/logto-compose.nix
-          ./modules/logto-postgres-login.nix
+          ./modules/kanidm.nix
+          ./modules/kanidm-admin-password.nix
         ];
-        environment.systemPackages = [ pkgs.git ];
+        environment.systemPackages = with pkgs; [
+          git
+          kanidm_1_8
+        ];
 
         networking.firewall.allowedTCPPorts = [
           80
@@ -94,21 +97,30 @@
               reverse_proxy 127.0.0.1:5006
             '';
           };
-          virtualHosts."auth-todos.hagenlocher.me" = {
+          # Kanidm Identity Provider
+          # Kanidm uses HTTPS internally, so we need to handle that
+          virtualHosts."idm.hagenlocher.me" = {
             extraConfig = ''
-              reverse_proxy 127.0.0.1:3001
+              reverse_proxy https://127.0.0.1:8443 {
+                transport http {
+                  tls
+                  tls_insecure_skip_verify
+                }
+              }
             '';
           };
-          virtualHosts."admin-todos.hagenlocher.me" = {
+          # Automerge Todo App
+          virtualHosts."todos.hagenlocher.me" = {
             extraConfig = ''
-              reverse_proxy 127.0.0.1:3002
+              reverse_proxy 127.0.0.1:3000
             '';
           };
         };
 
-        clan.core.state.todo-home = {
+        # Kanidm database (identity data)
+        clan.core.state.kanidm = {
           folders = [
-            "/var/lib/containers/volumes/logto_postgres_data"
+            "/var/lib/kanidm"
           ];
         };
 
