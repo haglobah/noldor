@@ -92,11 +92,11 @@
               reverse_proxy 127.0.0.1:28981
             '';
           };
-          virtualHosts."finances.hagenlocher.me" = {
-            extraConfig = ''
-              reverse_proxy 127.0.0.1:5006
-            '';
-          };
+          # virtualHosts."finances.hagenlocher.me" = {
+          #   extraConfig = ''
+          #     reverse_proxy 127.0.0.1:5006
+          #   '';
+          # };
           # Kanidm Identity Provider
           # Kanidm uses HTTPS internally, so we need to handle that
           virtualHosts."idm.hagenlocher.me" = {
@@ -125,18 +125,18 @@
         };
 
         # https://docs.clan.lol/guides/backups/backup-intro/
-        clan.core.state.actual = {
-          folders = [
-            "/var/lib/actual"
-          ];
-        };
+        # clan.core.state.actual = {
+        #   folders = [
+        #     "/var/lib/actual"
+        #   ];
+        # };
         # https://search.nixos.org/options?channel=unstable&query=services.actual
-        services.actual = {
-          enable = true;
-          settings = {
-            port = 5006;
-          };
-        };
+        # services.actual = {
+        #   enable = true;
+        #   settings = {
+        #     port = 5006;
+        #   };
+        # };
 
         # https://docs.clan.lol/guides/backups/backup-intro/
         clan.core.state.paperless = {
