@@ -47,6 +47,7 @@
           displayName = "Automerge Todo App";
           originLanding = "https://todos.hagenlocher.me";
           originUrl = "https://todos.hagenlocher.me";
+          enableLocalhostRedirects = true;
           preferShortUsername = true;
           # Public client (SPA) - PKCE is enforced by default for public clients
           public = true;
