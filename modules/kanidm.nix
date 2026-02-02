@@ -40,6 +40,15 @@
         };
       };
 
+      persons = {
+        "haglobah" = {
+          present = true;
+          mailAddresses = [ "bah@posteo.de" ];
+          groups = [ "todo-app-users" ];
+          displayName = "beat.";
+        };
+      };
+
       # Define OAuth2/OIDC clients for your applications
       systems.oauth2 = {
         # Your Todo App OAuth2 client
