@@ -97,31 +97,12 @@
           #     reverse_proxy 127.0.0.1:5006
           #   '';
           # };
-          # Kanidm Identity Provider
-          # Kanidm uses HTTPS internally, so we need to handle that
-          virtualHosts."idm.hagenlocher.me" = {
-            extraConfig = ''
-              reverse_proxy https://127.0.0.1:8443 {
-                transport http {
-                  tls
-                  tls_insecure_skip_verify
-                }
-              }
-            '';
-          };
           # Automerge Todo App
           virtualHosts."todos.hagenlocher.me" = {
             extraConfig = ''
               reverse_proxy 127.0.0.1:3000
             '';
           };
-        };
-
-        # Kanidm database (identity data)
-        clan.core.state.kanidm = {
-          folders = [
-            "/var/lib/kanidm"
-          ];
         };
 
         # https://docs.clan.lol/guides/backups/backup-intro/

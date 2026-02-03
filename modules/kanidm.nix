@@ -8,6 +8,28 @@
   ...
 }:
 {
+  # Kanidm database (identity data)
+  clan.core.state.kanidm = {
+    folders = [
+      "/var/lib/kanidm"
+    ];
+  };
+
+  services.caddy = {
+    enable = true;
+    # Kanidm Identity Provider
+    # Kanidm uses HTTPS internally, so we need to handle that
+    virtualHosts."idm.hagenlocher.me" = {
+      extraConfig = ''
+        reverse_proxy https://127.0.0.1:8443 {
+          transport http {
+            tls
+            tls_insecure_skip_verify
+          }
+        }
+      '';
+    };
+  };
   services.kanidm = {
     enableServer = true;
 
@@ -36,7 +58,7 @@
       groups = {
         # Users who can access your todo app
         "todo-app-users" = {
-          members = [ ]; # Add user IDs here after creating them
+          members = [ ];
         };
       };
 
@@ -67,10 +89,6 @@
             "email"
           ];
         };
-
-        # Add more OAuth2 clients here as needed
-        # "paperless" = { ... };
-        # "actual" = { ... };
       };
     };
   };
