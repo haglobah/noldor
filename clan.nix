@@ -73,7 +73,7 @@
       {
         imports = [
           ./modules/kanidm.nix
-          ./modules/kanidm-admin-password.nix
+          ./modules/kanidm-vars.nix
         ];
         environment.systemPackages = with pkgs; [
           git
