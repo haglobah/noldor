@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+    nixpkgs-24-11.url = "github:nixos/nixpkgs?ref=nixos-24.11";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
@@ -10,6 +11,38 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-index-database = {
+      url = "github:Mic92/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    catppuccin.url = "github:catppuccin/nix";
+
+    nix-starter-kit = {
+      url = "github:active-group/nix-starter-kit";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
+    vimium-options.url = "github:uimataso/vimium-nixos";
+
+    alles.url = "github:haglobah/alles";
   };
 
   outputs =
@@ -17,7 +50,16 @@
       self,
       clan-core,
       nixpkgs,
+      nixpkgs-24-11,
       flake-parts,
+      home-manager,
+      agenix,
+      nix-index-database,
+      firefox-addons,
+      catppuccin,
+      nix-starter-kit,
+      vimium-options,
+      alles,
       ...
     }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } (
@@ -32,6 +74,7 @@
         ];
 
         clan = {
+          _module.args = { inherit inputs; };
           imports = [
             ./clan.nix
           ];

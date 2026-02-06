@@ -1,3 +1,4 @@
+{ inputs, ... }:
 {
   # Ensure this is unique among all clans you want to use.
   meta.name = "noldor";
@@ -11,6 +12,7 @@
       tags = [ "server" ];
     };
     gondor = {
+      deploy.targetHost = "localhost";
       tags = [ "client" ];
     };
   };
@@ -95,9 +97,29 @@
       {
         imports = [
           ./machines/gondor/hardware.nix
+          inputs.home-manager.nixosModules.home-manager
+          inputs.agenix.nixosModules.default
         ];
 
+        # Allow unfree packages (obsidian, discord, etc.)
+        nixpkgs.config.allowUnfree = true;
+
+        # Add overlays for agenix CLI and alles
+        nixpkgs.overlays = [
+          inputs.agenix.overlays.default
+          (final: prev: {
+            alles = inputs.alles.packages.${final.system}.default;
+          })
+        ];
+
+        # Home Manager configuration
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.users."beat" = import ./home/home.nix;
+        home-manager.extraSpecialArgs = { inherit inputs; };
+
         networking.hostName = "gondor";
+        clan.core.networking.targetHost = "localhost";
 
         # Bootloader
         boot.loader.systemd-boot.enable = true;
@@ -130,6 +152,9 @@
           LC_TELEPHONE = "de_DE.UTF-8";
           LC_TIME = "de_DE.UTF-8";
         };
+
+        # dbus
+        services.dbus.implementation = "broker";
 
         # X11 and GNOME
         services.xserver.enable = true;
