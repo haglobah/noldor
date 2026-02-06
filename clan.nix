@@ -8,7 +8,10 @@
     # Define machines here.
     formenos = {
       deploy.targetHost = "root@49.12.12.164";
-      tags = [ ];
+      tags = [ "server" ];
+    };
+    gondor = {
+      tags = [ "client" ];
     };
   };
 
@@ -19,7 +22,7 @@
     # Admin service for managing machines
     # This service adds a root password and SSH access.
     sshd = {
-      roles.server.tags.all = { };
+      roles.server.tags.server = { };
       roles.server.settings = {
         authorizedKeys = {
           # Insert the public key that you want to use for SSH access.
@@ -51,7 +54,7 @@
       roles.client.machines."formenos".settings = {
         destinations."storagebox" = {
           repo = "u366465-sub5@u366465-sub5.your-storagebox.de:/./borgbackup";
-          rsh = ''ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/borgbackup/borgbackup.ssh'';
+          rsh = "ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/borgbackup/borgbackup.ssh";
         };
       };
     };
@@ -64,9 +67,7 @@
       # Replace with the name (string) of your machine that you will use as zerotier-controller
       # See: https://docs.zerotier.com/controller/
       # Deploy this machine first to create the network secrets
-      roles.controller.machines."formenos" = {
-        settings.allowedIps = [ "8e:e1:63:8b:23:6c" ];
-      };
+      roles.controller.machines."formenos" = { };
       # Peers of the network
       # tags.all means 'all machines' will joined
       roles.peer.tags.all = { };
@@ -84,6 +85,161 @@
   # machines/jon/configuration.nix will be automatically imported.
   # See: https://docs.clan.lol/guides/more-machines/#automatic-registration
   machines = {
+    gondor =
+      {
+        config,
+        pkgs,
+        lib,
+        ...
+      }:
+      {
+        imports = [
+          ./machines/gondor/hardware.nix
+        ];
+
+        networking.hostName = "gondor";
+
+        # Bootloader
+        boot.loader.systemd-boot.enable = true;
+        boot.loader.efi.canTouchEfiVariables = true;
+        boot.kernelPackages = pkgs.linuxPackages_latest;
+        boot.kernelParams = [
+          # router can't do ipv6 at home
+          "ipv6.disable=1"
+          # https://www.reddit.com/r/framework/comments/1goh7hc/anyone_else_get_this_screen_flickering_issue/
+          "amdgpu.dcdebugmask=0x410"
+        ];
+
+        # Networking
+        networking.networkmanager.enable = true;
+
+        # Bluetooth
+        hardware.bluetooth.enable = true;
+
+        # Timezone and locale
+        time.timeZone = "Europe/Berlin";
+        i18n.defaultLocale = "en_US.UTF-8";
+        i18n.extraLocaleSettings = {
+          LC_ADDRESS = "de_DE.UTF-8";
+          LC_IDENTIFICATION = "de_DE.UTF-8";
+          LC_MEASUREMENT = "de_DE.UTF-8";
+          LC_MONETARY = "de_DE.UTF-8";
+          LC_NAME = "de_DE.UTF-8";
+          LC_NUMERIC = "de_DE.UTF-8";
+          LC_PAPER = "de_DE.UTF-8";
+          LC_TELEPHONE = "de_DE.UTF-8";
+          LC_TIME = "de_DE.UTF-8";
+        };
+
+        # X11 and GNOME
+        services.xserver.enable = true;
+        services.displayManager.gdm.enable = true;
+        services.desktopManager.gnome = {
+          enable = true;
+          extraGSettingsOverrides = ''
+            [org.gnome.mutter.keybindings]
+            switch-monitor=['<Shift><Super>p', 'XF86Display']
+          '';
+        };
+
+        # Keyboard
+        services.xserver.xkb = {
+          layout = "us,de";
+          variant = "";
+        };
+
+        # Sound
+        security.rtkit.enable = true;
+        services.pulseaudio.enable = false;
+        services.pipewire = {
+          enable = true;
+          alsa.enable = true;
+          alsa.support32Bit = true;
+          pulse.enable = true;
+        };
+
+        # User
+        programs.fish.enable = true;
+        users.users.beat = {
+          isNormalUser = true;
+          description = "Beat Hagenlocher";
+          extraGroups = [
+            "networkmanager"
+            "wheel"
+            "docker"
+            "dialout"
+            "tty"
+          ];
+          shell = pkgs.fish;
+        };
+
+        # Nix settings
+        nix.settings = {
+          experimental-features = [
+            "nix-command"
+            "flakes"
+          ];
+          trusted-users = [
+            "root"
+            "beat"
+          ];
+        };
+        nix.gc = {
+          automatic = true;
+          dates = "monthly";
+          options = "--delete-older-than 90d";
+        };
+
+        # Docker
+        virtualisation.docker.enable = true;
+        virtualisation.docker.daemon.settings = {
+          default-address-pools = [
+            {
+              base = "172.30.0.0/16";
+              size = 24;
+            }
+          ];
+        };
+
+        # Services
+        services.fwupd.enable = true;
+        services.printing.enable = true;
+        services.upower.percentageLow = 30;
+        services.upower.percentageCritical = 15;
+
+        # Fonts
+        fonts.packages = with pkgs; [
+          nerd-fonts.fira-code
+          nerd-fonts.droid-sans-mono
+        ];
+
+        # Packages
+        environment.systemPackages = with pkgs; [
+          git
+        ];
+
+        environment.gnome.excludePackages = with pkgs; [
+          gnome-tour
+          gedit
+          cheese
+          gnome-music
+          epiphany
+          geary
+          gnome-characters
+          tali
+          iagno
+          hitori
+          atomix
+          yelp
+          gnome-contacts
+          gnome-initial-setup
+        ];
+
+        programs.dconf.enable = true;
+
+        system.stateVersion = "23.05";
+      };
+
     formenos =
       { _config, pkgs, ... }:
       {
