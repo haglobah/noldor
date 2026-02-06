@@ -1,7 +1,8 @@
 {
   # Ensure this is unique among all clans you want to use.
   meta.name = "noldor";
-  meta.tld = "noldor";
+  meta.domain = "noldor";
+  meta.description = "My homelab clan";
 
   inventory.machines = {
     # Define machines here.
@@ -17,16 +18,29 @@
     # Docs: https://docs.clan.lol/reference/clanServices/admin/
     # Admin service for managing machines
     # This service adds a root password and SSH access.
-    admin = {
-      roles.default.tags.all = { };
-      roles.default.settings.allowedKeys = {
-        # Insert the public key that you want to use for SSH access.
-        # All keys will have ssh access to all machines ("tags.all" means 'all machines').
-        # Alternatively set 'users.users.root.openssh.authorizedKeys.keys' in each machine
-        "beat" =
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILD4jhHznn3K7uZGhNTu3En3vDyiLmbColfok2Qm/MKS beat@gondor";
+    sshd = {
+      roles.server.tags.all = { };
+      roles.server.settings = {
+        authorizedKeys = {
+          # Insert the public key that you want to use for SSH access.
+          # All keys will have ssh access to all machines ("tags.all" means 'all machines').
+          # Alternatively set 'users.users.root.openssh.authorizedKeys.keys' in each machine
+          "beat" =
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILD4jhHznn3K7uZGhNTu3En3vDyiLmbColfok2Qm/MKS beat@gondor";
+        };
       };
     };
+
+    # root-password = {
+    #   module = {
+    #     name = "users";
+    #     input = "clan-core";
+    #   };
+    #   roles.default.tags.all = { };
+    #   roles.default.settings = {
+    #     user = "root";
+    #   };
+    # };
 
     # https://docs.clan.lol/services/official/borgbackup/
     borgbackup = {
@@ -50,7 +64,9 @@
       # Replace with the name (string) of your machine that you will use as zerotier-controller
       # See: https://docs.zerotier.com/controller/
       # Deploy this machine first to create the network secrets
-      roles.controller.machines."formenos" = { };
+      roles.controller.machines."formenos" = {
+        settings.allowedIps = [ "8e:e1:63:8b:23:6c" ];
+      };
       # Peers of the network
       # tags.all means 'all machines' will joined
       roles.peer.tags.all = { };
@@ -80,10 +96,16 @@
           kanidm_1_8
         ];
 
-        networking.firewall.allowedTCPPorts = [
-          80
-          443
-        ];
+        networking.firewall = {
+          allowedTCPPorts = [
+            80
+            443
+          ];
+          allowedUDPPorts = [
+            80
+            443
+          ];
+        };
 
         services.caddy = {
           enable = true;
