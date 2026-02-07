@@ -47,19 +47,8 @@
 
   outputs =
     {
-      self,
       clan-core,
-      nixpkgs,
-      nixpkgs-24-11,
       flake-parts,
-      home-manager,
-      agenix,
-      nix-index-database,
-      firefox-addons,
-      catppuccin,
-      nix-starter-kit,
-      vimium-options,
-      alles,
       ...
     }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } (
