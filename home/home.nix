@@ -73,7 +73,8 @@
         # for secrets
         agenix
 
-        # for `nix`
+        # Nix language servers
+        nil
         nixd
 
         # for `alles`
