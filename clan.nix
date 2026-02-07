@@ -127,7 +127,7 @@
         boot.kernelPackages = pkgs.linuxPackages_latest;
         boot.kernelParams = [
           # router can't do ipv6 at home
-          "ipv6.disable=1"
+          # "ipv6.disable=1"
           # https://www.reddit.com/r/framework/comments/1goh7hc/anyone_else_get_this_screen_flickering_issue/
           "amdgpu.dcdebugmask=0x410"
         ];
