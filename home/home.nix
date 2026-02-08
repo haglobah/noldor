@@ -74,7 +74,6 @@
         agenix
 
         # Nix language servers
-        nil
         nixd
 
         # for `alles`
