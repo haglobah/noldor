@@ -95,6 +95,8 @@
           ./modules/kanidm.nix
           ./modules/kanidm-vars.nix
           ./modules/paperless.nix
+          ./modules/immich.nix
+          ./modules/storagebox-secret.nix
         ];
         environment.systemPackages = with pkgs; [
           git
