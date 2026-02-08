@@ -12,7 +12,7 @@
       tags = [ "server" ];
     };
     gondor = {
-      deploy.targetHost = "localhost";
+      deploy.targetHost = "root@127.0.0.1";
       tags = [ "client" ];
     };
   };
@@ -24,7 +24,7 @@
     # Admin service for managing machines
     # This service adds a root password and SSH access.
     sshd = {
-      roles.server.tags.server = { };
+      roles.server.tags.all = { };
       roles.server.settings = {
         authorizedKeys = {
           # Insert the public key that you want to use for SSH access.
