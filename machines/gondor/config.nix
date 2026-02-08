@@ -11,9 +11,8 @@
 {
   imports = [
     ./hardware.nix
+    ../../modules/storagebox-secret.nix
     inputs.home-manager.nixosModules.home-manager
-    inputs.agenix.nixosModules.default
-
   ];
 
   # Allow unfree packages (obsidian, discord, etc.)
@@ -176,6 +175,28 @@
   ];
 
   programs.dconf.enable = true;
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+  };
+
+  # Mount for storage box
+  fileSystems."/mnt/share" = {
+    device = "//u366465.your-storagebox.de/backup";
+    fsType = "cifs";
+    options =
+      let
+        # this line prevents hanging on network split
+        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
+      in
+      [
+        "${automount_opts},credentials=${
+          config.clan.core.vars.generators.storagebox-secret.files."secret".path
+        },uid=1000,gid=100"
+      ];
+  };
 
   system.stateVersion = "23.05";
 }
