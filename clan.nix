@@ -92,6 +92,7 @@
       { _config, pkgs, ... }:
       {
         imports = [
+          inputs.home-manager.nixosModules.home-manager
           ./modules/kanidm.nix
           ./modules/kanidm-vars.nix
           ./modules/paperless.nix
@@ -102,6 +103,21 @@
           git
           kanidm_1_8
         ];
+
+        # Home Manager configuration
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.users."root" = {
+          imports = [
+            ./home/programs/fish.nix
+            ./home/programs/shell-utils.nix
+            ./home/programs/starship.nix
+          ];
+          home.stateVersion = "22.11";
+          home.username = "root";
+          home.homeDirectory = "/root";
+        };
+        home-manager.extraSpecialArgs = { inherit inputs; };
 
         networking.firewall = {
           allowedTCPPorts = [

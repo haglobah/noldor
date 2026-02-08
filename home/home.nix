@@ -23,6 +23,8 @@
     # ./programs/nvf.nix
     ./programs/bash.nix
     ./programs/fish.nix
+    ./programs/shell-utils.nix
+    ./programs/starship.nix
   ];
 
   config = {
@@ -197,8 +199,6 @@
       };
     };
 
-    # services.emacs.enable = true;
-
     programs.home-manager.enable = true;
 
     programs.gh = {
@@ -340,12 +340,6 @@
       # enableFishIntegration = true;
     };
 
-    programs.direnv = {
-      enable = true;
-      enableBashIntegration = true; # see note on other shells below
-      nix-direnv.enable = true;
-    };
-
     catppuccin = {
       enable = true;
       flavor = "mocha";
@@ -355,63 +349,6 @@
       fzf.enable = true;
       bat.enable = true;
       cursors.enable = true;
-    };
-
-    programs.starship = {
-      enable = true;
-
-      enableBashIntegration = true;
-      enableFishIntegration = true;
-
-      # Configuration written to ~/.config/starship.toml
-      settings = {
-        add_newline = false;
-
-        format = builtins.concatStringsSep "" [
-          "$line_break"
-          "$all"
-        ];
-
-        character = {
-          success_symbol = "[➜](bold green)";
-          error_symbol = "[➜](bold red)";
-        };
-
-        battery = {
-          display = [
-            {
-              threshold = 30;
-              style = "bold red";
-            }
-          ];
-        };
-      };
-    };
-
-    programs.btop = {
-      enable = true;
-    };
-    programs.bat = {
-      enable = true;
-    };
-    programs.eza = {
-      enable = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
-      git = true;
-    };
-    programs.zoxide = {
-      enable = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
-    };
-    programs.fzf = {
-      enable = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
-    };
-    programs.broot = {
-      enable = true;
     };
   };
 }
