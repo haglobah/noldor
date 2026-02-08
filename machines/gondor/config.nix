@@ -186,16 +186,16 @@
   fileSystems."/mnt/share" = {
     device = "//u366465.your-storagebox.de/backup";
     fsType = "cifs";
-    options =
-      let
-        # this line prevents hanging on network split
-        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
-      in
-      [
-        "${automount_opts},credentials=${
-          config.clan.core.vars.generators.storagebox-secret.files."secret".path
-        },uid=1000,gid=100"
-      ];
+    options = [
+      "x-systemd.automount"
+      "noauto"
+      "x-systemd.idle-timeout=60"
+      "x-systemd.device-timeout=5s"
+      "x-systemd.mount-timeout=5s"
+      "credentials=${config.clan.core.vars.generators.storagebox-secret.files."secret".path}"
+      "uid=1000"
+      "gid=100"
+    ];
   };
 
   system.stateVersion = "23.05";
