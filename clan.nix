@@ -94,6 +94,7 @@
         imports = [
           ./modules/kanidm.nix
           ./modules/kanidm-vars.nix
+          ./modules/paperless.nix
         ];
         environment.systemPackages = with pkgs; [
           git
@@ -113,59 +114,11 @@
 
         services.caddy = {
           enable = true;
-          virtualHosts."paperless.hagenlocher.me" = {
-            extraConfig = ''
-              reverse_proxy 127.0.0.1:28981
-            '';
-          };
-          # virtualHosts."finances.hagenlocher.me" = {
-          #   extraConfig = ''
-          #     reverse_proxy 127.0.0.1:5006
-          #   '';
-          # };
           # Automerge Todo App
           virtualHosts."todos.hagenlocher.me" = {
             extraConfig = ''
               reverse_proxy 127.0.0.1:3000
             '';
-          };
-        };
-
-        # https://docs.clan.lol/guides/backups/backup-intro/
-        # clan.core.state.actual = {
-        #   folders = [
-        #     "/var/lib/actual"
-        #   ];
-        # };
-        # https://search.nixos.org/options?channel=unstable&query=services.actual
-        # services.actual = {
-        #   enable = true;
-        #   settings = {
-        #     port = 5006;
-        #   };
-        # };
-
-        # https://docs.clan.lol/guides/backups/backup-intro/
-        clan.core.state.paperless = {
-          folders = [
-            "/var/lib/paperless"
-          ];
-        };
-        # https://wiki.nixos.org/wiki/Paperless-ngx
-        services.paperless = {
-          enable = true;
-          consumptionDirIsPublic = true;
-          settings = {
-            PAPERLESS_CONSUMER_IGNORE_PATTERN = [
-              ".DS_STORE/*"
-              "desktop.ini"
-            ];
-            PAPERLESS_OCR_LANGUAGE = "deu+eng";
-            PAPERLESS_OCR_USER_ARGS = {
-              optimize = 1;
-              pdfa_image_compression = "lossless";
-            };
-            PAPERLESS_URL = "https://paperless.hagenlocher.me";
           };
         };
       };
