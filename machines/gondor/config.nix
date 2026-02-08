@@ -21,7 +21,7 @@
   nixpkgs.overlays = [
     inputs.agenix.overlays.default
     (final: prev: {
-      alles = inputs.alles.packages.${final.system}.default;
+      alles = inputs.alles.packages.${final.stdenv.hostPlatform.system}.default;
     })
   ];
 
