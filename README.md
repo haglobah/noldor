@@ -1,6 +1,6 @@
 # Noldor
 
-This is my server clan config.
+This is my server/home lab clan config.
 
 There's the [CLI reference](https://docs.clan.lol/reference/cli/)
 
@@ -20,4 +20,5 @@ clan ssh formenos
 
 ## Todo
 
-- [ ] Add backup service: https://docs.clan.lol/services/official/borgbackup/
+- [x] Add backup service to server: https://docs.clan.lol/services/official/borgbackup/
+- [ ] Add backup service to machine.
