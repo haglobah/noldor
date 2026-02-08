@@ -1,3 +1,6 @@
+# NOTE: This file is very consciously _not_ named configuration.nix, as otherwise
+# clan auto-imports it, which breaks because of my dependence on inputs.
+# (Same for `./hardware.nix`, which could/should be called `hardware-configuration.nix`)
 { inputs, ... }:
 {
   config,
