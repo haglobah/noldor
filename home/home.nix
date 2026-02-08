@@ -76,6 +76,9 @@
         # Nix language servers
         nixd
 
+        # For easy shell-ish stuff
+        racket
+
         # for `alles`
         alles
         ydotool
