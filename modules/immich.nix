@@ -31,15 +31,9 @@
         "x-systemd.idle-timeout=60"
         "x-systemd.device-timeout=5s"
         "x-systemd.mount-timeout=5s"
-
-        # "nounix"
-        # "noperm"
-        # "noserverino"
         "credentials=${config.clan.core.vars.generators.storagebox-immich-secret.files."credentials".path}"
         "uid=immich"
         "gid=immich"
-        # "forceuid"
-        # "forcegid"
       ];
     };
   };
