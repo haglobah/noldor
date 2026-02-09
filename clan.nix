@@ -98,6 +98,7 @@
           ./modules/paperless.nix
           ./modules/immich.nix
           ./modules/storagebox-secret.nix
+          ./modules/audiobookshelf.nix
         ];
         environment.systemPackages = with pkgs; [
           git
