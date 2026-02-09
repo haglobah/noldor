@@ -10,16 +10,23 @@
       enable = true;
       virtualHosts."photos.hagenlocher.me" = {
         extraConfig = ''
-          reverse_proxy 127.0.0.1:2283
+          reverse_proxy 127.0.0.1:${toString config.services.immich.port}
         '';
       };
     };
     services.immich = {
       enable = true;
       host = "0.0.0.0";
-      machine-learning.enable = false;
+      # machine-learning.enable = false;
       openFirewall = true;
     };
+
+    # systemd.services.immich-server = {
+    #   serviceConfig = {
+    #     Restart = "always";
+    #     RestartSec = 10;
+    #   };
+    # };
 
     environment.systemPackages = [ pkgs.cifs-utils ];
     fileSystems."/var/lib/immich" = {
@@ -28,7 +35,6 @@
       options = [
         "x-systemd.automount"
         "noauto"
-        "x-systemd.idle-timeout=60"
         "x-systemd.device-timeout=5s"
         "x-systemd.mount-timeout=5s"
         "credentials=${config.clan.core.vars.generators.storagebox-immich-secret.files."credentials".path}"
