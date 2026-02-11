@@ -14,7 +14,6 @@
         "nix-list" = "nix profile history --profile /nix/var/nix/profiles/system";
         "nix-rm-boot-entries" =
           "nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 30d";
-        "rebuild" = "nixos-rebuild switch --sudo --flake .";
         "nre" = "nixos-rebuild switch --sudo --flake ~/noldor/";
         "nure" = "nix flake update && sudo nixos-rebuild switch --flake ~/noldor/";
         "nsh" = {
@@ -60,25 +59,16 @@
           setCursor = true;
         };
 
-        "nrd" = "npm run dev";
-        "nrp" = "npm run playground";
+        "c" = "clan";
+        "cs" = "clan ssh";
+        "cv" = "clan vars";
+        "cm" = "clam machines";
+        "cmu" = "clan machines update";
 
-        "c" = "code . &";
         "v" = "nvim .";
-        "e" = "emacs . &";
-        "h" = "history";
-        "rg" = "rg --line-number --context=2";
+        "rgl" = "rg --line-number --context=2";
         "wh" = "which";
         "wha" = "type --all";
-
-        "ae" = {
-          expansion = "cd ~/mynix/home/secrets/ && agenix --edit % && cd -";
-          setCursor = true;
-        };
-        "ad" = {
-          expansion = "cd ~/mynix/home/secrets/ && agenix --decrypt % && cd -";
-          setCursor = true;
-        };
 
         "j" = "just";
         "js" = "just setup";
@@ -193,9 +183,10 @@
           mkdir -p $argv[1] && cd $argv[1]
         end
 
-        function freq
-          history | cut -c8- | cut -d" " --fields=1"$argv[1]" | sort | uniq -c | sort -rn
-        end
+        # Doesn't make sense, since fish doesn't store duplicates in history, apparently: https://www.reddit.com/r/fishshell/comments/rgxgup/how_to_delete_duplicates_in_fish_shell_history/
+        # function freq
+        #   history | cut -c8- | cut -d" " --fields=1"$argv[1]" | sort | uniq -c | sort -rn
+        # end
 
         function gap
           git add . && git commit --message="$argv[1]" && git push
