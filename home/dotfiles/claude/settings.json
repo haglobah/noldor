@@ -1,2 +1,15 @@
 {
+    "hooks": {
+    "Notification": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "brightnessctl s +10%; sleep 0.05; brightnessctl s 10%-"
+          }
+        ]
+      }
+    ]
+  }
 }

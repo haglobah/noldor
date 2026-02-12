@@ -92,6 +92,9 @@
         fd
         emacs-lsp-booster
 
+        # For screen flickering notification
+        brightnessctl
+
         # AI
         aider-chat-with-playwright
         python314
@@ -248,6 +251,10 @@
         allow_remote_control = "yes";
         hide_window_decorations = "yes";
         font_size = 16;
+        # This is for enabling a global visual bell. However, this doesn't seem to work (only makes the screen brighter, not less bright again)
+        # enable_audio_bell = "no";
+        # visual_bell_duration = 0;
+        # command_on_bell = "${pkgs.brightnessctl}/bin/brightnessctl s +10%; sleep 0.05; ${pkgs.brightnessctl}/bin/brightnessctl s 10%-";
       };
 
       keybindings = {
