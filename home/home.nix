@@ -157,6 +157,8 @@
 
     home.file = {
       ".config/run-or-raise/shortcuts.conf".source = dotfiles/shortcuts.conf;
+      ".config/custom-tab-title-from-file/config.json".source =
+        dotfiles/custom-tab-title-from-file/config.json;
 
       ".config/zed/settings.json".source = dotfiles/zed/settings.json;
       ".config/zed/keymap.json".source = dotfiles/zed/keymap.json;
