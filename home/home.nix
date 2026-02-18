@@ -121,6 +121,7 @@
         mob
 
         # other GUI Tools
+        pcmanfm # a file viewer that just runs and doesn't wait ages for some search/tracker/miner database job that isn't there
         zed-editor
         tor-browser
         chromium

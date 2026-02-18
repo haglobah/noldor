@@ -158,6 +158,7 @@
   ];
 
   environment.gnome.excludePackages = with pkgs; [
+    nautilus
     gnome-tour
     gedit
     cheese
