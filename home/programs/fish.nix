@@ -61,8 +61,9 @@
 
         "c" = "clan";
         "cs" = "clan ssh";
+        "csf" = "clan ssh formenos -c fish";
         "cv" = "clan vars";
-        "cm" = "clam machines";
+        "cm" = "clan machines";
         "cmu" = "clan machines update";
 
         "v" = "nvim .";
