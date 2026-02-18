@@ -59,6 +59,8 @@
           setCursor = true;
         };
 
+        "co" = "claude --model opus";
+
         "c" = "clan";
         "cs" = "clan ssh";
         "csf" = "clan ssh formenos -c fish";
