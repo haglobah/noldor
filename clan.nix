@@ -36,6 +36,27 @@
       };
     };
 
+    monitoring = {
+      module = {
+        name = "monitoring";
+        input = "clan-core";
+      };
+
+      roles = {
+        client = {
+          tags = [ "all" ];
+          settings.useSSL = true;
+        };
+
+        server.machines."formenos".settings = {
+          grafana.enable = true;
+          host = "monitoring.hagenlocher.me";
+          nginx.defaultHTTPListenPort = 8080;
+          nginx.defaultSSLListenPort = 9443;
+        };
+      };
+    };
+
     # root-password = {
     #   module = {
     #     name = "users";
@@ -137,6 +158,11 @@
           virtualHosts."todos.hagenlocher.me" = {
             extraConfig = ''
               reverse_proxy 127.0.0.1:3000
+            '';
+          };
+          virtualHosts."monitoring.hagenlocher.me" = {
+            extraConfig = ''
+              reverse_proxy 127.0.0.1:8080
             '';
           };
         };
