@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   config = {
     clan.core.state.immich = {
@@ -20,6 +25,8 @@
       # machine-learning.enable = false;
       openFirewall = true;
     };
+
+    systemd.services.immich-server.serviceConfig.Restart = lib.mkForce "always";
 
     # systemd.services.immich-server = {
     #   serviceConfig = {
