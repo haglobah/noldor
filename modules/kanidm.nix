@@ -31,11 +31,11 @@
     };
   };
   services.kanidm = {
-    enableServer = true;
 
     package = pkgs.kanidmWithSecretProvisioning_1_8;
 
-    serverSettings = {
+    server.enable = true;
+    server.settings = {
       domain = "idm.hagenlocher.me";
       origin = "https://idm.hagenlocher.me";
       # Bind to localhost; Caddy will reverse proxy
