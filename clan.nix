@@ -11,6 +11,10 @@
       deploy.targetHost = "root@49.12.12.164";
       tags = [ "server" ];
     };
+    orthanc = {
+      deploy.targetHost = "root@91.99.217.220";
+      tags = [ "client" ];
+    };
     gondor = {
       deploy.targetHost = "root@127.0.0.1";
       tags = [ "client" ];
@@ -19,6 +23,21 @@
 
   # Docs: See https://docs.clan.lol/reference/clanServices
   inventory.instances = {
+
+    openclaw = {
+      module = {
+        name = "users";
+        input = "clan-core";
+      };
+      roles.default = {
+        machines.orthanc = { };
+        settings = {
+          user = "openclaw";
+          prompt = false;
+          share = true;
+        };
+      };
+    };
 
     # Docs: https://docs.clan.lol/reference/clanServices/admin/
     # Admin service for managing machines
@@ -109,6 +128,47 @@
   # See: https://docs.clan.lol/guides/more-machines/#automatic-registration
   machines = {
     gondor = import ./machines/gondor/config.nix { inherit inputs; };
+    orthanc =
+      { _config, pkgs, ... }:
+      {
+        imports = [
+          inputs.home-manager.nixosModules.home-manager
+        ];
+
+        # Home Manager configuration
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.extraSpecialArgs = { inherit inputs; };
+        home-manager.users = {
+          "root" = {
+            imports = [
+              inputs.catppuccin.homeModules.catppuccin
+              ./home/programs/fish.nix
+              ./home/programs/shell-utils.nix
+              ./home/programs/starship.nix
+            ];
+            catppuccin = {
+              enable = true;
+              flavor = "macchiato";
+              starship.enable = true;
+              fzf.enable = true;
+              bat.enable = true;
+            };
+            home.stateVersion = "22.11";
+            home.username = "root";
+            home.homeDirectory = "/root";
+          };
+          "openclaw" = {
+            imports = [
+              inputs.nix-openclaw.homeManagerModules.openclaw
+              ./home/modules/openclaw.nix
+            ];
+            home.stateVersion = "22.11";
+            home.username = "openclaw";
+            home.homeDirectory = "/home/openclaw";
+          };
+        };
+      };
     formenos =
       { _config, pkgs, ... }:
       {
