@@ -43,6 +43,8 @@
     vimium-options.url = "github:uimataso/vimium-nixos";
 
     alles.url = "github:haglobah/alles";
+    gastown.url = "github:steveyegge/gastown";
+    gastown.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =

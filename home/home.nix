@@ -104,7 +104,7 @@
         codex-acp
         gemini-cli
         opencode
-
+        inputs.gastown.packages.${final.stdenv.hostPlatform.system}.default
         # Install globally to make gleam-ts-mode happy
         gleam
 
