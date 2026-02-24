@@ -24,21 +24,6 @@
   # Docs: See https://docs.clan.lol/reference/clanServices
   inventory.instances = {
 
-    openclaw = {
-      module = {
-        name = "users";
-        input = "clan-core";
-      };
-      roles.default = {
-        machines.orthanc = { };
-        settings = {
-          user = "openclaw";
-          prompt = false;
-          share = true;
-        };
-      };
-    };
-
     # Docs: https://docs.clan.lol/reference/clanServices/admin/
     # Admin service for managing machines
     # This service adds a root password and SSH access.
@@ -133,6 +118,12 @@
       {
         imports = [
           inputs.home-manager.nixosModules.home-manager
+          inputs.nix-openclaw.nixosModules.default
+          ./modules/openclaw.nix
+        ];
+
+        environment.systemPackages = with pkgs; [
+          neovim
         ];
 
         # Home Manager configuration
@@ -158,15 +149,6 @@
             home.username = "root";
             home.homeDirectory = "/root";
           };
-          "openclaw" = {
-            imports = [
-              inputs.nix-openclaw.homeManagerModules.openclaw
-              ./home/modules/openclaw.nix
-            ];
-            home.stateVersion = "22.11";
-            home.username = "openclaw";
-            home.homeDirectory = "/home/openclaw";
-          };
         };
       };
     formenos =
@@ -185,6 +167,7 @@
         environment.systemPackages = with pkgs; [
           git
           kanidm_1_8
+          neovim
         ];
 
         # Home Manager configuration

@@ -44,7 +44,7 @@
 
     alles.url = "github:haglobah/alles";
     gastown.url = "github:steveyegge/gastown";
-    nix-openclaw.url = "github:openclaw/nix-openclaw";
+    nix-openclaw.url = "github:schemalabz/nix-openclaw";
   };
 
   outputs =
