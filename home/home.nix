@@ -104,7 +104,9 @@
         codex-acp
         gemini-cli
         opencode
-        inputs.gastown.packages.${stdenv.hostPlatform.system}.default
+
+        # NOTE: Disable gastown as soon as go 1.25.6 is here
+        # inputs.gastown.packages.${stdenv.hostPlatform.system}.default
         # Install globally to make gleam-ts-mode happy
         gleam
 
