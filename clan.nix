@@ -180,6 +180,7 @@
           ./modules/immich.nix
           ./modules/storagebox-secret.nix
           ./modules/audiobookshelf.nix
+          ./modules/code-server.nix
         ];
         environment.systemPackages = with pkgs; [
           git
