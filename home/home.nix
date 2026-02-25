@@ -59,18 +59,7 @@
     home.packages =
       with pkgs;
       [
-        # CLI
-        wget
-        curl
-        traceroute
-        dnsutils
-        jq
-        tmux
-        cachix
-        dua
-        gnupg
-        pass
-        nix-output-monitor
+        # CLI packages in ./programs/shell-utils.nix
 
         # for secrets
         agenix

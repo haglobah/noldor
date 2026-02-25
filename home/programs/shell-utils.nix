@@ -1,5 +1,19 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
+  home.packages = with pkgs; [
+    wget
+    curl
+    traceroute
+    dnsutils
+    jq
+    tmux
+    cachix
+    dua
+    gnupg
+    pass
+    nix-output-monitor
+  ];
+
   programs.direnv = {
     enable = true;
     enableBashIntegration = true; # see note on other shells below
