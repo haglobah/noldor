@@ -43,7 +43,8 @@
     vimium-options.url = "github:uimataso/vimium-nixos";
 
     alles.url = "github:haglobah/alles";
-    gastown.url = "github:steveyegge/gastown";
+    gastown.url = "github:haglobah/gastown";
+    beads.url = "github:haglobah/beads";
     nix-openclaw.url = "github:openclaw/nix-openclaw";
   };
 

@@ -97,7 +97,9 @@
         # NOTE: Enable gastown as soon as go 1.25.6 is here
         # Even though go 1.25.7 is here, the derivation is still broken –
         # a local checkout works for now.
-        # inputs.gastown.packages.${stdenv.hostPlatform.system}.default
+        inputs.gastown.packages.${stdenv.hostPlatform.system}.default
+        inputs.beads.packages.${stdenv.hostPlatform.system}.default
+        go
 
         # Install globally to make gleam-ts-mode happy
         gleam
