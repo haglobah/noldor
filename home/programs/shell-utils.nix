@@ -9,8 +9,6 @@
     tmux
     cachix
     dua
-    gnupg
-    pass
     nix-output-monitor
   ];
 
