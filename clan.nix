@@ -187,6 +187,7 @@
         environment.systemPackages = with pkgs; [
           git
           kanidm_1_8
+          kitty
         ];
 
         # Home Manager configuration
