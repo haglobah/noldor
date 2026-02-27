@@ -180,7 +180,9 @@
           ./modules/immich.nix
           ./modules/storagebox-secret.nix
           ./modules/audiobookshelf.nix
-          ./modules/code-server.nix
+          # ./modules/code-server.nix
+          # ./modules/todo-home.nix
+          ./modules/grafana-secret.nix
         ];
         environment.systemPackages = with pkgs; [
           git
