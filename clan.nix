@@ -172,6 +172,7 @@
     formenos =
       { _config, pkgs, ... }:
       {
+        _module.args = { inherit inputs; };
         imports = [
           inputs.home-manager.nixosModules.home-manager
           ./modules/kanidm.nix
@@ -181,7 +182,11 @@
           ./modules/storagebox-secret.nix
           ./modules/audiobookshelf.nix
           # ./modules/code-server.nix
-          # ./modules/todo-home.nix
+
+          inputs.todo-home.nixosModules.default
+          ./modules/todo-home.nix
+
+          # Only here until the grafana service gets fixed
           ./modules/grafana-secret.nix
         ];
         environment.systemPackages = with pkgs; [
