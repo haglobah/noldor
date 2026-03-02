@@ -2202,11 +2202,11 @@
         "nixpkgs": "nixpkgs_20"
       },
       "locked": {
-        "lastModified": 1772217578,
-        "narHash": "sha256-/7Vs4ds7xfE8GsM/Dczwa9EtvEZvDoz6Jbn0ofoIBM0=",
+        "lastModified": 1772289414,
+        "narHash": "sha256-LXqwrWAxyeLlePUmxA+FMcBgZJw6Kxk2dBmtihszaeA=",
         "ref": "refs/heads/main",
-        "rev": "f174d719f46a9791e3451169efe65c88d772c36d",
-        "revCount": 65,
+        "rev": "3600349f03a316f627bfc9ae40c693f30dd44f22",
+        "revCount": 72,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/todo-home.git"
       },

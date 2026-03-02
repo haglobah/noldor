@@ -37,7 +37,9 @@
       enable = true;
       repo = "git@github.com:haglobah/todo-home.git";
       branch = "main";
-      interval = "*:0/5"; # every 5 minutes
+      interval = "*:0/1";
+      # This key is added to github
+      sshKeyFile = config.clan.core.vars.generators.openssh.files."ssh.id_ed25519".path;
       frontendFlakeOutput = "frontend-deploy";
     };
   };
