@@ -354,7 +354,8 @@
       gtk.icon.enable = true;
       fzf.enable = true;
       bat.enable = true;
-      cursors.enable = true;
+      # Disable cause rebuilds all the time for ages
+      # cursors.enable = true;
     };
   };
 }
