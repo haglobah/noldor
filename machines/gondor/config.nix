@@ -48,6 +48,7 @@
 
   # Networking
   networking.networkmanager.enable = true;
+  networking.firewall.checkReversePath = false;
 
   # Bluetooth
   hardware.bluetooth.enable = true;
@@ -155,6 +156,8 @@
   # Packages
   environment.systemPackages = with pkgs; [
     git
+    wireguard-tools
+    protonvpn-gui
   ];
 
   environment.gnome.excludePackages = with pkgs; [
