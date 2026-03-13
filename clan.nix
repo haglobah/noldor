@@ -131,9 +131,26 @@
     orthanc =
       { _config, pkgs, ... }:
       {
+        _module.args = { inherit inputs; };
         imports = [
           inputs.home-manager.nixosModules.home-manager
+
+          inputs.todo-home.nixosModules.default
+          ./modules/todo-home.nix
         ];
+
+        environment.systemPackages = with pkgs; [
+          git
+          # Add kitty for correct terminal type
+          kitty
+        ];
+
+        networking.firewall = {
+          allowedTCPPorts = [
+            80
+            443
+          ];
+        };
 
         # Home Manager configuration
         home-manager.useGlobalPkgs = true;
