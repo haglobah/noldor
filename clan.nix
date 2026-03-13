@@ -158,15 +158,15 @@
             home.username = "root";
             home.homeDirectory = "/root";
           };
-          "openclaw" = {
-            imports = [
-              inputs.nix-openclaw.homeManagerModules.openclaw
-              ./home/modules/openclaw.nix
-            ];
-            home.stateVersion = "22.11";
-            home.username = "openclaw";
-            home.homeDirectory = "/home/openclaw";
-          };
+          # "openclaw" = {
+          #   imports = [
+          #     inputs.nix-openclaw.homeManagerModules.openclaw
+          #     ./home/modules/openclaw.nix
+          #   ];
+          #   home.stateVersion = "22.11";
+          #   home.username = "openclaw";
+          #   home.homeDirectory = "/home/openclaw";
+          # };
         };
       };
     formenos =
