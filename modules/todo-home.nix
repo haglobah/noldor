@@ -31,7 +31,6 @@
     frontend = inputs.todo-home.packages.x86_64-linux.frontend-deploy;
     backend = inputs.todo-home.packages.x86_64-linux.backend;
     envFile = config.clan.core.vars.generators.todo-home-env.files.env_file.path;
-    authPort = 13001;
 
     autoUpdate = {
       enable = true;
