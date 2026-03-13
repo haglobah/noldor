@@ -99,6 +99,7 @@
         # a local checkout works for now.
         inputs.gastown.packages.${stdenv.hostPlatform.system}.default
         inputs.beads.packages.${stdenv.hostPlatform.system}.default
+        dolt
         go
 
         # Install globally to make gleam-ts-mode happy
@@ -114,12 +115,11 @@
         markdownlint-cli
 
         # mob programming
-        mob
+        # mob
 
         # other GUI Tools
         pcmanfm # a file viewer that just runs and doesn't wait ages for some search/tracker/miner database job that isn't there
         zed-editor
-        tor-browser
         chromium
         librewolf
         obsidian
