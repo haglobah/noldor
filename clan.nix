@@ -141,7 +141,7 @@
 
         environment.systemPackages = with pkgs; [
           git
-          # Add kitty for correct terminal type
+          # needed for xterm-kitty being available
           kitty
         ];
 
@@ -209,6 +209,7 @@
         environment.systemPackages = with pkgs; [
           git
           kanidm_1_8
+          # needed for xterm-kitty being available
           kitty
         ];
 
