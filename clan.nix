@@ -55,26 +55,26 @@
       };
     };
 
-    monitoring = {
-      module = {
-        name = "monitoring";
-        input = "clan-core";
-      };
+    # monitoring = {
+    #   module = {
+    #     name = "monitoring";
+    #     input = "clan-core";
+    #   };
 
-      roles = {
-        client = {
-          tags = [ "all" ];
-          settings.useSSL = true;
-        };
+    #   roles = {
+    #     client = {
+    #       tags = [ "all" ];
+    #       settings.useSSL = true;
+    #     };
 
-        server.machines."formenos".settings = {
-          grafana.enable = true;
-          host = "monitoring.hagenlocher.me";
-          nginx.defaultHTTPListenPort = 8080;
-          nginx.defaultSSLListenPort = 9443;
-        };
-      };
-    };
+    #     server.machines."formenos".settings = {
+    #       grafana.enable = true;
+    #       host = "monitoring.hagenlocher.me";
+    #       nginx.defaultHTTPListenPort = 8080;
+    #       nginx.defaultSSLListenPort = 9443;
+    #     };
+    #   };
+    # };
 
     # root-password = {
     #   module = {
