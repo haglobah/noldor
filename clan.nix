@@ -200,11 +200,8 @@
           ./modules/audiobookshelf.nix
           # ./modules/code-server.nix
 
-          inputs.todo-home.nixosModules.default
-          ./modules/todo-home.nix
-
           # Only here until the grafana service gets fixed
-          ./modules/grafana-secret.nix
+          # ./modules/grafana-secret.nix
         ];
         environment.systemPackages = with pkgs; [
           git
@@ -242,16 +239,16 @@
         services.caddy = {
           enable = true;
           # Automerge Todo App
-          virtualHosts."todos.hagenlocher.me" = {
-            extraConfig = ''
-              reverse_proxy 127.0.0.1:3000
-            '';
-          };
-          virtualHosts."monitoring.hagenlocher.me" = {
-            extraConfig = ''
-              reverse_proxy 127.0.0.1:8080
-            '';
-          };
+          # virtualHosts."todos.hagenlocher.me" = {
+          #   extraConfig = ''
+          #     reverse_proxy 127.0.0.1:3000
+          #   '';
+          # };
+          # virtualHosts."monitoring.hagenlocher.me" = {
+          #   extraConfig = ''
+          #     reverse_proxy 127.0.0.1:8080
+          #   '';
+          # };
         };
       };
   };
