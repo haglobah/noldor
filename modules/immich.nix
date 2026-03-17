@@ -22,7 +22,7 @@
     services.immich = {
       enable = true;
       host = "0.0.0.0";
-      # machine-learning.enable = false;
+      machine-learning.enable = false;
       openFirewall = true;
     };
 
@@ -44,9 +44,9 @@
         "seal"
         "x-systemd.automount"
         "noauto"
-        "x-systemd.idle-timeout=60s"
         "x-systemd.device-timeout=5s"
         "x-systemd.mount-timeout=5s"
+        "soft"
         "credentials=${config.clan.core.vars.generators.storagebox-immich-secret.files."credentials".path}"
         "uid=immich"
         "gid=immich"
