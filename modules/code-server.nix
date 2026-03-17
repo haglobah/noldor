@@ -4,8 +4,9 @@
     services.caddy = {
       enable = true;
       virtualHosts."code.hagenlocher.me" = {
+        # Needs 'localhost' not 127.0.0.1 since it runs on ipv6?
         extraConfig = ''
-          reverse_proxy 127.0.0.1:4444
+          reverse_proxy localhost:4444
         '';
       };
     };

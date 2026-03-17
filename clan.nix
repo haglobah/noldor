@@ -198,7 +198,7 @@
           ./modules/immich.nix
           ./modules/storagebox-secret.nix
           ./modules/audiobookshelf.nix
-          # ./modules/code-server.nix
+          ./modules/code-server.nix
 
           # Only here until the grafana service gets fixed
           # ./modules/grafana-secret.nix
