@@ -28,12 +28,34 @@
 
     systemd.services.immich-server.serviceConfig.Restart = lib.mkForce "always";
 
-    # systemd.services.immich-server = {
-    #   serviceConfig = {
-    #     Restart = "always";
-    #     RestartSec = 10;
-    #   };
-    # };
+    # Periodically check if the CIFS mount is stale and remount it
+    systemd.services.immich-mount-watchdog = {
+      description = "Check and remount stale Immich CIFS mount";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = pkgs.writeShellScript "immich-mount-watchdog" ''
+          if ${pkgs.util-linux}/bin/mountpoint -q /var/lib/immich; then
+            # Mount exists, check if it's healthy
+            if ! ${pkgs.coreutils}/bin/stat /var/lib/immich/upload --format=%i 2>/dev/null; then
+              echo "Immich mount is stale, remounting..."
+              ${pkgs.util-linux}/bin/umount -l /var/lib/immich || true
+              # Automount will re-trigger on next access
+              ${pkgs.coreutils}/bin/stat /var/lib/immich >/dev/null 2>&1 || true
+              echo "Remount triggered"
+            fi
+          fi
+        '';
+      };
+    };
+    systemd.timers.immich-mount-watchdog = {
+      description = "Periodically check Immich CIFS mount health";
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnBootSec = "2min";
+        OnUnitActiveSec = "2min";
+        RandomizedDelaySec = "30s";
+      };
+    };
 
     environment.systemPackages = [ pkgs.cifs-utils ];
     fileSystems."/var/lib/immich" = {
