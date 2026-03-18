@@ -12,6 +12,7 @@
   imports = [
     ./hardware.nix
     ../../modules/storagebox-secret.nix
+    ../../modules/code-server-multi.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 
