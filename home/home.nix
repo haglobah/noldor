@@ -161,6 +161,7 @@
       ".config/zed/keymap.json".source = dotfiles/zed/keymap.json;
 
       ".claude/settings.json".source = dotfiles/claude/settings.json;
+      ".config/opencode/tui.json".source = dotfiles/opencode/tui.json;
 
       ".mob".source = dotfiles/mob.sh/.mob;
     };
