@@ -12,7 +12,6 @@
   imports = [
     ./hardware.nix
     ../../modules/storagebox-secret.nix
-    ../../modules/python-webserver.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 
