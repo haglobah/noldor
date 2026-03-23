@@ -2,6 +2,7 @@
   inputs,
   config,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -183,10 +184,75 @@
     };
 
     xdg.enable = true;
+    xdg.portal = {
+      enable = true;
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+      config.common.default = "*";
+    };
 
     dconf.settings = {
+      "org/gnome/desktop/input-sources" = {
+        xkb-options = [ "terminate:ctrl_alt_bksp" ];
+      };
+
       "org/gnome/desktop/interface" = {
         color-scheme = "prefer-dark";
+        show-battery-percentage = true;
+        text-scaling-factor = 1.21;
+      };
+
+      "org/gnome/desktop/notifications" = {
+        show-banners = false;
+      };
+
+      "org/gnome/desktop/search-providers" = {
+        disable-external = true;
+      };
+
+      "org/gnome/desktop/session" = {
+        idle-delay = lib.hm.gvariant.mkUint32 0;
+      };
+
+      "org/gnome/desktop/wm/keybindings" = {
+        activate-window-menu = [ ];
+        minimize = [ ];
+        switch-windows = [ "<Super>Tab" ];
+        switch-windows-backward = [ "<Shift><Super>Tab" ];
+      };
+
+      "org/gnome/desktop/wm/preferences" = {
+        button-layout = "appmenu:close";
+      };
+
+      "org/gnome/nautilus/list-view" = {
+        use-tree-view = true;
+      };
+
+      "org/gnome/nautilus/preferences" = {
+        default-folder-viewer = "list-view";
+      };
+
+      "org/gnome/settings-daemon/plugins/media-keys" = {
+        custom-keybindings = [ "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/" ];
+      };
+
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+        binding = "<Shift><Super>n";
+        command = let
+          toggle = pkgs.writeShellScript "toggle-night-light" ''
+            current=$(gsettings get org.gnome.settings-daemon.plugins.color night-light-enabled)
+            if [ "$current" = "true" ]; then
+              gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled false
+            else
+              gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
+            fi
+          '';
+        in toString toggle;
+        name = "Toggle Night Light";
+      };
+
+      "org/gnome/settings-daemon/plugins/power" = {
+        idle-dim = false;
       };
 
       "org/gnome/shell" = {
