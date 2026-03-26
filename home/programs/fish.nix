@@ -73,6 +73,9 @@
         "wh" = "which";
         "wha" = "type --all";
 
+        # REVIEW: At some point I shouldn't need this anymore.
+        "ir" = "ibus restart";
+
         "j" = "just";
         "js" = "just setup";
         "jd" = "just dev";
