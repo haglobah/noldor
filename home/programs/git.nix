@@ -28,6 +28,7 @@
         ".\\#*"
         ".dir-locals.el"
       ];
+      signing.format = "ssh";
       settings = {
         user.email = "bah@posteo.de";
         user.name = "Beat Hagenlocher";
