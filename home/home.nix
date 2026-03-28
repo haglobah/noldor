@@ -89,7 +89,7 @@
         aider-chat-with-playwright
         python314
         claude-code
-        claude-code-acp
+        claude-agent-acp
         codex
         codex-acp
         gemini-cli
@@ -233,21 +233,25 @@
       };
 
       "org/gnome/settings-daemon/plugins/media-keys" = {
-        custom-keybindings = [ "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/" ];
+        custom-keybindings = [
+          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+        ];
       };
 
       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
         binding = "<Shift><Super>n";
-        command = let
-          toggle = pkgs.writeShellScript "toggle-night-light" ''
-            current=$(gsettings get org.gnome.settings-daemon.plugins.color night-light-enabled)
-            if [ "$current" = "true" ]; then
-              gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled false
-            else
-              gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
-            fi
-          '';
-        in toString toggle;
+        command =
+          let
+            toggle = pkgs.writeShellScript "toggle-night-light" ''
+              current=$(gsettings get org.gnome.settings-daemon.plugins.color night-light-enabled)
+              if [ "$current" = "true" ]; then
+                gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled false
+              else
+                gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
+              fi
+            '';
+          in
+          toString toggle;
         name = "Toggle Night Light";
       };
 
