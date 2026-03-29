@@ -84,6 +84,7 @@
           {
             devShells.default = pkgs.mkShell {
               packages = [
+                pkgs.just
                 pkgs.nixfmt
                 clan-core.packages.${system}.clan-cli
                 pkgs.kanidm_1_8
