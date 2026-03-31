@@ -1,7 +1,7 @@
 formenos:
     clan ssh formenos -c fish
 
-ortanc:
+orthanc:
     clan ssh orthanc -c fish
 
 storage-box:
