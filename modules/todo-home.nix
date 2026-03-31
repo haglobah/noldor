@@ -4,6 +4,9 @@
   inputs,
   ...
 }:
+let
+  stateDir = "/var/lib/todo-home";
+in
 {
   clan.core.vars.generators = {
     todo-home-env = {
@@ -25,11 +28,17 @@
     };
   };
 
+  clan.core.state.todo-home = {
+    folders = [
+      stateDir
+    ];
+  };
   services.todo-home = {
     enable = true;
     domain = "todos.humane.tools";
     frontend = inputs.todo-home.packages.x86_64-linux.frontend-deploy;
     backend = inputs.todo-home.packages.x86_64-linux.backend;
+    dataDir = stateDir;
     envFile = config.clan.core.vars.generators.todo-home-env.files.env_file.path;
 
     autoUpdate = {
