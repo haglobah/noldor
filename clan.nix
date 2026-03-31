@@ -95,7 +95,13 @@
       };
       roles.client.machines."formenos".settings = {
         destinations."storagebox" = {
-          repo = "u366465-sub5@u366465-sub5.your-storagebox.de:/./borgbackup";
+          repo = "u366465-sub5@u366465-sub5.your-storagebox.de:/./borgbackup/formenos";
+          rsh = "ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/borgbackup/borgbackup.ssh";
+        };
+      };
+      roles.client.machines."orthanc".settings = {
+        destinations."storagebox" = {
+          repo = "u366465-sub5@u366465-sub5.your-storagebox.de:/./borgbackup/orthanc";
           rsh = "ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/borgbackup/borgbackup.ssh";
         };
       };
