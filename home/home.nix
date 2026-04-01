@@ -378,7 +378,6 @@
 
           search = {
             force = true;
-            default = "Kagi";
             engines = {
               "Kagi" = {
                 urls = [
