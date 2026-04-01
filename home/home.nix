@@ -375,6 +375,26 @@
 
           extensions.packages = extensionPkgs;
           extensions.force = true;
+
+          search = {
+            force = true;
+            default = "Kagi";
+            engines = {
+              "Kagi" = {
+                urls = [
+                  {
+                    template = "https://kagi.com/search?";
+                    params = [
+                      {
+                        name = "q";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+              };
+            };
+          };
         };
       };
 
