@@ -392,6 +392,9 @@
                     ];
                   }
                 ];
+                iconUpdateURL = "https://assets.kagi.com/v2/favicon-32x32.png";
+                updateInterval = 24 * 60 * 60 * 1000; # every day
+                definedAliases = [ "@kg" ];
               };
             };
           };
