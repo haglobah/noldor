@@ -3,7 +3,8 @@
     "allow": [
       "Bash(tree:*)",
       "Bash(nix flake check:*)",
-      "Bash(dconf dump:*)"
+      "Bash(dconf dump:*)",
+      "WebFetch(domain:docs.clan.lol)"
     ]
   }
 }
