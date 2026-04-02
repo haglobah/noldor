@@ -64,9 +64,12 @@
         "c" = "clan";
         "cs" = "clan ssh";
         "csf" = "clan ssh formenos -c fish";
+        "cso" = "clan ssh orthanc -c fish";
         "cv" = "clan vars";
         "cm" = "clan machines";
         "cmu" = "clan machines update";
+        "cmf" = "clan machines formenos";
+        "cmo" = "clan machines orthanc";
 
         "v" = "nvim .";
         "rgl" = "rg --line-number --context=2";
