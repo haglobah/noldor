@@ -86,6 +86,8 @@
               packages = [
                 pkgs.just
                 pkgs.nixfmt
+                # needed for backup testing
+                pkgs.borgbackup
                 clan-core.packages.${system}.clan-cli
                 pkgs.kanidm_1_8
               ];
