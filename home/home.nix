@@ -187,8 +187,18 @@
     xdg.enable = true;
     xdg.portal = {
       enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-      config.common.default = "*";
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gtk
+        pkgs.xdg-desktop-portal-gnome
+      ];
+      config.common = {
+        # Default to the gtk backend (honors mimeapps.list, works without
+        # Nautilus). Only route screen sharing to the gnome backend, since
+        # Mutter is the only implementation that works under Wayland.
+        default = "gtk";
+        "org.freedesktop.impl.portal.ScreenCast" = "gnome";
+        "org.freedesktop.impl.portal.RemoteDesktop" = "gnome";
+      };
     };
 
     dconf.settings = {
@@ -392,7 +402,7 @@
                     ];
                   }
                 ];
-                iconUpdateURL = "https://assets.kagi.com/v2/favicon-32x32.png";
+                icon = "https://assets.kagi.com/v2/favicon-32x32.png";
                 updateInterval = 24 * 60 * 60 * 1000; # every day
                 definedAliases = [ "@kg" ];
               };
