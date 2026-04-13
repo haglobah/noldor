@@ -14,23 +14,12 @@ in
       files = {
         "env_file" = { };
       };
-      prompts."secret-key-base" = {
-        type = "line";
-        description = "The Phoenix secret key base (generate with: mix phx.gen.secret)";
-      };
-      prompts."database-username" = {
-        type = "line";
-        description = "The SurrealDB root username";
-      };
-      prompts."database-password" = {
-        type = "line";
-        description = "The SurrealDB root password";
-      };
+      runtimeInputs = [ pkgs.openssl ];
       script = ''
         cat > "$out/env_file" <<here
-        SECRET_KEY_BASE=$(cat $prompts/secret-key-base)
-        DATABASE_USERNAME=$(cat $prompts/database-username)
-        DATABASE_PASSWORD=$(cat $prompts/database-password)
+        SECRET_KEY_BASE=$(openssl rand -base64 32)
+        DATABASE_USERNAME=colab
+        DATABASE_PASSWORD=$(openssl rand -base64 32)
         here
       '';
     };
