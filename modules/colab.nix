@@ -33,7 +33,7 @@ in
 
   services.colab = {
     enable = true;
-    domain = "zelium.io";
+    domain = "dev.zelium.io";
     dataDir = stateDir;
     envFile = config.clan.core.vars.generators.colab-env.files.env_file.path;
     repo = "git@github.com:haglobah/colab.git";
