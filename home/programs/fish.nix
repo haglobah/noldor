@@ -68,8 +68,8 @@
         "cv" = "clan vars";
         "cm" = "clan machines";
         "cmu" = "clan machines update";
-        "cmf" = "clan machines formenos";
-        "cmo" = "clan machines orthanc";
+        "cmf" = "clan machines update formenos";
+        "cmo" = "clan machines update orthanc";
 
         "v" = "nvim .";
         "rgl" = "rg --line-number --context=2";
