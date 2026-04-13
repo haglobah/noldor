@@ -143,6 +143,9 @@
 
           inputs.todo-home.nixosModules.default
           ./modules/todo-home.nix
+
+          inputs.colab.nixosModules.default
+          ./modules/colab.nix
         ];
 
         environment.systemPackages = with pkgs; [

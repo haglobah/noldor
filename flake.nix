@@ -47,6 +47,7 @@
     beads.url = "github:haglobah/beads";
     nix-openclaw.url = "github:openclaw/nix-openclaw";
     todo-home.url = "git+ssh://git@github.com/haglobah/todo-home.git";
+    colab.url = "git+ssh://git@github.com/haglobah/colab.git?ref=noldor-deploy";
   };
 
   outputs =
