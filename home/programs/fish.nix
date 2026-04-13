@@ -90,6 +90,9 @@
         "jod" = "just open chromium && just dev";
         "joa" = "just open chromium && just all";
 
+        "jc" = "journalctl";
+        "sc" = "systemctl";
+
         "k" = "kubectl";
         "kg" = "kubectl get";
         "kd" = "kubectl describe";

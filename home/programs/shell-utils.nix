@@ -10,6 +10,7 @@
     cachix
     dua
     nix-output-monitor
+    systemctl-tui
   ];
 
   programs.direnv = {
