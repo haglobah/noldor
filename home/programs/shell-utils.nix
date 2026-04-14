@@ -11,6 +11,7 @@
     dua
     nix-output-monitor
     systemctl-tui
+    lazyjournal
   ];
 
   programs.direnv = {
