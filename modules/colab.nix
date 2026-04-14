@@ -9,7 +9,7 @@ let
 in
 {
   clan.core.vars.generators = {
-    colab-env = {
+    colabEnv = {
       share = true;
       files = {
         "env_file" = { };
@@ -17,7 +17,7 @@ in
       runtimeInputs = [ pkgs.openssl ];
       script = ''
         cat > "$out/env_file" <<here
-        SECRET_KEY_BASE=$(openssl rand -base64 32)
+        SECRET_KEY_BASE=$(openssl rand -base64 64 | tr -d '\n')
         DATABASE_USERNAME=colab
         DATABASE_PASSWORD=$(openssl rand -base64 32)
         here
@@ -35,7 +35,7 @@ in
     enable = true;
     domain = "dev.zelium.io";
     dataDir = stateDir;
-    envFile = config.clan.core.vars.generators.colab-env.files.env_file.path;
+    envFile = config.clan.core.vars.generators.colabEnv.files.env_file.path;
     repo = "git@github.com:haglobah/colab.git";
     branch = "noldor-deploy";
     sshKeyFile = config.clan.core.vars.generators.openssh.files."ssh.id_ed25519".path;

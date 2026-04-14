@@ -350,11 +350,11 @@
         "nixpkgs-unstable": "nixpkgs-unstable"
       },
       "locked": {
-        "lastModified": 1776118942,
-        "narHash": "sha256-kiTRhxRgt9cBwccUvkAE+VGH9DxeSD4WUlu36N4u9hY=",
+        "lastModified": 1776121883,
+        "narHash": "sha256-vzyKRsPTfDMu+tcKxjeH39rHlv41H+KBrAoWkfY8Myg=",
         "ref": "noldor-deploy",
-        "rev": "f09e226f06de12d2c69b7e845adb4903cb0d5bd2",
-        "revCount": 514,
+        "rev": "93df273c968e9d195d464a9c74312a0757f9912b",
+        "revCount": 523,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/colab.git"
       },
