@@ -8,6 +8,7 @@ let
   stateDir = "/var/lib/colab";
 in
 {
+  environment.systemPackages = [ pkgs.surrealdb ];
   clan.core.vars.generators = {
     colabEnv = {
       share = true;
