@@ -2417,11 +2417,11 @@
         "nixpkgs": "nixpkgs_21"
       },
       "locked": {
-        "lastModified": 1776109572,
-        "narHash": "sha256-HiAoKFqJfDE/klrsgeDjPhIjpuue7bO/3ypli/EcuVE=",
+        "lastModified": 1776632990,
+        "narHash": "sha256-rpThMSsfsmU8MbLghzVpTSVCTUZETxwKkbGeF/G1ceM=",
         "ref": "refs/heads/main",
-        "rev": "dca77b62a7e1598c8ec556a311a1aa0745641579",
-        "revCount": 230,
+        "rev": "8bea940b3ce3fb467ce59a267a1628210568958e",
+        "revCount": 246,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/todo-home.git"
       },

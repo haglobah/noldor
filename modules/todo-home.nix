@@ -9,32 +9,45 @@ let
 in
 {
   clan.core.vars.generators = {
-    todo-home-env = {
+    todo-home-better-auth = {
       share = true;
-      files = {
-        "env_file" = { };
-      };
+      files."env_file" = { };
+      runtimeInputs = [ pkgs.openssl ];
+      script = ''
+        echo "BETTER_AUTH_SECRET=$(openssl rand -base64 32)" > "$out/env_file"
+      '';
+    };
+    todo-home-resend = {
+      share = true;
+      files."env_file" = { };
       prompts."resend-api-key" = {
         type = "line";
         description = "The resend api key";
       };
-      prompts."creem-webhook-secret" = {
-        type = "line";
-        description = "The creem webhook secret";
-      };
+      script = ''
+        echo "RESEND_API_KEY=$(cat $prompts/resend-api-key)" > "$out/env_file"
+      '';
+    };
+    todo-home-creem-api = {
+      share = true;
+      files."env_file" = { };
       prompts."creem-api-key" = {
         type = "line";
         description = "The creem api key";
       };
-      runtimeInputs = [ pkgs.openssl ];
       script = ''
-        cat > "$out/env_file" <<here
-        RESEND_API_KEY=$(cat $prompts/resend-api-key)
-        BETTER_AUTH_SECRET=$(openssl rand -base64 32)
-
-        CREEM_API_KEY=$(cat $prompts/creem-api-key)
-        CREEM_WEBHOOK_SECRET=$(cat $prompts/creem-webhook-secret)
-        here
+        echo "CREEM_API_KEY=$(cat $prompts/creem-api-key)" > "$out/env_file"
+      '';
+    };
+    todo-home-creem-webhook = {
+      share = true;
+      files."env_file" = { };
+      prompts."creem-webhook-secret" = {
+        type = "line";
+        description = "The creem webhook secret";
+      };
+      script = ''
+        echo "CREEM_WEBHOOK_SECRET=$(cat $prompts/creem-webhook-secret)" > "$out/env_file"
       '';
     };
   };
@@ -50,7 +63,12 @@ in
     frontend = inputs.todo-home.packages.x86_64-linux.frontend-deploy;
     backend = inputs.todo-home.packages.x86_64-linux.backend;
     dataDir = stateDir;
-    envFile = config.clan.core.vars.generators.todo-home-env.files.env_file.path;
+    envFiles = [
+      config.clan.core.vars.generators.todo-home-better-auth.files.env_file.path
+      config.clan.core.vars.generators.todo-home-resend.files.env_file.path
+      config.clan.core.vars.generators.todo-home-creem-api.files.env_file.path
+      config.clan.core.vars.generators.todo-home-creem-webhook.files.env_file.path
+    ];
 
     autoUpdate = {
       enable = true;
