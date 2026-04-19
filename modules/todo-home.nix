@@ -18,11 +18,22 @@ in
         type = "line";
         description = "The resend api key";
       };
+      prompts."creem-webhook-secret" = {
+        type = "line";
+        description = "The creem webhook secret";
+      };
+      prompts."creem-api-key" = {
+        type = "line";
+        description = "The creem api key";
+      };
       runtimeInputs = [ pkgs.openssl ];
       script = ''
         cat > "$out/env_file" <<here
         RESEND_API_KEY=$(cat $prompts/resend-api-key)
         BETTER_AUTH_SECRET=$(openssl rand -base64 32)
+
+        CREEM_API_KEY=$(cat $prompts/creem-api-key)
+        CREEM_WEBHOOK_SECRET=$(cat $prompts/creem-webhook-secret)
         here
       '';
     };
