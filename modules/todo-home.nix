@@ -6,6 +6,13 @@
 }:
 let
   stateDir = "/var/lib/todo-home";
+  envFiles = [
+    config.clan.core.vars.generators.todo-home-better-auth.files.env_file.path
+    config.clan.core.vars.generators.todo-home-resend.files.env_file.path
+    config.clan.core.vars.generators.todo-home-creem-api.files.env_file.path
+    config.clan.core.vars.generators.todo-home-creem-webhook.files.env_file.path
+  ];
+  sshKey = config.clan.core.vars.generators.openssh.files."ssh.id_ed25519".path;
 in
 {
   clan.core.vars.generators = {
@@ -57,27 +64,51 @@ in
       stateDir
     ];
   };
-  services.todo-home = {
+  services.todo-home.prod = {
     enable = true;
     domain = "todos.humane.tools";
     frontend = inputs.todo-home.packages.x86_64-linux.frontend-deploy;
     backend = inputs.todo-home.packages.x86_64-linux.backend;
     dataDir = stateDir;
-    envFiles = [
-      config.clan.core.vars.generators.todo-home-better-auth.files.env_file.path
-      config.clan.core.vars.generators.todo-home-resend.files.env_file.path
-      config.clan.core.vars.generators.todo-home-creem-api.files.env_file.path
-      config.clan.core.vars.generators.todo-home-creem-webhook.files.env_file.path
-    ];
+    envFiles = envFiles;
+    authPort = 3001;
+    syncPort = 3030;
+
+    autoUpdate = {
+      enable = true;
+      repo = "git@github.com:haglobah/todo-home.git";
+      strategy = "tag";
+      tagPattern = "v*";
+      # This key is added to github
+      sshKeyFile = sshKey;
+      # NOTE: This is the derivation the autoupdater tries to build.
+      # Optimally, I'd like this to be derived from `services.todo-home.<name>.frontend`,
+      # and get rid of the sync server coupling in todo-home/flake.nix
+      frontendFlakeOutput = "frontend-deploy";
+    };
+  };
+  services.todo-home.dev = {
+    enable = true;
+    domain = "dev.todos.humane.tools";
+    frontend = inputs.todo-home.packages.x86_64-linux.frontend.override {
+      syncServerUrl = "wss://dev.todos.humane.tools/sync";
+    };
+    backend = inputs.todo-home.packages.x86_64-linux.backend;
+    dataDir = stateDir;
+    envFiles = envFiles;
+    authPort = 3101;
+    syncPort = 3130;
 
     autoUpdate = {
       enable = true;
       repo = "git@github.com:haglobah/todo-home.git";
       branch = "main";
-      interval = "*:0/1";
       # This key is added to github
-      sshKeyFile = config.clan.core.vars.generators.openssh.files."ssh.id_ed25519".path;
-      frontendFlakeOutput = "frontend-deploy";
+      sshKeyFile = sshKey;
+      # NOTE: This is the derivation the autoupdater tries to build.
+      # Optimally, I'd like this to be derived from `services.todo-home.<name>.frontend`,
+      # and get rid of the sync server coupling in todo-home/flake.nix
+      frontendFlakeOutput = "frontend-deploy-dev";
     };
   };
 }
