@@ -103,6 +103,7 @@ in
       enable = true;
       repo = "git@github.com:haglobah/todo-home.git";
       branch = "main";
+      interval = "*:0/1";
       # This key is added to github
       sshKeyFile = sshKey;
       # NOTE: This is the derivation the autoupdater tries to build.
