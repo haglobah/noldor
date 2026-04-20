@@ -5,7 +5,6 @@
   ...
 }:
 let
-  stateDir = "/var/lib/todo-home";
   envFiles = [
     config.clan.core.vars.generators.todo-home-better-auth.files.env_file.path
     config.clan.core.vars.generators.todo-home-resend.files.env_file.path
@@ -61,7 +60,8 @@ in
 
   clan.core.state.todo-home = {
     folders = [
-      stateDir
+      config.services.todo-home.prod.dataDir
+      config.services.todo-home.dev.dataDir
     ];
   };
   services.todo-home.prod = {
@@ -69,7 +69,6 @@ in
     domain = "todos.humane.tools";
     frontend = inputs.todo-home.packages.x86_64-linux.frontend-deploy;
     backend = inputs.todo-home.packages.x86_64-linux.backend;
-    dataDir = stateDir;
     envFiles = envFiles;
     authPort = 3001;
     syncPort = 3030;
@@ -94,7 +93,6 @@ in
       syncServerUrl = "wss://dev.todos.humane.tools/sync";
     };
     backend = inputs.todo-home.packages.x86_64-linux.backend;
-    dataDir = stateDir;
     envFiles = envFiles;
     authPort = 3101;
     syncPort = 3130;
