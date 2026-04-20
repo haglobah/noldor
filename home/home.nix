@@ -205,6 +205,9 @@
       };
 
       "org/gnome/desktop/interface" = {
+        clock-format = "24h";
+        clock-show-date = true;
+        clock-show-seconds = true;
         color-scheme = "prefer-dark";
         show-battery-percentage = true;
         text-scaling-factor = 1.21;
