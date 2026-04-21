@@ -184,6 +184,9 @@
     dedicatedServer.openFirewall = true;
   };
 
+  programs.ausweisapp.enable = true;
+  programs.ausweisapp.openFirewall = true;
+
   # Mount for storage box
   fileSystems."/mnt/share" = {
     device = "//u366465.your-storagebox.de/backup";
