@@ -24,6 +24,15 @@
       X-GNOME-Autostart-enabled=true
       OnlyShowIn=GNOME;
     '';
+    ".config/autostart/todos-humane-tools.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=todos.humane.tools
+      Comment=Start the todos.humane.tools PWA
+      Exec=chromium-browser --app=https://todos.humane.tools
+      X-GNOME-Autostart-enabled=true
+      OnlyShowIn=GNOME;
+    '';
 
     ".config/autostart/linphone.desktop".source = "${
       inputs.nixpkgs-24-11.legacyPackages."x86_64-linux".linphone
