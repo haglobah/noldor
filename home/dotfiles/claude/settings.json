@@ -1,5 +1,5 @@
 {
-    "hooks": {
+  "hooks": {
     "Notification": [
       {
         "matcher": "*",
@@ -11,5 +11,9 @@
         ]
       }
     ]
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
   }
 }
