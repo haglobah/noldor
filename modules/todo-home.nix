@@ -56,6 +56,17 @@ in
         echo "CREEM_WEBHOOK_SECRET=$(cat $prompts/creem-webhook-secret)" > "$out/env_file"
       '';
     };
+    todo-home-creem-product-id-sync-monthly = {
+      share = true;
+      files."env_file" = { };
+      prompts."creem-product-id-sync-monthly" = {
+        type = "line";
+        description = "The product id of the monthly sync payment option";
+      };
+      script = ''
+        echo "CREEM_PRODUCT_ID_SYNC_MONTHLY=$(cat $prompts/creem-product-id-sync-monthly)" > "$out/env_file"
+      '';
+    };
   };
 
   clan.core.state.todo-home = {
