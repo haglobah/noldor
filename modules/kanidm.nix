@@ -32,7 +32,7 @@
   };
   services.kanidm = {
 
-    package = pkgs.kanidmWithSecretProvisioning_1_8;
+    package = pkgs.kanidmWithSecretProvisioning_1_10;
 
     server.enable = true;
     server.settings = {

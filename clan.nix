@@ -214,7 +214,7 @@
         ];
         environment.systemPackages = with pkgs; [
           git
-          kanidm_1_8
+          kanidm_1_10
           # needed for xterm-kitty being available
           kitty
         ];
