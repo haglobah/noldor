@@ -90,7 +90,7 @@
                 # needed for backup testing
                 pkgs.borgbackup
                 clan-core.packages.${system}.clan-cli
-                pkgs.kanidm_1_8
+                pkgs.kanidm_1_10
               ];
 
               shellHook = ''
