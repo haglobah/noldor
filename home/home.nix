@@ -94,6 +94,8 @@
         codex-acp
         gemini-cli
         opencode
+        # For claude code voice mode
+        sox
 
         # NOTE: Enable gastown as soon as go 1.25.6 is here
         # Even though go 1.25.7 is here, the derivation is still broken –
@@ -159,8 +161,6 @@
       ".config/zed/settings.json".source = dotfiles/zed/settings.json;
       ".config/zed/keymap.json".source = dotfiles/zed/keymap.json;
 
-      ".claude/settings.json".source = dotfiles/claude/settings.json;
-      ".claude/CLAUDE.md".source = dotfiles/claude/CLAUDE.md;
       ".config/opencode/tui.json".source = dotfiles/opencode/tui.json;
 
       ".mob".source = dotfiles/mob.sh/.mob;
