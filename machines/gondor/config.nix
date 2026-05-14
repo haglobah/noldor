@@ -12,6 +12,7 @@
   imports = [
     ./hardware.nix
     ../../modules/storagebox-secret.nix
+    ../../modules/ollama.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 
