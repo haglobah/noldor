@@ -1,8 +1,11 @@
+{ pkgs, ... }:
 {
   config = {
     services.ollama = {
       enable = true;
-      loadModels = [ "gemma4:4b" ];
+      package = pkgs.ollama-rocm;
+      rocmOverrideGfx = "11.0.0";
+      loadModels = [ "gemma4:e4b" ];
     };
   };
 }
