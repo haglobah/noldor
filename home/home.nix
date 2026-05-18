@@ -390,6 +390,10 @@
         };
       };
 
+      searchEngines = {
+        c = "https://claude.ai/new?q=%s Claude";
+      };
+
       exclusionRules = [
         {
           passKeys = "";
