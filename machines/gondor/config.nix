@@ -13,6 +13,7 @@
     ./hardware.nix
     ../../modules/storagebox-secret.nix
     ../../modules/ollama.nix
+    ../../modules/donethat.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 
@@ -176,6 +177,9 @@
     gnome-contacts
     gnome-initial-setup
   ];
+
+  programs.appimage.enable = true;
+  programs.appimage.binfmt = true;
 
   programs.dconf.enable = true;
 

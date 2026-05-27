@@ -133,6 +133,9 @@
         teams-for-linux
         slack
 
+        # DoneThat
+        gnome-screenshot
+
         # Useful for login networks: https://discourse.nixos.org/t/does-wifionice-wifi-on-deutsche-bahn-german-railway-work-for-you/41646
         captive-browser
 
