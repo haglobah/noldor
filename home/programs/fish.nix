@@ -58,6 +58,7 @@
           expansion = "nix develop % -c fish";
           setCursor = true;
         };
+        "ns" = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
 
         "co" = "claude --model opus";
 
