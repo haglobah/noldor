@@ -37,7 +37,7 @@
       Type=Application
       Version=1.0
       Name=DoneThat
-      Exec=${(import ../programs/donethat.nix { inherit pkgs; })} --no-sandbox
+      Exec=${(import ../programs/donethat.nix { inherit pkgs; })}/bin/donethat --no-sandbox
       Terminal=false
       X-GNOME-Autostart-enabled=true
       X-GNOME-Autostart-Delay=5
