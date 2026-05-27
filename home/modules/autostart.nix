@@ -3,7 +3,6 @@
   inputs,
   ...
 }:
-
 {
   home.file = {
     ".config/autostart/kitty-autostart.desktop".text = ''
@@ -32,6 +31,16 @@
       Exec=chromium-browser --app=https://todos.humane.tools
       X-GNOME-Autostart-enabled=true
       OnlyShowIn=GNOME;
+    '';
+    ".config/autostart/donethat.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Version=1.0
+      Name=DoneThat
+      Exec=${(import ../programs/donethat.nix { inherit pkgs; })} --no-sandbox
+      Terminal=false
+      X-GNOME-Autostart-enabled=true
+      X-GNOME-Autostart-Delay=5
     '';
 
     ".config/autostart/linphone.desktop".source = "${
