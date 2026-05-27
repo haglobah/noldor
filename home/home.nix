@@ -381,8 +381,6 @@
       keyMappings = {
         unmapAll = true;
         map = {
-          n = "goBack";
-          e = "goForward";
           l = "scrollPageDown";
           u = "scrollPageUp";
           f = "LinkHints.activateMode";
@@ -398,14 +396,6 @@
         {
           passKeys = "";
           pattern = "https?://mail.google.com/*";
-        }
-        {
-          passKeys = "n";
-          pattern = "https?://focus.nirvanahq.com/*";
-        }
-        {
-          passKeys = "n";
-          pattern = "https?://app.mochi.cards/*";
         }
       ];
     };
