@@ -344,6 +344,8 @@
       in
       {
         enable = true;
+        # TODO: replace with ${config.xdg.configHome}/mozilla/firefox, and then delete the former at some point
+        configPath = ".mozilla/firefox";
         profiles.beat = {
           isDefault = true;
           id = 0;
