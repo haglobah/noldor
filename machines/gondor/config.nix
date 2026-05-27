@@ -13,7 +13,6 @@
     ./hardware.nix
     ../../modules/storagebox-secret.nix
     ../../modules/ollama.nix
-    ../../modules/donethat.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 

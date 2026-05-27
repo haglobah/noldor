@@ -134,7 +134,11 @@
         slack
 
         # DoneThat
-        gnome-screenshot
+        (import ./programs/donethat.nix { inherit pkgs; })
+        # gnome-screenshot is non-functional on GNOME Wayland (silent no-op).
+        # donethat-screenshot wraps Recursing's portal-based capture script;
+        # point donethat's screenshot tool setting at `donethat-screenshot -f "%s"`.
+        (import ./programs/donethat-screenshot.nix { inherit pkgs; })
 
         # Useful for login networks: https://discourse.nixos.org/t/does-wifionice-wifi-on-deutsche-bahn-german-railway-work-for-you/41646
         captive-browser
