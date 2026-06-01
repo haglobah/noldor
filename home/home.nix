@@ -27,6 +27,7 @@
     ./programs/fish.nix
     ./programs/shell-utils.nix
     ./programs/starship.nix
+    ./programs/obs.nix
   ];
 
   config = {
