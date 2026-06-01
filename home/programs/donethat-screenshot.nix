@@ -33,9 +33,6 @@ let
     Based on Recursing's gist linked from donethat.ai/install/linux:
     https://gist.github.com/Recursing/813aee5bfa27b521a720d7c1eba3cb03
     """
-    import os
-    os.environ["DESKTOP_FILE_ID"] = "donethat-screenshot"
-
     import argparse
     import json
     import sys
@@ -192,6 +189,9 @@ in
 pkgs.writeShellApplication {
   name = "donethat-screenshot";
   text = ''
+    # Set at exec time so xdg-desktop-portal sees it in /proc/<pid>/environ
+    # (in-process os.environ updates don't propagate there).
+    export DESKTOP_FILE_ID=donethat-screenshot
     export GST_PLUGIN_SYSTEM_PATH_1_0="${gstPluginPath}''${GST_PLUGIN_SYSTEM_PATH_1_0:+:$GST_PLUGIN_SYSTEM_PATH_1_0}"
     export GI_TYPELIB_PATH="${typelibPath}''${GI_TYPELIB_PATH:+:$GI_TYPELIB_PATH}"
     exec ${python}/bin/python3 ${script} "$@"
