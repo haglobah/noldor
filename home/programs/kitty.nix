@@ -19,7 +19,8 @@
     keybindings = {
       "ctrl+shift+space" = "push_keyboard_mode scroll";
       "ctrl+t" = "launch --cwd=current --type=tab";
-      "ctrl+alt+c" = "launch --cwd=current --type=tab claude --model opus";
+      "ctrl+alt+c" =
+        "launch --cwd=current --type=tab fish --interactive --init-command \"direnv exec . claude --model opus\"";
       "alt+left" = "prev_tab";
       "alt+right" = "next_tab";
       "alt+shift+left" = "move_tab_backward";
