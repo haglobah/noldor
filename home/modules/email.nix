@@ -49,7 +49,6 @@
         };
       };
       posteo = {
-        primary = true;
         address = "hagenlob@posteo.de";
         realName = "Beat Hagenlocher";
         userName = "hagenlob@posteo.de";

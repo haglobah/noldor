@@ -10,11 +10,11 @@
         "rapid": "rapid"
       },
       "locked": {
-        "lastModified": 1777881248,
-        "narHash": "sha256-hP/Fa6/U3r7vUgNyv03Mse8KuVCmD4FOLlFiGHQYPnU=",
+        "lastModified": 1779260155,
+        "narHash": "sha256-wvleKQU4B+UOdSBSPjjrdZuiro8s9Yie1i/RJuMI9DI=",
         "ref": "refs/heads/main",
-        "rev": "51060a71648993ac6b84ca80b61bb41134859c1a",
-        "revCount": 638,
+        "rev": "1ed1d4879de635f8619ec4fa92423d0094440aef",
+        "revCount": 671,
         "type": "git",
         "url": "ssh://git@gitlab.active-group.de/ag/active-accounting.git"
       },
@@ -53,11 +53,11 @@
         "nixpkgs": "nixpkgs_16"
       },
       "locked": {
-        "lastModified": 1773127874,
-        "narHash": "sha256-HyeORnsVICgtxu8jStphG3CBBw7Nw2YnM0lllhukDkw=",
+        "lastModified": 1777226828,
+        "narHash": "sha256-BAMlnbJs/oIHmGV0cQBlz7jE+UeMPHsNlcRyG2v2O2Q=",
         "ref": "refs/heads/main",
-        "rev": "487280678e4e606e1f8b8d1b24e3b76b706ed93f",
-        "revCount": 266,
+        "rev": "4cdd2b6ab9b1861c067bf43070df2296290fa068",
+        "revCount": 270,
         "type": "git",
         "url": "ssh://git@gitlab.active-group.de/ag/active-timetracking.git"
       },
@@ -734,11 +734,11 @@
         "nixpkgs-lib": "nixpkgs-lib_13"
       },
       "locked": {
-        "lastModified": 1775087534,
-        "narHash": "sha256-91qqW8lhL7TLwgQWijoGBbiD4t7/q75KTi8NxjVmSmA=",
+        "lastModified": 1778716662,
+        "narHash": "sha256-m1Yf0wZ8j1OHjTc2UwHwyQRSnNeSgLJOd7q5Y45hzi4=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "3107b77cd68437b9a76194f0f7f9c55f2329ca5b",
+        "rev": "f7c1a2d347e4c52d5fb8d10cb4d94b5884e546fb",
         "type": "github"
       },
       "original": {
@@ -1556,11 +1556,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777881379,
-        "narHash": "sha256-3OWml+6BZVm42J2tviQoF4WDfDexyrogU67ATE8NlpA=",
+        "lastModified": 1781096343,
+        "narHash": "sha256-/SeHgcbx/99wpjGj4xIHB/HjbQCdXjwhuVf0yI0LCZA=",
         "owner": "active-group",
         "repo": "nix-starter-kit",
-        "rev": "9cfa91e6d95e46fae6c2957f1d0afc563814d1b3",
+        "rev": "7628504c96b191bab4924272f8ed7e25ccfd6b25",
         "type": "github"
       },
       "original": {
@@ -1660,11 +1660,11 @@
     },
     "nixpkgs-lib_13": {
       "locked": {
-        "lastModified": 1774748309,
-        "narHash": "sha256-+U7gF3qxzwD5TZuANzZPeJTZRHS29OFQgkQ2kiTJBIQ=",
+        "lastModified": 1777168982,
+        "narHash": "sha256-GOkGPcboWE9BmGCRMLX3worL4EMnsnG8MyKmXNeYuhQ=",
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "rev": "333c4e0545a6da976206c74db8773a1645b5870a",
+        "rev": "f5901329dade4a6ea039af1433fb087bd9c1fe14",
         "type": "github"
       },
       "original": {

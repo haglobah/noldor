@@ -10,13 +10,12 @@
     inputs.nix-index-database.homeModules.nix-index
     inputs.catppuccin.homeModules.catppuccin
     inputs.agenix.homeManagerModules.default
-    inputs.nix-starter-kit.homeModules.timetracking
-    inputs.nix-starter-kit.homeModules.khard
     inputs.vimium-options.homeManagerModules.vimium-options
 
+    ./modules/ag.nix
+    ./modules/autostart.nix
     ./modules/registry.nix
     ./modules/email.nix
-    ./modules/autostart.nix
     ./secrets.nix
 
     ./programs/git.nix
@@ -31,20 +30,6 @@
   ];
 
   config = {
-    active-group = {
-      timetracking = {
-        enable = true;
-        timetracking-token = config.age.secrets.timetracking-secret.path;
-        arbeitszeiten-token = config.age.secrets.arbeitszeiten-secret.path;
-        abrechenbare-zeiten-token = config.age.secrets.abrechenbare-zeiten-secret.path;
-      };
-
-      khard = {
-        enable = true;
-        storagePath = "/home/beat/ag/addresses/vcf";
-      };
-    };
-
     # Home Manager needs a bit of information about you and the paths it should
     # manage.
     home.username = "beat";
