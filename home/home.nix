@@ -10,9 +10,9 @@
     inputs.nix-index-database.homeModules.nix-index
     inputs.catppuccin.homeModules.catppuccin
     inputs.agenix.homeManagerModules.default
-    inputs.vimium-options.homeManagerModules.vimium-options
 
     ./modules/ag.nix
+    ./modules/browsers.nix
     ./modules/autostart.nix
     ./modules/registry.nix
     ./modules/email.nix

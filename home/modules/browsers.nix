@@ -1,5 +1,8 @@
 { inputs, config, ... }:
 {
+  imports = [
+    inputs.vimium-options.homeManagerModules.vimium-options
+  ];
   programs.firefox =
     let
       extensionPkgs = with inputs.firefox-addons.packages."x86_64-linux"; [
@@ -63,11 +66,8 @@
         u = "scrollPageUp";
         f = "LinkHints.activateMode";
         p = "LinkHints.activateModeToOpenInNewTab";
+        c = "createTab https://claude.ai";
       };
-    };
-
-    searchEngines = {
-      c = "https://claude.ai/new?q=%s Claude";
     };
 
     exclusionRules = [
