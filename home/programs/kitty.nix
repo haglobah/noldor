@@ -40,6 +40,8 @@
       "ctrl+minus" = "change_font_size all -1.0";
       "ctrl+s" = "send_text all \\x17";
       "ctrl+g" = "send_key alt+d";
+      "ctrl+h" = "remote_control scroll-window 0.5p+";
+      "ctrl+," = "remote_control scroll-window 0.5p-";
     };
 
     extraConfig = ''
