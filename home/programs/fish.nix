@@ -61,8 +61,12 @@
         "ns" = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
 
         "co" = "claude --model opus";
+        "c" = {
+          expansion = "z % && claude --model opus";
+          setCursor = true;
+        };
 
-        "c" = "clan";
+        "cl" = "clan";
         "cs" = "clan ssh";
         "csf" = "clan ssh formenos -c fish";
         "cso" = "clan ssh orthanc -c fish";
