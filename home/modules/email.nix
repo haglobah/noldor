@@ -49,8 +49,9 @@
         };
       };
       posteo = {
-        address = "hagenlob@posteo.de";
+        address = "bah@posteo.de";
         realName = "Beat Hagenlocher";
+        # This is the userName used at the server
         userName = "hagenlob@posteo.de";
         passwordCommand = "cat ~/.posteopassword";
         signature = {
@@ -85,6 +86,7 @@
         };
         msmtp.enable = true;
         mu.enable = true;
+        thunderbird.enable = true;
       };
     };
   };
