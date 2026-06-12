@@ -161,6 +161,15 @@
       ".config/opencode/tui.json".source = dotfiles/opencode/tui.json;
 
       ".mob".source = dotfiles/mob.sh/.mob;
+      ".markdownlint.json".text = builtins.toJSON {
+        "blanks-around-lists" = false;
+        "blanks-around-headings" = false;
+        "blanks-around-fences" = false;
+        "no-bare-urls" = false;
+        "first-line-heading" = false;
+        "single-h1" = false;
+        "line-length" = false;
+      };
     };
 
     # You can also manage environment variables but you will have to manually
