@@ -10,6 +10,7 @@
     inputs.nix-index-database.homeModules.nix-index
     inputs.catppuccin.homeModules.catppuccin
     inputs.agenix.homeManagerModules.default
+    inputs.donethat.homeManagerModules.donethat
 
     ./modules/ag.nix
     ./modules/browsers.nix
@@ -122,12 +123,6 @@
         teams-for-linux
         slack
 
-        # DoneThat
-        (import ./programs/donethat.nix { inherit pkgs; })
-        # gnome-screenshot is non-functional on GNOME Wayland (silent no-op).
-        # donethat-screenshot wraps Recursing's portal-based capture script;
-        # point donethat's screenshot tool setting at `donethat-screenshot -f "%s"`.
-        (import ./programs/donethat-screenshot.nix { inherit pkgs; })
 
         # Useful for login networks: https://discourse.nixos.org/t/does-wifionice-wifi-on-deutsche-bahn-german-railway-work-for-you/41646
         captive-browser
@@ -291,6 +286,15 @@
     };
 
     programs.home-manager.enable = true;
+
+    programs.donethat = {
+      enable = true;
+      gnomeWindowTracker.enable = true;
+      gnomeWindowTracker.autoEnable = true;
+      # Portal/PipeWire screen capture for Wayland; in DoneThat's settings point
+      # the screenshot tool at `donethat-screenshot -f "%s"`.
+      screenshotHelper.enable = true;
+    };
 
     programs.gh = {
       enable = true;

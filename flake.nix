@@ -49,6 +49,7 @@
     nix-openclaw.url = "github:openclaw/nix-openclaw";
     todo-home.url = "git+ssh://git@github.com/haglobah/todo-home.git";
     colab.url = "git+ssh://git@github.com/haglobah/colab.git?ref=noldor-deploy";
+    donethat.url = "git+ssh://git@github.com/haglobah/donethat-electron.git";
   };
 
   outputs =
