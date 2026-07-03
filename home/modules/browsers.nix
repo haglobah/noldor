@@ -66,7 +66,7 @@
         u = "scrollPageUp";
         f = "LinkHints.activateMode";
         p = "LinkHints.activateModeToOpenInNewTab";
-        c = "createTab https://claude.ai";
+        x = "createTab https://claude.ai";
       };
     };
 
