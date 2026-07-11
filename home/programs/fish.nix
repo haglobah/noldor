@@ -60,9 +60,9 @@
         };
         "ns" = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
 
-        "co" = "claude --model opus";
-        "c" = {
-          expansion = "z % && claude --model opus";
+        "c" = "claude";
+        "x" = {
+          expansion = "z % && claude";
           setCursor = true;
         };
 
