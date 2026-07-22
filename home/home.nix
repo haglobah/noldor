@@ -17,6 +17,7 @@
     ./modules/autostart.nix
     ./modules/registry.nix
     ./modules/email.nix
+    ./modules/run-or-raise.nix
     ./secrets.nix
 
     ./programs/git.nix
@@ -123,7 +124,6 @@
         teams-for-linux
         slack
 
-
         # Useful for login networks: https://discourse.nixos.org/t/does-wifionice-wifi-on-deutsche-bahn-german-railway-work-for-you/41646
         captive-browser
 
@@ -146,7 +146,6 @@
       ];
 
     home.file = {
-      ".config/run-or-raise/shortcuts.conf".source = dotfiles/shortcuts.conf;
       ".config/custom-tab-title-from-file/config.json".source =
         dotfiles/custom-tab-title-from-file/config.json;
 
