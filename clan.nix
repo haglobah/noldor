@@ -146,6 +146,8 @@
 
           inputs.colab.nixosModules.default
           ./modules/colab.nix
+
+          ./modules/sslh.nix
         ];
 
         environment.systemPackages = with pkgs; [
@@ -208,6 +210,7 @@
           ./modules/storagebox-secret.nix
           ./modules/audiobookshelf.nix
           ./modules/code-server.nix
+          ./modules/sslh.nix
 
           # Only here until the grafana service gets fixed
           # ./modules/grafana-secret.nix
