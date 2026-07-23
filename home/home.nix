@@ -18,6 +18,7 @@
     ./modules/registry.nix
     ./modules/email.nix
     ./modules/run-or-raise.nix
+    ./modules/school-networks.nix
     ./secrets.nix
 
     ./programs/git.nix
