@@ -63,6 +63,9 @@
           "https://gitlab.com/" = {
             insteadOf = "gl:";
           };
+          "https://gitlab.active-group.de" = {
+            insteadOf = "ssh://git@gitlab.active-group.de";
+          };
           "git@gitlab.active-group.de:ag/" = {
             insteadOf = "ag:";
           };

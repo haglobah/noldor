@@ -13,6 +13,7 @@
     ./hardware.nix
     ../../modules/storagebox-secret.nix
     ../../modules/ollama.nix
+    ../../modules/catppuccin-cache.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 
@@ -49,6 +50,33 @@
 
   # Networking
   networking.networkmanager.enable = true;
+
+  # The school FortiGate MITMs TCP 443 but can't inspect QUIC; reject outbound
+  # UDP 443 on that SSID so browsers fall back to TCP immediately.
+  networking.networkmanager.dispatcherScripts = [
+    {
+      type = "basic";
+      source = pkgs.writeText "quic-blocker" ''
+        #!/bin/sh
+        NFT=${pkgs.nftables}/bin/nft
+        SSID="DSA-Kursleiter"
+
+        case "$2" in
+          up)
+            [ "$CONNECTION_ID" = "$SSID" ] || exit 0
+            $NFT destroy table inet block-quic
+            $NFT add table inet block-quic
+            $NFT add chain inet block-quic out '{ type filter hook output priority 0; policy accept; }'
+            $NFT add rule inet block-quic out udp dport 443 reject
+            ;;
+          down)
+            [ "$CONNECTION_ID" = "$SSID" ] || exit 0
+            $NFT destroy table inet block-quic
+            ;;
+        esac
+      '';
+    }
+  ];
 
   # Bluetooth
   hardware.bluetooth.enable = true;
@@ -184,11 +212,11 @@
 
   programs.nix-ld.enable = true;
 
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-  };
+  # programs.steam = {
+  #   enable = true;
+  #   remotePlay.openFirewall = true;
+  #   dedicatedServer.openFirewall = true;
+  # };
 
   programs.ausweisapp.enable = true;
   programs.ausweisapp.openFirewall = true;
