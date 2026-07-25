@@ -148,6 +148,7 @@
           ./modules/colab.nix
 
           ./modules/sslh.nix
+          ./modules/catppuccin-cache.nix
         ];
 
         environment.systemPackages = with pkgs; [
