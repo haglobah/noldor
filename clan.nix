@@ -111,15 +111,15 @@
     # !!! Manual steps required:
     #   - Define a controller machine for the zerotier network.
     #   - Deploy the controller machine first to initialize the network.
-    zerotier = {
-      # Replace with the name (string) of your machine that you will use as zerotier-controller
-      # See: https://docs.zerotier.com/controller/
-      # Deploy this machine first to create the network secrets
-      roles.controller.machines."formenos" = { };
-      # Peers of the network
-      # tags.all means 'all machines' will joined
-      roles.peer.tags.all = { };
-    };
+    # zerotier = {
+    #   # Replace with the name (string) of your machine that you will use as zerotier-controller
+    #   # See: https://docs.zerotier.com/controller/
+    #   # Deploy this machine first to create the network secrets
+    #   roles.controller.machines."formenos" = { };
+    #   # Peers of the network
+    #   # tags.all means 'all machines' will joined
+    #   roles.peer.tags.all = { };
+    # };
 
     # Docs: https://docs.clan.lol/reference/clanServices/tor/
     # Tor network provides secure, anonymous connections to your machines
