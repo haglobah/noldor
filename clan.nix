@@ -238,6 +238,13 @@
         };
         home-manager.extraSpecialArgs = { inherit inputs; };
 
+        # 4 GB box with no swap: memory spikes OOM-killed nix eval and could
+        # just as well hit postgres. Compressed in-RAM swap absorbs them.
+        zramSwap = {
+          enable = true;
+          memoryPercent = 100;
+        };
+
         networking.firewall = {
           allowedTCPPorts = [
             80
