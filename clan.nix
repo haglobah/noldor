@@ -76,16 +76,18 @@
     #   };
     # };
 
-    # root-password = {
-    #   module = {
-    #     name = "users";
-    #     input = "clan-core";
-    #   };
-    #   roles.default.tags.all = { };
-    #   roles.default.settings = {
-    #     user = "root";
-    #   };
-    # };
+    root-password = {
+      module = {
+        name = "users";
+        input = "clan-core";
+      };
+      roles.default.machines.orthanc = { };
+      roles.default.machines.formenos = { };
+      roles.default.settings = {
+        user = "root";
+        prompt = false;
+      };
+    };
 
     # https://docs.clan.lol/services/official/borgbackup/
     borgbackup = {
@@ -144,8 +146,8 @@
           inputs.todo-home.nixosModules.default
           ./modules/todo-home.nix
 
-          inputs.colab.nixosModules.default
-          ./modules/colab.nix
+          # inputs.colab.nixosModules.default
+          # ./modules/colab.nix
 
           ./modules/sslh.nix
           ./modules/catppuccin-cache.nix
