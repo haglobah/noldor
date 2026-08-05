@@ -12,7 +12,9 @@
       tags = [ "server" ];
     };
     orthanc = {
-      deploy.targetHost = "root@91.99.217.220";
+      # Port 443 goes through sslh, which passes SSH through to sshd.
+      # Port 22 is blocked on school networks (see home/modules/school-networks.nix).
+      deploy.targetHost = "root@91.99.217.220:443";
       tags = [ "client" ];
     };
     gondor = {

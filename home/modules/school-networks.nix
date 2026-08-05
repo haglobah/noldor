@@ -1,5 +1,9 @@
 { ... }:
 {
+  # Without enable = true, home-manager silently ignores the matchBlocks
+  # below and never generates ~/.ssh/config.
+  programs.ssh.enable = true;
+
   programs.ssh.matchBlocks."github.com" = {
     hostname = "ssh.github.com";
     port = 443;
