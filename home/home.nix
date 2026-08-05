@@ -12,7 +12,7 @@
     inputs.agenix.homeManagerModules.default
     inputs.donethat.homeManagerModules.donethat
 
-    ./modules/ag.nix
+    # ./modules/ag.nix
     ./modules/browsers.nix
     ./modules/autostart.nix
     ./modules/registry.nix

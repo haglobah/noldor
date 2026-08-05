@@ -8,14 +8,6 @@
   config = {
     programs.git = {
       enable = true;
-      includes = [
-        {
-          condition = "gitdir:~/ag/";
-          contents = {
-            user.email = "beat.hagenlocher@active-group.de";
-          };
-        }
-      ];
       ignores = [
         ".envrc"
         ".direnv/"
@@ -62,15 +54,6 @@
           };
           "https://gitlab.com/" = {
             insteadOf = "gl:";
-          };
-          "https://gitlab.active-group.de" = {
-            insteadOf = "ssh://git@gitlab.active-group.de";
-          };
-          "git@gitlab.active-group.de:ag/" = {
-            insteadOf = "ag:";
-          };
-          "git@github.com:active-group/" = {
-            insteadOf = "agh:";
           };
         };
       };
