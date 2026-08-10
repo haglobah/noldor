@@ -12,8 +12,9 @@
   imports = [
     ./hardware.nix
     ../../modules/storagebox-secret.nix
-    ../../modules/ollama.nix
+    # ../../modules/ollama.nix
     ../../modules/catppuccin-cache.nix
+    ../../modules/gnome.nix
     inputs.home-manager.nixosModules.home-manager
   ];
 
@@ -101,9 +102,8 @@
 
   # X11 and GNOME
   services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
+  # gdm and gnome.enable come from modules/gnome.nix
   services.desktopManager.gnome = {
-    enable = true;
     extraGSettingsOverrides = ''
       [org.gnome.mutter.keybindings]
       switch-monitor=['<Shift><Super>p', 'XF86Display']
