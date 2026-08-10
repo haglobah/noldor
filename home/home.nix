@@ -10,7 +10,7 @@
     inputs.nix-index-database.homeModules.nix-index
     inputs.catppuccin.homeModules.catppuccin
     inputs.agenix.homeManagerModules.default
-    inputs.donethat.homeManagerModules.donethat
+    # inputs.donethat.homeManagerModules.donethat
 
     # ./modules/ag.nix
     ./modules/browsers.nix
@@ -287,14 +287,14 @@
 
     programs.home-manager.enable = true;
 
-    programs.donethat = {
-      enable = true;
-      gnomeWindowTracker.enable = true;
-      gnomeWindowTracker.autoEnable = true;
-      # Portal/PipeWire screen capture for Wayland; in DoneThat's settings point
-      # the screenshot tool at `donethat-screenshot -f "%s"`.
-      screenshotHelper.enable = true;
-    };
+    # programs.donethat = {
+    #   enable = true;
+    #   gnomeWindowTracker.enable = true;
+    #   gnomeWindowTracker.autoEnable = true;
+    #   # Portal/PipeWire screen capture for Wayland; in DoneThat's settings point
+    #   # the screenshot tool at `donethat-screenshot -f "%s"`.
+    #   screenshotHelper.enable = true;
+    # };
 
     programs.gh = {
       enable = true;
