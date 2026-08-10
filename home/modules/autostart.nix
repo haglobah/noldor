@@ -32,16 +32,16 @@
       X-GNOME-Autostart-enabled=true
       OnlyShowIn=GNOME;
     '';
-    ".config/autostart/donethat.desktop".text = ''
-      [Desktop Entry]
-      Type=Application
-      Version=1.0
-      Name=DoneThat
-      Exec=${inputs.donethat.packages.${pkgs.stdenv.hostPlatform.system}.donethat}/bin/donethat --no-sandbox
-      Terminal=false
-      X-GNOME-Autostart-enabled=true
-      X-GNOME-Autostart-Delay=5
-    '';
+    # ".config/autostart/donethat.desktop".text = ''
+    #   [Desktop Entry]
+    #   Type=Application
+    #   Version=1.0
+    #   Name=DoneThat
+    #   Exec=${inputs.donethat.packages.${pkgs.stdenv.hostPlatform.system}.donethat}/bin/donethat --no-sandbox
+    #   Terminal=false
+    #   X-GNOME-Autostart-enabled=true
+    #   X-GNOME-Autostart-Delay=5
+    # '';
 
     ".config/autostart/linphone.desktop".source = "${
       inputs.nixpkgs-24-11.legacyPackages."x86_64-linux".linphone
