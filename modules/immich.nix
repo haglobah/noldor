@@ -21,6 +21,10 @@
     };
     services.immich = {
       enable = true;
+      # jellyfin-ffmpeg drags clang-lib + samba into the closure (~1 GiB);
+      # no GPU on this VPS, and ffmpeg-headless has libx264/libx265 for CPU
+      # transcoding
+      package = pkgs.immich.override { jellyfin-ffmpeg = pkgs.ffmpeg-headless; };
       host = "0.0.0.0";
       machine-learning.enable = false;
       openFirewall = true;

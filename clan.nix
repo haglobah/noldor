@@ -158,7 +158,7 @@
         environment.systemPackages = with pkgs; [
           git
           # needed for xterm-kitty being available
-          kitty
+          kitty.terminfo
         ];
 
         networking.firewall = {
@@ -203,7 +203,12 @@
         };
       };
     formenos =
-      { _config, pkgs, ... }:
+      {
+        _config,
+        pkgs,
+        lib,
+        ...
+      }:
       {
         _module.args = { inherit inputs; };
         imports = [
@@ -214,7 +219,8 @@
           ./modules/immich.nix
           ./modules/storagebox-secret.nix
           ./modules/audiobookshelf.nix
-          ./modules/code-server.nix
+          # Disabled 2026-08-18 to save ~950 MiB (code-server + elixir toolchain)
+          # ./modules/code-server.nix
           ./modules/sslh.nix
           ./modules/media-inbox-notify.nix
 
@@ -225,8 +231,25 @@
           git
           kanidm_1_10
           # needed for xterm-kitty being available
-          kitty
+          kitty.terminfo
         ];
+
+        # Headless VPS: facter detected a virtual GPU and enabled mesa,
+        # dragging llvm-lib into the closure (~800 MiB)
+        hardware.graphics.enable = lib.mkForce false;
+
+        # Don't pin the 200 MiB nixpkgs source into the system closure via
+        # the flake registry; `nix shell nixpkgs#...` will fetch it instead
+        nixpkgs.flake.setNixPath = false;
+        nixpkgs.flake.setFlakeRegistry = false;
+
+        # Old generations pile up and the deploy needs old + new closures
+        # to coexist during the switch
+        nix.gc = {
+          automatic = true;
+          options = "--delete-older-than 7d";
+        };
+        nix.optimise.automatic = true;
 
         # Home Manager configuration
         home-manager.useGlobalPkgs = true;
@@ -237,6 +260,9 @@
             ./home/programs/shell-utils.nix
             ./home/programs/starship.nix
           ];
+          # broot leaks its source tree into the runtime closure — not
+          # worth it on a server
+          programs.broot.enable = lib.mkForce false;
           home.stateVersion = "22.11";
           home.username = "root";
           home.homeDirectory = "/root";
