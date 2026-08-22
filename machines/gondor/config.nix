@@ -82,8 +82,8 @@
   # Bluetooth
   hardware.bluetooth.enable = true;
 
-  # Timezone and locale
-  time.timeZone = "Europe/Berlin";
+  # Timezone and Locale
+  time.timeZone = null; # so that I can set it imperatively from GNOME
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "de_DE.UTF-8";
