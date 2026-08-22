@@ -216,6 +216,7 @@
           ./modules/audiobookshelf.nix
           ./modules/code-server.nix
           ./modules/sslh.nix
+          ./modules/media-inbox-notify.nix
 
           # Only here until the grafana service gets fixed
           # ./modules/grafana-secret.nix
