@@ -40,6 +40,8 @@
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  # Scripted initrd is deprecated, removal scheduled for NixOS 26.11
+  boot.initrd.systemd.enable = true;
   # boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [
     # router can't do ipv6 at home
