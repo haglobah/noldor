@@ -32,10 +32,6 @@ let
       wmClass = "kitty";
     }
     {
-      key = "<Super>u";
-      command = "thunderbird";
-    }
-    {
       key = "<Super>y";
       command = "linphone";
     }

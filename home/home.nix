@@ -120,7 +120,6 @@
         signal-desktop
         telegram-desktop
         zoom-us
-        thunderbird
         gnome-tweaks
         teams-for-linux
         slack
