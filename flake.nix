@@ -34,11 +34,11 @@
 
     catppuccin.url = "github:catppuccin/nix";
 
-    nix-starter-kit = {
-      url = "github:active-group/nix-starter-kit";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-    };
+    # nix-starter-kit = {
+    #   url = "github:active-group/nix-starter-kit";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    #   inputs.home-manager.follows = "home-manager";
+    # };
 
     vimium-options.url = "github:uimataso/vimium-nixos";
 
