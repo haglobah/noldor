@@ -67,6 +67,11 @@ let
       command = "chromium-browser --app=https://todos.humane.tools";
       wmClass = "todos.humane.tools";
     }
+    {
+      key = "<Super>o";
+      command = "orca-ide";
+      wmClass = "orca";
+    }
   ];
 
   # Apps whose windows are split between shortcuts: each claim grabs the
