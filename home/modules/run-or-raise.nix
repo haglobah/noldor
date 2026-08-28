@@ -68,6 +68,11 @@ let
       wmClass = "todos.humane.tools";
     }
     {
+      key = "<Super>comma";
+      command = "chromium-browser --app=https://media.humane.tools";
+      wmClass = "media.humane.tools";
+    }
+    {
       key = "<Super>o";
       command = "orca-ide";
       wmClass = "orca";
