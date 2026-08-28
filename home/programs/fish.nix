@@ -65,6 +65,11 @@
           expansion = "z % && claude";
           setCursor = true;
         };
+        "o" = "opencode";
+        "y" = {
+          expansion = "z % && opencode";
+          setCursor = true;
+        };
 
         "cl" = "clan";
         "cs" = "clan ssh";

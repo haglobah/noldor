@@ -1,14 +1,4 @@
 { ... }:
-let
-  # Repeat an SGR mouse wheel event N times so one keypress scrolls N lines.
-  # Claude Code (and similar fullscreen TUIs) move ~1 line per wheel notch, so
-  # 24 events ≈ half a page on a typical window. button 64 = up, 65 = down.
-  wheel =
-    direction: times:
-    builtins.concatStringsSep "" (
-      builtins.genList (_: "\\x1b[<${if direction == "up" then "64" else "65"};1;1M") times
-    );
-in
 {
   programs.kitty = {
     enable = true;
@@ -52,11 +42,13 @@ in
       "ctrl+g" = "send_key alt+d";
       "ctrl+h" = "remote_control scroll-window 0.5p+";
       "ctrl+," = "remote_control scroll-window 0.5p-";
-      # Emulate mouse-wheel scroll for fullscreen TUIs (e.g. Claude Code) that
-      # grab the mouse and render on the alternate screen, where kitty's own
-      # scrollback (above) is empty. See the `wheel` helper at the top of file.
-      "alt+h" = "send_text all ${wheel "down" 16}";
-      "alt+," = "send_text all ${wheel "up" 16}";
+      # Fullscreen TUIs handle these keys without relying on mouse coordinates.
+      "alt+h" = "send_key ctrl+alt+d";
+      "alt+," = "send_key ctrl+alt+u";
+      # Claude Code: no native actions for these, so kitty types them.
+      # \x0c is ctrl+l (chat:clearInput) so a partial prompt does not corrupt the command.
+      "ctrl+alt+l" = "send_text all \\x0c/clear\\r";
+      "ctrl+alt+r" = "send_text all \\x0c/resume\\r";
     };
 
     extraConfig = ''

@@ -248,6 +248,7 @@
         custom-keybindings = [
           "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
         ];
+        rotate-video-lock-static = [ "XF86RotationLockToggle" ];
       };
 
       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
