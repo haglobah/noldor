@@ -209,6 +209,9 @@
         clock-show-date = true;
         clock-show-seconds = true;
         color-scheme = "prefer-dark";
+        # Chrome follows this key as prefers-reduced-motion; a stray GUI
+        # toggle once disabled it, so pin it declaratively.
+        enable-animations = true;
         show-battery-percentage = true;
         text-scaling-factor = 1.21;
       };
