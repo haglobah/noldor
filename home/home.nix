@@ -19,6 +19,7 @@
     ./modules/email.nix
     ./modules/run-or-raise.nix
     ./modules/school-networks.nix
+    ./modules/emacs.nix
     ./secrets.nix
 
     ./programs/git.nix
@@ -66,8 +67,7 @@
         ydotool
         wl-clipboard
 
-        # Emacs
-        ((emacsPackagesFor emacs30).emacsWithPackages (epkgs: [ epkgs.mu4e ]))
+        # Emacs itself lives in ./modules/emacs.nix (with the doom-sync hook)
         ripgrep
         fd
         emacs-lsp-booster
