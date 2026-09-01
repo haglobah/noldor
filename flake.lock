@@ -178,6 +178,30 @@
         "url": "https://git.clan.lol/haglobah/clan-core/archive/main.tar.gz"
       }
     },
+    "claude-code-bin": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-dhsyTzk0Ey4W75K/lIJTKmK2uqVXmDbYaP44Hu8oPl0=",
+        "type": "tarball",
+        "url": "https://github.com/anthropics/claude-code/releases/latest/download/claude-linux-x64.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/anthropics/claude-code/releases/latest/download/claude-linux-x64.tar.gz"
+      }
+    },
+    "claude-code-version": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-x1T6wh44doOfc2kH1Kt6NP6WUXGM3/O4Zg+LwZDVZSQ=",
+        "type": "file",
+        "url": "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/latest"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/latest"
+      }
+    },
     "colab": {
       "inputs": {
         "agenix": "agenix_2",
@@ -1158,6 +1182,8 @@
         "beads": "beads",
         "catppuccin": "catppuccin",
         "clan-core": "clan-core",
+        "claude-code-bin": "claude-code-bin",
+        "claude-code-version": "claude-code-version",
         "colab": "colab",
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts_3",

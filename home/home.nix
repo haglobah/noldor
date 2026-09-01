@@ -78,7 +78,8 @@
         # AI
         aider-chat-with-playwright
         python314
-        claude-code
+        # Latest GitHub release, falls back to nixpkgs once it has caught up
+        (pkgs.callPackage ./pkgs/claude-code { inherit (inputs) claude-code-bin claude-code-version; })
         claude-agent-acp
         codex
         codex-acp
