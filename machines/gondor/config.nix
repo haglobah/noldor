@@ -190,7 +190,13 @@
   # Packages
   environment.systemPackages = with pkgs; [
     git
+    asdbctl
   ];
+
+  # Apple Studio Display brightness: asdbctl ships a hidraw rule with
+  # TAG+="uaccess", so the seated user gets an ACL on /dev/hidraw* for
+  # 05ac:1114/1116/1118. Without it the nodes are root-only (0600).
+  services.udev.packages = [ pkgs.asdbctl ];
 
   environment.gnome.excludePackages = with pkgs; [
     nautilus
