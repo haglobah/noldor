@@ -28,12 +28,18 @@ in
         warnEcho "doomSync: $doomBin not found or not executable; skipping"
       elif [ "$(cat "$stateFile" 2>/dev/null || true)" != "$currentEmacs" ]; then
         echo "doomSync: Emacs closure changed; running doom sync"
+        # doom sync regenerates ~/.config/emacs/.local/env when it
+        # exists, snapshotting this process's environment. Doom loads
+        # that file at startup and it REPLACES Emacs's PATH, so the
+        # PATH here must contain the user session bins (mbsync, mu,
+        # ...) or mu4e and friends break until the next `doom env`.
+        # Activation runs with a minimal PATH, so list them explicitly.
         if run env PATH="${
           lib.makeBinPath [
             emacsWithPackages
             pkgs.git
           ]
-        }:$PATH" \
+        }:/run/wrappers/bin:${config.home.homeDirectory}/.nix-profile/bin:/etc/profiles/per-user/${config.home.username}/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:$PATH" \
           "$doomBin" sync
         then
           run mkdir -p "$(dirname "$stateFile")"

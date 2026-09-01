@@ -34,6 +34,17 @@
 
     catppuccin.url = "github:catppuccin/nix";
 
+    # Latest Claude Code release; both are unpinned URLs that
+    # `nix flake update` re-locks. See home/pkgs/claude-code.
+    claude-code-version = {
+      url = "file+https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/latest";
+      flake = false;
+    };
+    claude-code-bin = {
+      url = "https://github.com/anthropics/claude-code/releases/latest/download/claude-linux-x64.tar.gz";
+      flake = false;
+    };
+
     # nix-starter-kit = {
     #   url = "github:active-group/nix-starter-kit";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -88,6 +99,34 @@
             ...
           }:
           {
+            # claude-code is unfree; flake-parts' default pkgs would refuse it.
+            _module.args.pkgs = import inputs.nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
+
+            packages.claude-code = pkgs.callPackage ./home/pkgs/claude-code {
+              inherit (inputs) claude-code-bin claude-code-version;
+            };
+
+            # Eval-time test of the nixpkgs fallback: older release -> nixpkgs
+            # as-is; newer release -> nixpkgs' derivation with the release src.
+            checks.claude-code-fallback =
+              let
+                mk =
+                  releaseVersion:
+                  pkgs.callPackage ./home/pkgs/claude-code {
+                    inherit (inputs) claude-code-bin claude-code-version;
+                    inherit releaseVersion;
+                  };
+                older = mk "0.0.1";
+                newer = mk "999.0.0";
+              in
+              assert older == pkgs.claude-code;
+              assert newer.version == "999.0.0";
+              assert newer.src == inputs.claude-code-bin;
+              pkgs.runCommand "claude-code-fallback" { } "touch $out";
+
             devShells.default = pkgs.mkShell {
               packages = [
                 pkgs.just
