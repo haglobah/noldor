@@ -277,6 +277,10 @@
 
         # bind " " expand-abbr or self-insert
 
+        # fish 4 binds ctrl-right to forward-token, which swallows a whole path.
+        # forward-word stops at every path segment and accepts one word of the autosuggestion.
+        bind ctrl-right forward-word
+
         set -gx PATH $PATH "/home/beat/.config/emacs/bin"
         set -gx EDITOR "nvim"
 
