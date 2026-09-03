@@ -10,8 +10,9 @@
     cachix
     dua
     nix-output-monitor
-    systemctl-tui
-    lazyjournal
+    # systemctl-tui
+    # lazyjournal
+    lazygit
   ];
 
   programs.direnv = {
