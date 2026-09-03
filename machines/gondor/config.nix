@@ -198,6 +198,11 @@
   # 05ac:1114/1116/1118. Without it the nodes are root-only (0600).
   services.udev.packages = [ pkgs.asdbctl ];
 
+  # Tailscale
+  services.tailscale = {
+    enable = true;
+  };
+
   environment.gnome.excludePackages = with pkgs; [
     nautilus
     gnome-tour
