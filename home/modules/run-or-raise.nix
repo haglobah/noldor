@@ -46,21 +46,14 @@ let
       wmClass = "discord";
     }
     {
+      key = "<Super>k";
+      command = "slack";
+      wmClass = "slack";
+    }
+    {
       key = "<Super>p";
       command = "pcmanfm";
       wmClass = "pcmanfm";
-    }
-    {
-      key = "<Super>d";
-      command = "donethat";
-      wmClass = "donethat";
-      title = "DoneThat";
-    }
-    {
-      key = "<Ctrl><Shift>d";
-      command = "donethat";
-      wmClass = "donethat";
-      title = "Chat";
     }
     {
       key = "<Super>h";
