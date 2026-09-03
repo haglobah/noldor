@@ -277,9 +277,22 @@
 
         # bind " " expand-abbr or self-insert
 
-        # fish 4 binds ctrl-right to forward-token, which swallows a whole path.
-        # forward-word stops at every path segment and accepts one word of the autosuggestion.
+        # fish 4 binds ctrl-right/ctrl-backspace/ctrl-delete to *-token, which swallows a whole path.
+        # The *-word variants stop at every path segment; forward-word also accepts one word of the autosuggestion.
         bind ctrl-right forward-word
+
+        bind ctrl-backspace backward-kill-word
+        bind ctrl-delete kill-word
+
+        # Open the current project (git toplevel, else cwd) in the running
+        # Emacs and raise it. `+beat/open-project` lives in ~/.config/doom/config.el.
+        # Shadows fish's default alt-o (preview current file).
+        function emacs-project --description 'Open the current project in the running Emacs'
+          set -l root (git rev-parse --show-toplevel 2>/dev/null; or pwd)
+          emacsclient --no-wait --eval "(+beat/open-project \"$root\")" >/dev/null
+          commandline -f repaint
+        end
+        bind alt-o emacs-project
 
         set -gx PATH $PATH "/home/beat/.config/emacs/bin"
         set -gx EDITOR "nvim"
