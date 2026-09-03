@@ -83,7 +83,7 @@
         claude-agent-acp
         codex
         codex-acp
-        gemini-cli
+        antigravity-cli
         opencode
         # For claude code voice mode
         sox

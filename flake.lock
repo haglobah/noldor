@@ -1135,11 +1135,11 @@
         "nixpkgs": "nixpkgs_10"
       },
       "locked": {
-        "lastModified": 1787867486,
-        "narHash": "sha256-7QnBetbfRZ6VanphW48lJO6XUaz3TLV2O81GwIuYsPc=",
+        "lastModified": 1788414269,
+        "narHash": "sha256-8Y9x08YfXbqJKmQ2col7Kmj4VTGPc37eGQiaGhDST5s=",
         "ref": "nix-flake",
-        "rev": "8d81be11338e7e01dca7b30842e019c845b51152",
-        "revCount": 9317,
+        "rev": "80b56e0e8b604b6dc3f0c6dfc20e972b5a5d71fe",
+        "revCount": 9318,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/orca.git"
       },
@@ -1228,11 +1228,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771889317,
-        "narHash": "sha256-YV17Q5lEU0S9ppw08Y+cs4eEQJBuc79AzblFoHORLMU=",
+        "lastModified": 1788337237,
+        "narHash": "sha256-gkSH8VUtCo6hnysNmb9DbTuDepH2t5pv+QWjP75xKAk=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "b027513c32e5b39b59f64626b87fbe168ae02094",
+        "rev": "fbf759290e0cb0a98dfc813a4eb7d53ad1dacb57",
         "type": "github"
       },
       "original": {

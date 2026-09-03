@@ -231,7 +231,7 @@
         ];
         environment.systemPackages = with pkgs; [
           git
-          kanidm_1_10
+          kanidm_1_11
           # needed for xterm-kitty being available
           kitty.terminfo
         ];
