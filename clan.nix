@@ -218,6 +218,7 @@
           ./modules/kanidm.nix
           ./modules/kanidm-vars.nix
           ./modules/paperless.nix
+          ./modules/monitoring.nix
           ./modules/immich.nix
           ./modules/storagebox-secret.nix
           ./modules/audiobookshelf.nix
