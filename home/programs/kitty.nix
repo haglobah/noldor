@@ -27,6 +27,15 @@
       "alt+shift+right" = "next_tab_forward";
       "ctrl+]" = "launch --cwd=current --location=vsplit";
       "ctrl+[" = "launch --cwd=current --location=hsplit";
+      # Doom-style window leader (SPC w ...) with ctrl+space as leader.
+      # Same keys as in ~/.config/doom/config/keybindings.el.
+      "ctrl+space>w>s" = "launch --cwd=current --location=hsplit";
+      "ctrl+space>w>t" = "launch --cwd=current --location=vsplit";
+      "ctrl+space>w>equal" = "resize_window reset";
+      "ctrl+space>w>plus" = "resize_window taller 2";
+      "ctrl+space>w>minus" = "resize_window shorter 2";
+      "ctrl+space>w>greater" = "resize_window wider 2";
+      "ctrl+space>w>less" = "resize_window narrower 2";
       "shift+left" = "neighboring_window left";
       "shift+right" = "neighboring_window right";
       "shift+up" = "neighboring_window up";
