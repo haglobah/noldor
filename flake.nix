@@ -45,6 +45,13 @@
       flake = false;
     };
 
+    # Latest Codex release bundle; it carries its own version in
+    # codex-package.json. See home/pkgs/codex.
+    codex-bin = {
+      url = "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-unknown-linux-musl.tar.gz";
+      flake = false;
+    };
+
     # nix-starter-kit = {
     #   url = "github:active-group/nix-starter-kit";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -126,6 +133,26 @@
               assert newer.version == "999.0.0";
               assert newer.src == inputs.claude-code-bin;
               pkgs.runCommand "claude-code-fallback" { } "touch $out";
+
+            packages.codex = pkgs.callPackage ./home/pkgs/codex { inherit (inputs) codex-bin; };
+
+            # Same eval-time test for codex: older release -> nixpkgs as-is;
+            # newer release -> our binary derivation from the release bundle.
+            checks.codex-fallback =
+              let
+                mk =
+                  releaseVersion:
+                  pkgs.callPackage ./home/pkgs/codex {
+                    inherit (inputs) codex-bin;
+                    inherit releaseVersion;
+                  };
+                older = mk "0.0.1";
+                newer = mk "999.0.0";
+              in
+              assert older == pkgs.codex;
+              assert newer.version == "999.0.0";
+              assert newer.src == inputs.codex-bin;
+              pkgs.runCommand "codex-fallback" { } "touch $out";
 
             devShells.default = pkgs.mkShell {
               packages = [

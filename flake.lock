@@ -202,6 +202,19 @@
         "url": "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/latest"
       }
     },
+    "codex-bin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788397512,
+        "narHash": "sha256-UQePFuiDe49SIdbJWXPWG6RlLCxy9x35fiN6bHigBIE=",
+        "type": "tarball",
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-unknown-linux-musl.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-unknown-linux-musl.tar.gz"
+      }
+    },
     "colab": {
       "inputs": {
         "agenix": "agenix_2",
@@ -1184,6 +1197,7 @@
         "clan-core": "clan-core",
         "claude-code-bin": "claude-code-bin",
         "claude-code-version": "claude-code-version",
+        "codex-bin": "codex-bin",
         "colab": "colab",
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts_3",

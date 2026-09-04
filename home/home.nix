@@ -81,7 +81,7 @@
         # Latest GitHub release, falls back to nixpkgs once it has caught up
         (pkgs.callPackage ./pkgs/claude-code { inherit (inputs) claude-code-bin claude-code-version; })
         claude-agent-acp
-        codex
+        (pkgs.callPackage ./pkgs/codex { inherit (inputs) codex-bin; })
         codex-acp
         antigravity-cli
         opencode
