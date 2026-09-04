@@ -83,6 +83,10 @@ in
     envFiles = envFiles;
     authPort = 3001;
     syncPort = 3030;
+    # The module turns the boot-time topology split on by default. Prod stays
+    # off until the runbook (todo-home/docs/design/topology-deploy.md: backup,
+    # copy, dry run) has been walked for the M3 tag.
+    topologyMigrateOnBoot = false;
 
     autoUpdate = {
       enable = true;
