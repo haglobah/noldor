@@ -65,6 +65,7 @@
           expansion = "z % && claude";
           setCursor = true;
         };
+        "co" = "codex --approve-for-me";
         "o" = "opencode";
         "y" = {
           expansion = "z % && opencode";
