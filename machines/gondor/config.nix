@@ -121,6 +121,21 @@
     variant = "";
   };
 
+  # Swap caps lock and esc on the internal keyboard only. keyd works at the
+  # evdev level and matches by USB id, so external keyboards are untouched.
+  # The Framework 16 keyboard modules are swappable; a different module has a
+  # different product id and needs its own entry in `ids`.
+  services.keyd = {
+    enable = true;
+    keyboards.framework-internal = {
+      ids = [ "32ac:0018" ]; # Framework Laptop 16 Keyboard Module - ISO
+      settings.main = {
+        capslock = "esc";
+        esc = "capslock";
+      };
+    };
+  };
+
   # Sound
   security.rtkit.enable = true;
   services.pulseaudio.enable = false;
