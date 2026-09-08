@@ -1,19 +1,22 @@
 { config, ... }:
 let
   compactToolchains = [
+    "buf"
     "bun"
     "c"
     "cmake"
     "cobol"
+    "cpp"
     "crystal"
     "daml"
     "dart"
     "deno"
     "dotnet"
-    "elixir"
     "elm"
     "erlang"
     "fennel"
+    "fortran"
+    "gleam"
     "golang"
     "gradle"
     "haskell"
@@ -23,15 +26,16 @@ let
     "julia"
     "kotlin"
     "lua"
+    "maven"
+    "mojo"
     "nim"
     "nodejs"
     "ocaml"
+    "odin"
     "opa"
     "perl"
     "php"
-    "pulumi"
     "purescript"
-    "python"
     "quarto"
     "raku"
     "red"
@@ -41,10 +45,10 @@ let
     "scala"
     "solidity"
     "swift"
-    "terraform"
     "typst"
     "vagrant"
     "vlang"
+    "xmake"
     "zig"
   ];
   compact = {
@@ -84,6 +88,35 @@ in
       nix_shell = {
         format = "[$symbol$state ]($style)";
       };
+
+      gcloud = {
+        format = "[$symbol$account ]($style)";
+      };
+
+      # Starship defaults with the "via"/"on"/"is" prefix word removed.
+      # These keep fields the shared compact format would drop.
+      aws.format = "[$symbol($profile )(\\($region\\) )(\\[$duration\\] )]($style)";
+      azure.format = "[$symbol($subscription) ]($style)";
+      openstack.format = "[$symbol$cloud(\\($project\\)) ]($style)";
+
+      git_branch.format = "[$symbol$branch(:$remote_branch) ]($style)";
+      hg_branch.format = "[$symbol$branch(:$topic) ]($style)";
+      fossil_branch.format = "[$symbol$branch ]($style)";
+      pijul_channel.format = "[$symbol$channel ]($style)";
+
+      package.format = "[$symbol$version ]($style)";
+      docker_context.format = "[$symbol$context ]($style)";
+      meson.format = "[$symbol$project ]($style)";
+
+      conda.format = "[$symbol$environment ]($style)";
+      spack.format = "[$symbol$environment ]($style)";
+      guix_shell.format = "[$symbol]($style) ";
+      pixi.format = "[$symbol($version )(\\($environment\\) )]($style)";
+
+      elixir.format = "[$symbol($version \\(OTP $otp_version\\) )]($style)";
+      python.format = "[$symbol$pyenv_prefix($version )(\\($virtualenv\\) )]($style)";
+      pulumi.format = "[$symbol($username@)$stack ]($style)";
+      terraform.format = "[$symbol$workspace ]($style)";
     }
     // builtins.listToAttrs (
       map (n: {
