@@ -173,10 +173,18 @@
       "beat"
     ];
   };
-  nix.gc = {
-    automatic = true;
-    dates = "monthly";
-    options = "--delete-older-than 90d";
+  # Age-only GC can leave zero rollback targets after a quiet week.
+  # nh clean keeps the 3 newest generations regardless of age, plus
+  # anything younger than 7d. It also drops direnv gcroots older than
+  # 7d (stale .direnv/flake-inputs pinned ~1100 roots) and hard-links
+  # duplicate store paths afterwards.
+  programs.nh = {
+    enable = true;
+    clean = {
+      enable = true;
+      dates = "weekly";
+      extraArgs = "--keep 3 --keep-since 7d --optimise";
+    };
   };
 
   # Docker
