@@ -1,5 +1,8 @@
 { ... }:
 {
+  # Custom kitten; tests: nix run nixpkgs#python3Packages.pytest -- home/programs/kitty
+  xdg.configFile."kitty/balance_splits.py".source = ./kitty/balance_splits.py;
+
   programs.kitty = {
     enable = true;
     shellIntegration.enableBashIntegration = true;
@@ -31,7 +34,9 @@
       # Same keys as in ~/.config/doom/config/keybindings.el.
       "ctrl+space>w>s" = "launch --cwd=current --location=hsplit";
       "ctrl+space>w>t" = "launch --cwd=current --location=vsplit";
-      "ctrl+space>w>equal" = "resize_window reset";
+      # `resize_window reset` only sets each split to 50/50 (A | (B | C) -> 1/2|1/4|1/4).
+      # The kitten weights each split by column/row count, so all columns get equal width.
+      "ctrl+space>w>equal" = "kitten balance_splits.py";
       "ctrl+space>w>plus" = "resize_window taller 2";
       "ctrl+space>w>minus" = "resize_window shorter 2";
       "ctrl+space>w>greater" = "resize_window wider 2";
