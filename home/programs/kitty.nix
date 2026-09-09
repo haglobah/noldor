@@ -1,4 +1,14 @@
 { ... }:
+let
+  # Claude Code and Codex have no native kitty actions for these, so kitty types them.
+  # ctrl+l clears a partial prompt so it does not corrupt the command.
+  # Codex treats >=3 chars inside 8ms as a paste and turns an Enter that arrives
+  # within 120ms after it into a newline. One send_text burst therefore never
+  # submits in Codex; a background process sends Enter after a delay instead.
+  slashCommand =
+    cmd:
+    "launch --type=background --allow-remote-control sh -c 'kitten @ send-key ctrl+l; kitten @ send-text /${cmd}; sleep 0.2; kitten @ send-key enter'";
+in
 {
   # Custom kitten; tests: nix run nixpkgs#python3Packages.pytest -- home/programs/kitty
   xdg.configFile."kitty/balance_splits.py".source = ./kitty/balance_splits.py;
@@ -59,10 +69,8 @@
       # Fullscreen TUIs handle these keys without relying on mouse coordinates.
       "alt+h" = "send_key ctrl+alt+d";
       "alt+," = "send_key ctrl+alt+u";
-      # Claude Code: no native actions for these, so kitty types them.
-      # \x0c is ctrl+l (chat:clearInput) so a partial prompt does not corrupt the command.
-      "ctrl+alt+l" = "send_text all \\x0c/clear\\r";
-      "ctrl+alt+r" = "send_text all \\x0c/resume\\r";
+      "ctrl+alt+l" = slashCommand "clear";
+      "ctrl+alt+r" = slashCommand "resume";
     };
 
     extraConfig = ''
