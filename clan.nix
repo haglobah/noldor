@@ -1,4 +1,8 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
+let
+  # Enable all three hosts together after following docs/todo-home-backup-testing.md.
+  todoHomeBackupEnabled = false;
+in
 {
   # Ensure this is unique among all clans you want to use.
   meta.name = "noldor";
@@ -137,7 +141,15 @@
   # machines/<name>/configuration.nix will be automatically imported.
   # See: https://docs.clan.lol/guides/more-machines/#automatic-registration
   machines = {
-    gondor = import ./machines/gondor/config.nix { inherit inputs; };
+    gondor = {
+      imports = [
+        (import ./machines/gondor/config.nix { inherit inputs; })
+      ]
+      ++ lib.optionals todoHomeBackupEnabled [
+        (import ./modules/todo-home-backup-runner.nix { inherit inputs; })
+      ];
+      _module.args = { inherit inputs; };
+    };
     orthanc =
       { _config, pkgs, ... }:
       {
@@ -145,7 +157,7 @@
         imports = [
           inputs.home-manager.nixosModules.home-manager
 
-          inputs.todo-home.nixosModules.default
+          inputs.ht.nixosModules.default
           ./modules/todo-home.nix
 
           # inputs.colab.nixosModules.default
@@ -153,7 +165,8 @@
 
           ./modules/sslh.nix
           ./modules/catppuccin-cache.nix
-        ];
+        ]
+        ++ lib.optionals todoHomeBackupEnabled [ ./modules/todo-home-backup-source.nix ];
 
         environment.systemPackages = with pkgs; [
           git
@@ -229,7 +242,8 @@
 
           # Only here until the grafana service gets fixed
           # ./modules/grafana-secret.nix
-        ];
+        ]
+        ++ lib.optionals todoHomeBackupEnabled [ ./modules/todo-home-backup-watchdog.nix ];
         environment.systemPackages = with pkgs; [
           git
           kanidm_1_11

@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   inputs,
   ...
 }:
@@ -56,18 +57,13 @@ in
         echo "CREEM_WEBHOOK_SECRET=$(cat $prompts/creem-webhook-secret)" > "$out/env_file"
       '';
     };
-    todo-home-creem-product-id-sync-monthly = {
-      share = true;
-      files."env_file" = { };
-      prompts."creem-product-id-sync-monthly" = {
-        type = "line";
-        description = "The product id of the monthly sync payment option";
-      };
-      script = ''
-        echo "CREEM_PRODUCT_ID_SYNC_MONTHLY=$(cat $prompts/creem-product-id-sync-monthly)" > "$out/env_file"
-      '';
-    };
+
   };
+
+  # Preserve the current test-mode behavior explicitly. Switch production only
+  # together with matching live credentials and HT's public product configuration.
+  systemd.services.todo-home-prod.environment.CREEM_TEST_MODE = lib.mkDefault "true";
+  systemd.services.todo-home-dev.environment.CREEM_TEST_MODE = lib.mkDefault "true";
 
   clan.core.state.todo-home = {
     folders = [
@@ -78,19 +74,19 @@ in
   services.todo-home.prod = {
     enable = true;
     domain = "todos.humane.tools";
-    frontend = inputs.todo-home.packages.x86_64-linux.frontend-deploy;
-    backend = inputs.todo-home.packages.x86_64-linux.backend;
+    frontend = inputs.ht.packages.x86_64-linux.frontend-deploy;
+    backend = inputs.ht.packages.x86_64-linux.backend;
     envFiles = envFiles;
     authPort = 3001;
     syncPort = 3030;
     # The module turns the boot-time topology split on by default. Prod stays
-    # off until the runbook (todo-home/docs/design/topology-deploy.md: backup,
+    # off until the runbook (ht/apps/todos/docs/design/topology-deploy.md: backup,
     # copy, dry run) has been walked for the M3 tag.
     topologyMigrateOnBoot = false;
 
     autoUpdate = {
       enable = true;
-      repo = "git@github.com:haglobah/todo-home.git";
+      repo = "git@github.com:haglobah/ht.git";
       strategy = "tag";
       tagPattern = "v*";
       interval = "*:0/1";
@@ -98,31 +94,29 @@ in
       sshKeyFile = sshKey;
       # NOTE: This is the derivation the autoupdater tries to build.
       # Optimally, I'd like this to be derived from `services.todo-home.<name>.frontend`,
-      # and get rid of the sync server coupling in todo-home/flake.nix
+      # and get rid of the sync server coupling in ht/flake.nix
       frontendFlakeOutput = "frontend-deploy";
     };
   };
   services.todo-home.dev = {
     enable = true;
     domain = "dev.todos.humane.tools";
-    frontend = inputs.todo-home.packages.x86_64-linux.frontend.override {
-      syncServerUrl = "wss://dev.todos.humane.tools/sync";
-    };
-    backend = inputs.todo-home.packages.x86_64-linux.backend;
+    frontend = inputs.ht.packages.x86_64-linux.frontend-deploy-dev;
+    backend = inputs.ht.packages.x86_64-linux.backend;
     envFiles = envFiles;
     authPort = 3101;
     syncPort = 3130;
 
     autoUpdate = {
       enable = true;
-      repo = "git@github.com:haglobah/todo-home.git";
+      repo = "git@github.com:haglobah/ht.git";
       branch = "main";
       interval = "*:0/1";
       # This key is added to github
       sshKeyFile = sshKey;
       # NOTE: This is the derivation the autoupdater tries to build.
       # Optimally, I'd like this to be derived from `services.todo-home.<name>.frontend`,
-      # and get rid of the sync server coupling in todo-home/flake.nix
+      # and get rid of the sync server coupling in ht/flake.nix
       frontendFlakeOutput = "frontend-deploy-dev";
     };
   };

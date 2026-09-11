@@ -1,5 +1,5 @@
 # External uptime probe for todos.humane.tools (see
-# todo-home/docs/design/monitoring.md for the health endpoints it hits).
+# ht/apps/todos/docs/design/monitoring.md for the health endpoints it hits).
 #
 # Gatus runs here on formenos, outside orthanc, so a dead host still gets
 # reported. Alerts go to a secret topic on the public ntfy.sh; the ntfy app
