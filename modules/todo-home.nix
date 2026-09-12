@@ -82,7 +82,7 @@ in
     # The module turns the boot-time topology split on by default. Prod stays
     # off until the runbook (ht/apps/todos/docs/design/topology-deploy.md: backup,
     # copy, dry run) has been walked for the M3 tag.
-    topologyMigrateOnBoot = false;
+    topologyMigrateOnBoot = true;
 
     autoUpdate = {
       enable = true;
