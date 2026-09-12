@@ -10,6 +10,8 @@
 # nixpkgs does after its Rust build: install `codex` and its
 # `codex-code-mode-host` companion, prefix PATH with ripgrep and bubblewrap,
 # install shell completions, and check `--version` against the version.
+# Both variants are wrapped with the Nix-packaged Playwright MCP server,
+# which supplies matching NixOS-compatible browser binaries.
 {
   lib,
   stdenvNoCC,
@@ -18,6 +20,9 @@
   codex-bin,
   installShellFiles,
   makeBinaryWrapper,
+  makeWrapper,
+  playwright-mcp,
+  symlinkJoin,
   ripgrep,
   versionCheckHook,
   bundle ? builtins.fromJSON (builtins.readFile "${codex-bin}/codex-package.json"),
@@ -28,48 +33,73 @@ assert lib.assertMsg (
 ) "codex-bin is the x86_64-linux bundle; add a flake input for ${stdenvNoCC.hostPlatform.system}";
 assert lib.assertMsg (bundle.layoutVersion == 1)
   "codex-package.json layoutVersion changed to ${toString bundle.layoutVersion}; update this package";
-if lib.versionAtLeast codex.version releaseVersion then
-  codex
-else
-  stdenvNoCC.mkDerivation {
-    pname = "codex";
-    version = releaseVersion;
-    src = codex-bin;
+let
+  unwrapped =
+    if lib.versionAtLeast codex.version releaseVersion then
+      codex
+    else
+      stdenvNoCC.mkDerivation {
+        pname = "codex";
+        version = releaseVersion;
+        src = codex-bin;
 
-    nativeBuildInputs = [
-      installShellFiles
-      makeBinaryWrapper
-    ];
+        nativeBuildInputs = [
+          installShellFiles
+          makeBinaryWrapper
+        ];
 
-    # Upstream ships stripped static-pie binaries.
-    dontStrip = true;
+        # Upstream ships stripped static-pie binaries.
+        dontStrip = true;
 
-    installPhase = ''
-      runHook preInstall
-      installBin ${bundle.entrypoint} bin/codex-code-mode-host
-      runHook postInstall
-    '';
+        installPhase = ''
+          runHook preInstall
+          installBin ${bundle.entrypoint} bin/codex-code-mode-host
+          runHook postInstall
+        '';
 
-    postInstall = ''
-      installShellCompletion --cmd codex \
-        --bash <($out/bin/codex completion bash) \
-        --fish <($out/bin/codex completion fish) \
-        --zsh <($out/bin/codex completion zsh)
-    '';
+        postInstall = ''
+          installShellCompletion --cmd codex \
+            --bash <($out/bin/codex completion bash) \
+            --fish <($out/bin/codex completion fish) \
+            --zsh <($out/bin/codex completion zsh)
+        '';
 
-    postFixup = ''
-      wrapProgram $out/bin/codex --prefix PATH : ${
-        lib.makeBinPath [
-          ripgrep
-          bubblewrap
-        ]
+        postFixup = ''
+          wrapProgram $out/bin/codex --prefix PATH : ${
+            lib.makeBinPath [
+              ripgrep
+              bubblewrap
+            ]
+          }
+        '';
+
+        doInstallCheck = true;
+        nativeInstallCheckInputs = [ versionCheckHook ];
+
+        meta = codex.meta // {
+          sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
+        };
+      };
+in
+symlinkJoin {
+  name = "codex-${unwrapped.version}";
+  inherit (unwrapped) version;
+  paths = [ unwrapped ];
+  nativeBuildInputs = [ makeWrapper ];
+  postBuild = ''
+    rm "$out/bin/codex"
+    makeWrapper ${unwrapped}/bin/codex "$out/bin/codex" \
+      --add-flags ${
+        lib.escapeShellArg (
+          lib.escapeShellArgs [
+            "--config"
+            "mcp_servers.playwright.command=\"${lib.getExe playwright-mcp}\""
+            "--config"
+            ''mcp_servers.playwright.args=["--headless", "--isolated"]''
+          ]
+        )
       }
-    '';
-
-    doInstallCheck = true;
-    nativeInstallCheckInputs = [ versionCheckHook ];
-
-    meta = codex.meta // {
-      sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
-    };
-  }
+  '';
+  passthru = { inherit unwrapped; };
+  inherit (unwrapped) meta;
+}

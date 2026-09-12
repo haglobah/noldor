@@ -133,7 +133,7 @@
 
             packages.codex = pkgs.callPackage ./home/pkgs/codex { inherit (inputs) codex-bin; };
 
-            # Same eval-time test for codex: older release -> nixpkgs as-is;
+            # Test the underlying Codex selection beneath the Playwright wrapper:
             # newer release -> our binary derivation from the release bundle.
             checks.codex-fallback =
               let
@@ -146,9 +146,9 @@
                 older = mk "0.0.1";
                 newer = mk "999.0.0";
               in
-              assert older == pkgs.codex;
+              assert older.unwrapped == pkgs.codex;
               assert newer.version == "999.0.0";
-              assert newer.src == inputs.codex-bin;
+              assert newer.unwrapped.src == inputs.codex-bin;
               pkgs.runCommand "codex-fallback" { } "touch $out";
 
             devShells.default = pkgs.mkShell {
