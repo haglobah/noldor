@@ -65,10 +65,7 @@
     beads.url = "github:haglobah/beads";
     hx.url = "github:haglobah/hx";
     nix-openclaw.url = "github:openclaw/nix-openclaw";
-    ht.url = "git+ssh://git@github.com/haglobah/ht.git?ref=refs/tags/v0.5.0";
-    # No nixpkgs.follows: orca's pnpmDeps hash is pinned to its own locked
-    # nixpkgs' pnpm, and matching locks let gondor reuse the built store path.
-    orca.url = "git+ssh://git@github.com/haglobah/orca.git?ref=nix-flake";
+    ht.url = "git+ssh://git@github.com/haglobah/ht.git";
     colab.url = "git+ssh://git@github.com/haglobah/colab.git?ref=noldor-deploy";
     # donethat.url = "git+ssh://git@github.com/haglobah/donethat-electron.git";
   };

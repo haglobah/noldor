@@ -16,10 +16,8 @@
     ../../modules/catppuccin-cache.nix
     ../../modules/gnome.nix
     inputs.home-manager.nixosModules.home-manager
-    inputs.orca.nixosModules.default
+    # inputs.orca.nixosModules.default
   ];
-
-  programs.orca.enable = true;
 
   # Allow unfree packages (obsidian, discord, etc.)
   nixpkgs.config.allowUnfree = true;

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  emacsWithPackages = (pkgs.emacsPackagesFor pkgs.emacs30).emacsWithPackages (epkgs: [
+  emacsWithPackages = (pkgs.emacsPackagesFor pkgs.emacs31).emacsWithPackages (epkgs: [
     epkgs.mu4e
   ]);
 in

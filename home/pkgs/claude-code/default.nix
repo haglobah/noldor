@@ -28,14 +28,18 @@ if lib.versionAtLeast claude-code.version releaseVersion then
 else
   claude-code.overrideAttrs (
     old:
-    assert lib.assertMsg (lib.hasInfix "installBin $src" old.installPhase)
+    let
+      # nixpkgs fetches a zstd-compressed binary and decompresses it into place.
+      nixpkgsInstall = "unzstd -q $src -o $out/bin/claude";
+    in
+    assert lib.assertMsg (lib.hasInfix nixpkgsInstall old.installPhase)
       "nixpkgs' claude-code installPhase changed; update this override";
     {
       version = releaseVersion;
       # The flake input is the unpacked tarball: a directory holding `claude`.
       src = claude-code-bin;
       installPhase =
-        builtins.replaceStrings [ "installBin $src" ] [ "installBin $src/claude" ]
+        builtins.replaceStrings [ nixpkgsInstall ] [ "cp $src/claude $out/bin/claude" ]
           old.installPhase;
     }
   )
