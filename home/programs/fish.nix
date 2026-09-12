@@ -192,6 +192,7 @@
         "reload" = "source ~/.config/fish/config.fish";
       };
       shellAliases = {
+        "who" = "command w";
         ".." = "cd ..";
         "cp" = "cp -i";
         "l" = "lla";
@@ -199,6 +200,29 @@
         "mv" = "mv -i";
         "rm" = "rm -i";
         "du" = "du -ach | sort -h";
+      };
+
+      functions.w = {
+        description = "Open a three-pane kitty tab using z directory lookup (default: current)";
+        body = ''
+          set -l directory "$PWD"
+          # Match z's direct-path precedence and history lookup without changing cwd.
+          if test (count $argv) -eq 1; and test -d "$argv[1]"
+            set directory "$argv[1]"
+          else if set -q argv[1]
+            set directory (command zoxide query --exclude "$PWD" -- $argv)
+            or return 1
+          end
+          if not test -d "$directory"
+            echo "w: not a directory: $directory" >&2
+            return 1
+          end
+
+          # Kitty resolves relative paths in its own process, not this shell.
+          set directory (path resolve -- "$directory" | string collect)
+          or return 1
+          command kitty @ --to=unix:@mykitty kitten balance_splits.py workspace "$directory"
+        '';
       };
 
       shellInit = ''

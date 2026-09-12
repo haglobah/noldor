@@ -40,10 +40,11 @@ in
       "alt+shift+right" = "next_tab_forward";
       "ctrl+]" = "launch --cwd=current --location=vsplit";
       "ctrl+[" = "launch --cwd=current --location=hsplit";
-      # Doom-style window leader (SPC w ...) with ctrl+space as leader.
+      # Doom-style window leader (SPC w ...) with Ctrl+Space (keyboard N+I combo) as leader.
       # Same keys as in ~/.config/doom/config/keybindings.el.
       "ctrl+space>w>s" = "launch --cwd=current --location=hsplit";
       "ctrl+space>w>t" = "launch --cwd=current --location=vsplit";
+      "ctrl+space>w>colon" = "kitten balance_splits.py workspace";
       # `resize_window reset` only sets each split to 50/50 (A | (B | C) -> 1/2|1/4|1/4).
       # The kitten weights each split by column/row count, so all columns get equal width.
       "ctrl+space>w>equal" = "kitten balance_splits.py";
