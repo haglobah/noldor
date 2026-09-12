@@ -20,7 +20,7 @@
     ./modules/run-or-raise.nix
     ./modules/school-networks.nix
     ./modules/emacs.nix
-    ./modules/monitor-brightness.nix
+    # ./modules/monitor-brightness.nix
     ./secrets.nix
 
     ./programs/git.nix
@@ -31,7 +31,7 @@
     ./programs/fish.nix
     ./programs/shell-utils.nix
     ./programs/starship.nix
-    ./programs/obs.nix
+    # ./programs/obs.nix
   ];
 
   config = {
