@@ -218,6 +218,8 @@
   # TAG+="uaccess", so the seated user gets an ACL on /dev/hidraw* for
   # 05ac:1114/1116/1118. Without it the nodes are root-only (0600).
   services.udev.packages = [ pkgs.asdbctl ];
+  # Loads i2c-dev and grants the local desktop user access for ddcutil.
+  hardware.i2c.enable = true;
 
   # Tailscale
   services.tailscale = {
