@@ -181,7 +181,7 @@
         "uf" = "echo \"use flake . -Lv\" >> .envrc";
         "ud" = "echo \"use flake . -Lv\" >> .envrc && direnv allow";
         "uda" = "git add flake.nix && echo \"use flake . -Lv\" >> .envrc && direnv allow";
-        "da" = "direnv allow";
+        "da" = "git add flake.nix && direnv allow";
         "dr" = "direnv reload";
 
         "ds" = "doom sync";
