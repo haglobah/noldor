@@ -725,11 +725,11 @@
         "portless": "portless"
       },
       "locked": {
-        "lastModified": 1789108029,
-        "narHash": "sha256-6SniYvPOEoAKxLSdZ9gkl24jbEnl/FTNZ/wAZgnjZgQ=",
+        "lastModified": 1789338532,
+        "narHash": "sha256-fU9aqAkTerY4VljJE6WeTR6/IzQodO+Wam6yCQiZkLs=",
         "ref": "refs/heads/main",
-        "rev": "10726df1a852701e434a49e656e87296b7080667",
-        "revCount": 722,
+        "rev": "90275d2c6912911c5ca484ee3544480c3ace0738",
+        "revCount": 736,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/ht.git"
       },
