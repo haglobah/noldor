@@ -159,6 +159,8 @@ in
 
           inputs.ht.nixosModules.default
           ./modules/todo-home.nix
+          inputs.ht.nixosModules.mail
+          ./modules/humane-mail.nix
 
           # inputs.colab.nixosModules.default
           # ./modules/colab.nix

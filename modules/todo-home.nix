@@ -13,6 +13,10 @@ let
     config.clan.core.vars.generators.todo-home-creem-webhook.files.env_file.path
   ];
   sshKey = config.clan.core.vars.generators.openssh.files."ssh.id_ed25519".path;
+  # The Mail bridge token and origin, minted per instance in ./humane-mail.nix
+  # so both sides of the bridge hold the same token.
+  mailBridgeEnv =
+    instance: config.clan.core.vars.generators."humane-mail-${instance}".files.todo_env.path;
 in
 {
   clan.core.vars.generators = {
@@ -76,7 +80,15 @@ in
     domain = "todos.humane.tools";
     frontend = inputs.ht.packages.x86_64-linux.frontend-deploy;
     backend = inputs.ht.packages.x86_64-linux.backend;
-    envFiles = envFiles;
+    envFiles = envFiles ++ [ (mailBridgeEnv "prod") ];
+    # Shared sessions with mail.humane.tools (ht/apps/mail/README.md, "Running
+    # against a real account"): the parent cookie domain lets a Todo login
+    # carry over to Mail; the prefix is new, so every user signs in once more
+    # after the first rollout. Mail's origin must be trusted or Better Auth
+    # refuses its proxied cookie-bearing requests (sign-out) as "Invalid origin".
+    sharedCookieDomain = "humane.tools";
+    cookiePrefix = "humane-shared";
+    trustedOrigins = [ "https://mail.humane.tools" ];
     authPort = 3001;
     syncPort = 3030;
     # The module turns the boot-time topology split on by default. Prod stays
@@ -103,7 +115,14 @@ in
     domain = "dev.todos.humane.tools";
     frontend = inputs.ht.packages.x86_64-linux.frontend-deploy-dev;
     backend = inputs.ht.packages.x86_64-linux.backend;
-    envFiles = envFiles;
+    envFiles = envFiles ++ [ (mailBridgeEnv "dev") ];
+    # No parent cookie domain here: every humane.tools subdomain would join
+    # the trust boundary, and production cookies must never reach dev. The
+    # distinct prefix keeps prod's shared cookies unreadable here regardless.
+    # Mail's proxied login still works without shared cookies; only seamless
+    # session hand-over between dev.todos and dev.mail is lost.
+    cookiePrefix = "humane-dev";
+    trustedOrigins = [ "https://dev.mail.humane.tools" ];
     authPort = 3101;
     syncPort = 3130;
 
