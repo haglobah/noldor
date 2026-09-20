@@ -1,6 +1,7 @@
 {
   writeShellApplication,
   asdbctl,
+  coreutils,
   ddcutil,
   gawk,
   libnotify,
@@ -10,6 +11,7 @@ writeShellApplication {
   name = "monitor-brightness";
   runtimeInputs = [
     asdbctl
+    coreutils
     ddcutil
     gawk
     libnotify

@@ -21,7 +21,7 @@
     ./modules/school-networks.nix
     ./modules/emacs.nix
     ./modules/mycelium-sync.nix
-    # ./modules/monitor-brightness.nix
+    ./modules/monitor-brightness.nix
     ./secrets.nix
 
     ./programs/git.nix
