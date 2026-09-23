@@ -633,6 +633,27 @@
         "type": "github"
       }
     },
+    "herdr": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1789856492,
+        "narHash": "sha256-pILX+xtORX9rHtOAsPpapyb511f+UVmuk1cBGp17ICE=",
+        "owner": "herdrdev",
+        "repo": "herdr",
+        "rev": "9d29441a84858780f80ff1bc35ce9c0c5f43b0c9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "herdrdev",
+        "repo": "herdr",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -743,7 +764,7 @@
         "crane": "crane",
         "flake-parts": "flake-parts_6",
         "nixpkgs": "nixpkgs_7",
-        "rust-overlay": "rust-overlay"
+        "rust-overlay": "rust-overlay_2"
       },
       "locked": {
         "lastModified": 1780618717,
@@ -1191,6 +1212,7 @@
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts_3",
         "gastown": "gastown",
+        "herdr": "herdr",
         "home-manager": "home-manager_3",
         "ht": "ht",
         "hx": "hx",
@@ -1202,6 +1224,27 @@
       }
     },
     "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "herdr",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1783577481,
+        "narHash": "sha256-EWMxOWrJ031f8f/lrcEmhTRs4npw1/5N3Hcjin846c8=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "4cdea398dc491b082dccdce0fad1ed0b75fa3394",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_2": {
       "inputs": {
         "nixpkgs": [
           "hx",

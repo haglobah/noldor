@@ -90,6 +90,9 @@
         # For claude code voice mode
         sox
 
+        # herdr
+        inputs.herdr.packages.${stdenv.hostPlatform.system}.default
+
         # Better haskell tooling
         inputs.hx.packages.${stdenv.hostPlatform.system}.default
 

@@ -52,6 +52,11 @@
       flake = false;
     };
 
+    herdr = {
+      url = "github:herdrdev/herdr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # nix-starter-kit = {
     #   url = "github:active-group/nix-starter-kit";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -109,10 +114,6 @@
               config.allowUnfree = true;
             };
 
-            packages.claude-code = pkgs.callPackage ./home/pkgs/claude-code {
-              inherit (inputs) claude-code-bin claude-code-version;
-            };
-
             # Eval-time test of the nixpkgs fallback: older release -> nixpkgs
             # as-is; newer release -> nixpkgs' derivation with the release src.
             checks.claude-code-fallback =
@@ -130,8 +131,6 @@
               assert newer.version == "999.0.0";
               assert newer.src == inputs.claude-code-bin;
               pkgs.runCommand "claude-code-fallback" { } "touch $out";
-
-            packages.codex = pkgs.callPackage ./home/pkgs/codex { inherit (inputs) codex-bin; };
 
             # Test the underlying Codex selection beneath the Playwright wrapper:
             # newer release -> our binary derivation from the release bundle.
