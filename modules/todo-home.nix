@@ -80,7 +80,7 @@ in
     domain = "todos.humane.tools";
     frontend = inputs.ht.packages.x86_64-linux.frontend-deploy;
     backend = inputs.ht.packages.x86_64-linux.backend;
-    envFiles = envFiles ++ [ (mailBridgeEnv "prod") ];
+    envFiles = envFiles; # ++ [ (mailBridgeEnv "prod") ];
     # Shared sessions with mail.humane.tools (ht/apps/mail/README.md, "Running
     # against a real account"): the parent cookie domain lets a Todo login
     # carry over to Mail; the prefix is new, so every user signs in once more
