@@ -205,94 +205,121 @@
       };
     };
 
-    dconf.settings = {
-      "org/gnome/desktop/input-sources" = {
-        xkb-options = [ "terminate:ctrl_alt_bksp" ];
-      };
+    dconf.settings =
+      let
+        # Shift the night light temperature by $1 Kelvin, clamped to 1700..6500.
+        # Takes effect live while night light is enabled.
+        nightLightStep = pkgs.writeShellScript "night-light-step" ''
+          key="org.gnome.settings-daemon.plugins.color night-light-temperature"
+          current=$(gsettings get $key)
+          next=$(( ''${current#uint32 } + $1 ))
+          [ "$next" -lt 1700 ] && next=1700
+          [ "$next" -gt 6500 ] && next=6500
+          gsettings set $key "$next"
+        '';
+      in
+      {
+        "org/gnome/desktop/input-sources" = {
+          xkb-options = [ "terminate:ctrl_alt_bksp" ];
+        };
 
-      "org/gnome/desktop/interface" = {
-        clock-format = "24h";
-        clock-show-date = true;
-        clock-show-seconds = true;
-        color-scheme = "prefer-dark";
-        # Chrome follows this key as prefers-reduced-motion; a stray GUI
-        # toggle once disabled it, so pin it declaratively.
-        enable-animations = true;
-        show-battery-percentage = true;
-        text-scaling-factor = 1.21;
-      };
+        "org/gnome/desktop/interface" = {
+          clock-format = "24h";
+          clock-show-date = true;
+          clock-show-seconds = true;
+          color-scheme = "prefer-dark";
+          # Chrome follows this key as prefers-reduced-motion; a stray GUI
+          # toggle once disabled it, so pin it declaratively.
+          enable-animations = true;
+          show-battery-percentage = true;
+          text-scaling-factor = 1.21;
+        };
 
-      "org/gnome/desktop/notifications" = {
-        show-banners = false;
-      };
+        "org/gnome/desktop/notifications" = {
+          show-banners = false;
+        };
 
-      "org/gnome/desktop/search-providers" = {
-        disable-external = true;
-      };
+        "org/gnome/desktop/search-providers" = {
+          disable-external = true;
+        };
 
-      "org/gnome/desktop/session" = {
-        idle-delay = lib.hm.gvariant.mkUint32 0;
-      };
+        "org/gnome/desktop/session" = {
+          idle-delay = lib.hm.gvariant.mkUint32 0;
+        };
 
-      "org/gnome/desktop/wm/keybindings" = {
-        activate-window-menu = [ ];
-        minimize = [ ];
-        switch-windows = [ "<Super>Tab" ];
-        switch-windows-backward = [ "<Shift><Super>Tab" ];
-      };
+        "org/gnome/desktop/wm/keybindings" = {
+          activate-window-menu = [ ];
+          minimize = [ ];
+          switch-windows = [ "<Super>Tab" ];
+          switch-windows-backward = [ "<Shift><Super>Tab" ];
+        };
 
-      "org/gnome/desktop/wm/preferences" = {
-        button-layout = "appmenu:close";
-      };
+        "org/gnome/desktop/wm/preferences" = {
+          button-layout = "appmenu:close";
+        };
 
-      "org/gnome/nautilus/list-view" = {
-        use-tree-view = true;
-      };
+        "org/gnome/nautilus/list-view" = {
+          use-tree-view = true;
+        };
 
-      "org/gnome/nautilus/preferences" = {
-        default-folder-viewer = "list-view";
-      };
+        "org/gnome/nautilus/preferences" = {
+          default-folder-viewer = "list-view";
+        };
 
-      "org/gnome/settings-daemon/plugins/media-keys" = {
-        custom-keybindings = [
-          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-        ];
-        rotate-video-lock-static = [ "XF86RotationLockToggle" ];
-      };
+        "org/gnome/settings-daemon/plugins/media-keys" = {
+          custom-keybindings = [
+            "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+            "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+            "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
+          ];
+          rotate-video-lock-static = [ "XF86RotationLockToggle" ];
+        };
 
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-        binding = "<Shift><Super>n";
-        command =
-          let
-            toggle = pkgs.writeShellScript "toggle-night-light" ''
-              current=$(gsettings get org.gnome.settings-daemon.plugins.color night-light-enabled)
-              if [ "$current" = "true" ]; then
-                gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled false
-              else
-                gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
-              fi
-            '';
-          in
-          toString toggle;
-        name = "Toggle Night Light";
-      };
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+          binding = "<Shift><Super>n";
+          command =
+            let
+              toggle = pkgs.writeShellScript "toggle-night-light" ''
+                current=$(gsettings get org.gnome.settings-daemon.plugins.color night-light-enabled)
+                if [ "$current" = "true" ]; then
+                  gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled false
+                else
+                  gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
+                fi
+              '';
+            in
+            toString toggle;
+          name = "Toggle Night Light";
+        };
 
-      "org/gnome/settings-daemon/plugins/power" = {
-        idle-dim = false;
-      };
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+          binding = "<Shift><Super>comma";
+          command = "${nightLightStep} -500";
+          name = "Night Light Warmer";
+        };
 
-      "org/gnome/shell" = {
-        disable-user-extensions = false;
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
+          binding = "<Shift><Super>period";
+          command = "${nightLightStep} 500";
+          name = "Night Light Cooler";
+        };
 
-        enabled-extensions = [ "run-or-raise@edvard.cz" ];
+        "org/gnome/settings-daemon/plugins/power" = {
+          idle-dim = false;
+        };
+
+        "org/gnome/shell" = {
+          disable-user-extensions = false;
+
+          enabled-extensions = [ "run-or-raise@edvard.cz" ];
+        };
+        "org/gnome/shell/keybindings" = {
+          toggle-message-tray = [ ];
+          toggle-quick-settings = [ ];
+          focus-active-notification = [ ];
+          toggle-application-view = [ ];
+        };
       };
-      "org/gnome/shell/keybindings" = {
-        toggle-message-tray = [ ];
-        toggle-quick-settings = [ ];
-        focus-active-notification = [ ];
-        toggle-application-view = [ ];
-      };
-    };
 
     programs.home-manager.enable = true;
 
