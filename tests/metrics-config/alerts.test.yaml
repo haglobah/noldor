@@ -1,0 +1,180 @@
+# Unit tests for the vmalert rules in modules/metrics/rules.nix, run by
+# vmalert-tool in tests/metrics-config.nix.
+rule_files:
+  - rules.yaml
+evaluation_interval: 1m
+
+tests:
+  # Scrape failures of the apps warn only: public uptime pages come from
+  # Gatus, so a dead backend pages once, not twice.
+  - name: app metrics down warns
+    interval: 1m
+    input_series:
+      - series: 'up{job="todos",app="todos",instance="prod",machine="orthanc"}'
+        values: "0x10"
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: AppMetricsDown
+        exp_alerts:
+          - exp_labels:
+              severity: warn
+              job: todos
+              app: todos
+              instance: prod
+              machine: orthanc
+            exp_annotations:
+              summary: "todos prod: metrics endpoint unreachable for 3m"
+
+  # 10 of 100 requests/min are app 500s: 10% > 5% with enough traffic.
+  - name: prod 5xx ratio pages, dev warns
+    interval: 1m
+    input_series:
+      - series: 'caddy_http_request_duration_seconds_count{machine="orthanc",host="todos.humane.tools",code="200",handler="subroute",server="srv0",method="GET"}'
+        values: "0+90x15"
+      - series: 'caddy_http_request_duration_seconds_count{machine="orthanc",host="todos.humane.tools",code="500",handler="subroute",server="srv0",method="GET"}'
+        values: "0+10x15"
+      - series: 'caddy_http_request_duration_seconds_count{machine="orthanc",host="dev.mail.humane.tools",code="200",handler="subroute",server="srv0",method="GET"}'
+        values: "0+90x15"
+      - series: 'caddy_http_request_duration_seconds_count{machine="orthanc",host="dev.mail.humane.tools",code="500",handler="subroute",server="srv0",method="GET"}'
+        values: "0+10x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: HighErrorRate
+        exp_alerts:
+          - exp_labels:
+              severity: page
+              host: todos.humane.tools
+              machine: orthanc
+            exp_annotations:
+              summary: "todos.humane.tools: 10% of requests fail with 5xx"
+          - exp_labels:
+              severity: warn
+              host: dev.mail.humane.tools
+              machine: orthanc
+            exp_annotations:
+              summary: "dev.mail.humane.tools: 10% of requests fail with 5xx"
+
+  # 502/504 mean the backend is unreachable; that is Gatus' page.
+  - name: gateway errors and low traffic do not fire
+    interval: 1m
+    input_series:
+      - series: 'caddy_http_request_duration_seconds_count{machine="orthanc",host="mail.humane.tools",code="502",handler="subroute",server="srv0",method="GET"}'
+        values: "0+100x15"
+      - series: 'caddy_http_request_duration_seconds_count{machine="orthanc",host="todos.humane.tools",code="500",handler="subroute",server="srv0",method="GET"}'
+        values: "0+1x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: HighErrorRate
+        exp_alerts: []
+
+  - name: mail sync stale
+    interval: 1m
+    input_series:
+      - series: 'humane_mail_sync_age_seconds{job="mail",app="mail",instance="prod",machine="orthanc"}'
+        values: "1900x10"
+      - series: 'humane_mail_sync_age_seconds{job="mail",app="mail",instance="dev",machine="orthanc"}'
+        values: "60x10"
+    alert_rule_test:
+      - eval_time: 8m
+        alertname: MailSyncStale
+        exp_alerts:
+          - exp_labels:
+              severity: page
+              job: mail
+              app: mail
+              instance: prod
+              machine: orthanc
+            exp_annotations:
+              summary: "mail prod: an account has not synced for 31m 40s"
+
+  - name: mail outbox stuck while nothing is sent
+    interval: 1m
+    input_series:
+      - series: 'humane_mail_outbox{job="mail",app="mail",instance="prod",machine="orthanc",status="queued"}'
+        values: "2x20"
+      - series: 'humane_mail_send_status_total{job="mail",app="mail",instance="prod",machine="orthanc",status="sent"}'
+        values: "5x20"
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: MailOutboxStuck
+        exp_alerts: []
+      - eval_time: 20m
+        alertname: MailOutboxStuck
+        exp_alerts:
+          - exp_labels:
+              severity: page
+              job: mail
+              app: mail
+              instance: prod
+              machine: orthanc
+              status: queued
+            exp_annotations:
+              summary: "mail prod: 2 outbox messages queued for 15m with no send"
+
+  - name: mail outbox drains
+    interval: 1m
+    input_series:
+      - series: 'humane_mail_outbox{job="mail",app="mail",instance="prod",machine="orthanc",status="queued"}'
+        values: "2x20"
+      - series: 'humane_mail_send_status_total{job="mail",app="mail",instance="prod",machine="orthanc",status="sent"}'
+        values: "0+1x20"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: MailOutboxStuck
+        exp_alerts: []
+
+  - name: todos refused updates page for prod
+    interval: 1m
+    input_series:
+      - series: 'todo_home_sync_updates_refused_total{job="todos",app="todos",instance="prod",machine="orthanc",reason="apply_failed"}'
+        values: "0 0 3 3 3"
+      - series: 'todo_home_sync_updates_refused_total{job="todos",app="todos",instance="prod",machine="orthanc",reason="derived_doc"}'
+        values: "0 5 10 15 20"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: TodosSyncApplyFailed
+        exp_alerts:
+          - exp_labels:
+              severity: page
+              job: todos
+              app: todos
+              instance: prod
+              machine: orthanc
+              reason: apply_failed
+            exp_annotations:
+              summary: "todos prod: 3 sync updates failed to apply in 10m"
+
+  - name: host memory and disk
+    interval: 1m
+    input_series:
+      - series: 'node_memory_MemAvailable_bytes{job="node",machine="formenos"}'
+        values: "300x20"
+      - series: 'node_memory_MemTotal_bytes{job="node",machine="formenos"}'
+        values: "4000x20"
+      - series: 'node_filesystem_avail_bytes{job="node",machine="orthanc",mountpoint="/",device="/dev/sda1",fstype="ext4"}'
+        values: "5x20"
+      - series: 'node_filesystem_size_bytes{job="node",machine="orthanc",mountpoint="/",device="/dev/sda1",fstype="ext4"}'
+        values: "100x20"
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: HostMemoryLow
+        exp_alerts:
+          - exp_labels:
+              severity: page
+              job: node
+              machine: formenos
+            exp_annotations:
+              summary: "formenos: 8% memory available"
+      - eval_time: 16m
+        alertname: HostDiskLow
+        exp_alerts:
+          - exp_labels:
+              severity: page
+              job: node
+              machine: orthanc
+              mountpoint: /
+              device: /dev/sda1
+              fstype: ext4
+            exp_annotations:
+              summary: "orthanc /: 5% disk free"
+

@@ -150,6 +150,18 @@
               assert newer.unwrapped.src == inputs.codex-bin;
               pkgs.runCommand "codex-fallback" { } "touch $out";
 
+            # VM test of the formenos metrics backend (modules/metrics.nix).
+            checks.metrics-backend = import ./tests/metrics-backend.nix {
+              inherit pkgs;
+              inherit (pkgs) lib;
+            };
+
+            # Rule unit tests and dashboard lint for modules/metrics/, no VM.
+            checks.metrics-config = import ./tests/metrics-config.nix {
+              inherit pkgs;
+              inherit (pkgs) lib;
+            };
+
             devShells.default = pkgs.mkShell {
               packages = [
                 pkgs.just

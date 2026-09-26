@@ -234,6 +234,7 @@ in
           ./modules/kanidm-vars.nix
           ./modules/paperless.nix
           ./modules/monitoring.nix
+          ./modules/metrics.nix
           ./modules/immich.nix
           ./modules/storagebox-secret.nix
           ./modules/audiobookshelf.nix
