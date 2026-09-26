@@ -88,6 +88,8 @@ in
     prod = common // {
       domain = "mail.humane.tools";
       port = 3201;
+      # /metrics on 127.0.0.1, scraped by vmagent (./metrics-shipper.nix).
+      metricsPort = 3209;
       authServiceUrl = "https://todos.humane.tools";
       environmentFile = config.clan.core.vars.generators.humane-mail-prod.files.mail_env.path;
       autoUpdate = common.autoUpdate // {
@@ -98,6 +100,7 @@ in
     dev = common // {
       domain = "dev.mail.humane.tools";
       port = 3301;
+      metricsPort = 3309;
       authServiceUrl = "https://dev.todos.humane.tools";
       environmentFile = config.clan.core.vars.generators.humane-mail-dev.files.mail_env.path;
       autoUpdate = common.autoUpdate // {

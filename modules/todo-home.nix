@@ -91,6 +91,8 @@ in
     trustedOrigins = [ "https://mail.humane.tools" ];
     authPort = 3001;
     syncPort = 3030;
+    # Loopback only; vmagent scrapes it (./metrics-shipper.nix).
+    metricsPort = 3039;
     # The module turns the boot-time topology split on by default. Prod stays
     # off until the runbook (ht/apps/todos/docs/design/topology-deploy.md: backup,
     # copy, dry run) has been walked for the M3 tag.
@@ -125,6 +127,7 @@ in
     trustedOrigins = [ "https://dev.mail.humane.tools" ];
     authPort = 3101;
     syncPort = 3130;
+    metricsPort = 3139;
 
     autoUpdate = {
       enable = true;

@@ -167,6 +167,7 @@ in
 
           ./modules/sslh.nix
           ./modules/catppuccin-cache.nix
+          ./modules/metrics-shipper.nix
         ]
         ++ lib.optionals todoHomeBackupEnabled [ ./modules/todo-home-backup-source.nix ];
 
