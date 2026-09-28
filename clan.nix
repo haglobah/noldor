@@ -45,6 +45,16 @@ in
       };
     };
 
+    # Plain NixOS modules for every machine.
+    common = {
+      module = {
+        name = "importer";
+        input = "clan-core";
+      };
+      roles.default.tags.all = { };
+      roles.default.extraModules = [ ./modules/resolved.nix ];
+    };
+
     # Docs: https://docs.clan.lol/reference/clanServices/admin/
     # Admin service for managing machines
     # This service adds a root password and SSH access.
