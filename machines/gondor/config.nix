@@ -15,6 +15,7 @@
     # ../../modules/ollama.nix
     ../../modules/catppuccin-cache.nix
     ../../modules/gnome.nix
+    ../../modules/protonvpn.nix
     inputs.home-manager.nixosModules.home-manager
     # inputs.orca.nixosModules.default
   ];

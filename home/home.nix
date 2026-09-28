@@ -22,6 +22,7 @@
     ./modules/emacs.nix
     ./modules/mycelium-sync.nix
     ./modules/monitor-brightness.nix
+    ./modules/protonvpn.nix
     ./secrets.nix
 
     ./programs/git.nix
