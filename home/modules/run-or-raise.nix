@@ -62,14 +62,14 @@ let
     }
     {
       key = "<Super>comma";
-      command = "chromium-browser --app=https://media.humane.tools";
-      wmClass = "media.humane.tools";
+      command = "chromium-browser --app=https://links.humane.tools";
+      wmClass = "links.humane.tools";
     }
-    # {
-    #   key = "<Super>o";
-    #   command = "orca-ide";
-    #   wmClass = "orca";
-    # }
+    {
+      key = "<Super>m";
+      command = "chromium-browser --app=https://mail.humane.tools";
+      wmClass = "mail.humane.tools";
+    }
   ];
 
   # Apps whose windows are split between shortcuts: each claim grabs the
@@ -88,12 +88,12 @@ let
       };
       claims = [
         {
-          key = "<Super>c";
+          key = "<Super>d";
           command = "firefox --new-window=https://calendar.google.com";
           titles = [ "Google Calendar" ];
         }
         {
-          key = "<Super>m";
+          key = "<Super>c";
           command = "firefox --new-window=https://claude.ai";
           titles = [
             "claude\\.ai"
