@@ -1,4 +1,4 @@
-{ ... }:
+{ config, pkgs, ... }:
 let
   # Claude Code and Codex have no native kitty actions for these, so kitty types them.
   # ctrl+l clears a partial prompt so it does not corrupt the command.
@@ -12,6 +12,14 @@ in
 {
   # Custom kitten; tests: nix run nixpkgs#python3Packages.pytest -- home/programs/kitty
   xdg.configFile."kitty/balance_splits.py".source = ./kitty/balance_splits.py;
+  # Provides draw_title() for {custom} in the tab title template.
+  xdg.configFile."kitty/tab_bar.py".source = ./kitty/tab_bar.py;
+  xdg.configFile."kitty/tab_bar_refresh.py".source = ./kitty/tab_bar_refresh.py;
+  # Called by Claude Code hooks in ~/.claude/settings.json (not Nix-managed).
+  home.file.".claude/hooks/kitty-state.sh".source = pkgs.writeShellScript "claude-kitty-state" ''
+    PATH=${config.programs.kitty.package}/bin:$PATH
+    ${builtins.readFile ./kitty/claude-kitty-state.sh}
+  '';
 
   programs.kitty = {
     enable = true;
@@ -23,6 +31,10 @@ in
       allow_remote_control = "yes";
       hide_window_decorations = "yes";
       font_size = 16;
+      tab_bar_edge = "top";
+      # "<majority cwd> | <windows> | <state>", see kitty/tab_bar.py.
+      tab_title_template = "{custom}";
+      watcher = "tab_bar_refresh.py";
       # This is for enabling a global visual bell. However, this doesn't seem to work (only makes the screen brighter, not less bright again)
       # enable_audio_bell = "no";
       # visual_bell_duration = 0;
@@ -37,7 +49,7 @@ in
       "alt+left" = "prev_tab";
       "alt+right" = "next_tab";
       "alt+shift+left" = "move_tab_backward";
-      "alt+shift+right" = "next_tab_forward";
+      "alt+shift+right" = "move_tab_forward";
       "ctrl+]" = "launch --cwd=current --location=vsplit";
       "ctrl+[" = "launch --cwd=current --location=hsplit";
       # Doom-style window leader (SPC w ...) with Ctrl+Space (keyboard N+I combo) as leader.
