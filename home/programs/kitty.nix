@@ -31,8 +31,7 @@ in
       allow_remote_control = "yes";
       hide_window_decorations = "yes";
       font_size = 16;
-      tab_bar_edge = "top";
-      # "<majority cwd> | <windows> | <state>", see kitty/tab_bar.py.
+      # "<majority cwd> <windows> <state>", see kitty/tab_bar.py.
       tab_title_template = "{custom}";
       watcher = "tab_bar_refresh.py";
       # This is for enabling a global visual bell. However, this doesn't seem to work (only makes the screen brighter, not less bright again)

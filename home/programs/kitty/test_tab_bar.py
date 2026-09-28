@@ -95,4 +95,4 @@ def test_empty_tab_is_idle():
 
 
 def test_format_title():
-    assert format_title("noldor", 2, BLOCKED) == "noldor | 2 | ◆"
+    assert format_title("noldor", 2, BLOCKED) == "noldor 2 ◆"

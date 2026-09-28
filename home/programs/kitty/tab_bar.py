@@ -1,4 +1,4 @@
-"""Custom tab title: majority working directory | window count | state.
+"""Custom tab title: majority working directory, window count, state.
 
 kitty calls draw_title() for `{custom}` in tab_title_template.
 """
@@ -51,7 +51,7 @@ def tab_state(states):
 
 
 def format_title(label, num_windows, state):
-    return f"{label} | {num_windows} | {ICONS[state]}"
+    return f"{label} {num_windows} {ICONS[state]}"
 
 
 def draw_title(data):
