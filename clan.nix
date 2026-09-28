@@ -171,6 +171,8 @@ in
           ./modules/todo-home.nix
           inputs.ht.nixosModules.mail
           ./modules/humane-mail.nix
+          inputs.media-inbox.nixosModules.worker
+          ./modules/links-worker.nix
           ./modules/updater-alerts.nix
 
           # inputs.colab.nixosModules.default
