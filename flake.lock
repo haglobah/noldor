@@ -855,11 +855,11 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1790557583,
-        "narHash": "sha256-EP9uiRiagNYFdP6+ZSV9UbdbHDnuR16Vdf7w+d7RP40=",
+        "lastModified": 1790623080,
+        "narHash": "sha256-inMc59TjBZjdNUAqBDnx76u56CI8alFEOd/89YWenqA=",
         "ref": "refs/heads/main",
-        "rev": "b41e018ca4944e90a7b12cf05789a4723de979ca",
-        "revCount": 214,
+        "rev": "7810ca2e086a863a86d4ddd76dd2904bc2645cff",
+        "revCount": 232,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/media-inbox.git"
       },
