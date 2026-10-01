@@ -49,6 +49,9 @@ in
 
   services.links-worker = {
     enable = true;
+    # Releases ship with media-inbox's `just deploy-worker`, not a system
+    # deploy; activation seeds the profile with the pinned package once.
+    profile = "/nix/var/nix/profiles/links-worker";
     domains = [
       "worker.links.humane.tools"
       # Installed extensions bake these in; keep them as real API hosts.

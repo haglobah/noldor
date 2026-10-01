@@ -810,11 +810,11 @@
         "portless": "portless"
       },
       "locked": {
-        "lastModified": 1790488172,
-        "narHash": "sha256-gKyCgU0YM5H4hnMdcZ+WPHQllext752zb7+eKEi86rs=",
+        "lastModified": 1790668362,
+        "narHash": "sha256-ZfWoJs6btA7muMyLhYKRXBHViG15iFn5JADSjnHhHAg=",
         "ref": "refs/heads/main",
-        "rev": "48811245b596165e2a0c179f2f7d389d39032c72",
-        "revCount": 782,
+        "rev": "dec44f69fff9d6cfa7bf18ecb3cde66bcb122430",
+        "revCount": 808,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/ht.git"
       },
@@ -855,11 +855,11 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1790623080,
-        "narHash": "sha256-inMc59TjBZjdNUAqBDnx76u56CI8alFEOd/89YWenqA=",
+        "lastModified": 1790724739,
+        "narHash": "sha256-vMiMgj52GX92jkx+u5Lb4mnhIH/3Q7Zw60qzDy0qHus=",
         "ref": "refs/heads/main",
-        "rev": "7810ca2e086a863a86d4ddd76dd2904bc2645cff",
-        "revCount": 232,
+        "rev": "ac6b1fa31ce01c5db80c30fdf02a3a5f284888b3",
+        "revCount": 261,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/media-inbox.git"
       },

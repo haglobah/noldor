@@ -97,6 +97,7 @@
         "jb" = "just build";
         "ja" = "just all";
         "jt" = "just test";
+        "jo" = "just open";
         "joc" = "just open chromium";
         "jod" = "just open chromium && just dev";
         "joa" = "just open chromium && just all";
