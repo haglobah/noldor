@@ -57,17 +57,17 @@ let
     }
     {
       key = "<Super>h";
-      command = "chromium-browser --app=https://todos.humane.tools";
+      command = "chromium-app https://todos.humane.tools";
       wmClass = "todos.humane.tools";
     }
     {
       key = "<Super>comma";
-      command = "chromium-browser --app=https://links.humane.tools";
+      command = "chromium-app https://links.humane.tools";
       wmClass = "links.humane.tools";
     }
     {
       key = "<Super>m";
-      command = "chromium-browser --app=https://mail.humane.tools";
+      command = "chromium-app https://mail.humane.tools";
       wmClass = "mail.humane.tools";
     }
   ];

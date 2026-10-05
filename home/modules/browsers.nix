@@ -1,8 +1,27 @@
-{ inputs, config, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
 {
   imports = [
     inputs.vimium-options.homeManagerModules.vimium-options
   ];
+
+  # Opens a URL as a Chromium app window in its own user data dir, so the
+  # extensions of the main profile (Bitwarden, Vimium, ...) stay out of it.
+  # All app windows share this dir, and with it their logins.
+  home.packages = [
+    (pkgs.writeShellScriptBin "chromium-app" ''
+      exec ${pkgs.chromium}/bin/chromium-browser \
+        --user-data-dir="''${XDG_CONFIG_HOME:-$HOME/.config}/chromium-apps" \
+        --no-first-run \
+        --no-default-browser-check \
+        --app="$1"
+    '')
+  ];
+
   programs.firefox =
     let
       extensionPkgs = with inputs.firefox-addons.packages."x86_64-linux"; [

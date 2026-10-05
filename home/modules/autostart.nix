@@ -28,7 +28,7 @@
       Type=Application
       Name=todos.humane.tools
       Comment=Start the todos.humane.tools PWA
-      Exec=chromium-browser --app=https://todos.humane.tools
+      Exec=chromium-app https://todos.humane.tools
       X-GNOME-Autostart-enabled=true
       OnlyShowIn=GNOME;
     '';
