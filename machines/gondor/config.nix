@@ -12,6 +12,7 @@
   imports = [
     ./hardware.nix
     ../../modules/storagebox-secret.nix
+    ../../modules/storagebox-share.nix
     # ../../modules/ollama.nix
     ../../modules/catppuccin-cache.nix
     ../../modules/gnome.nix
@@ -260,22 +261,6 @@
 
   programs.ausweisapp.enable = true;
   programs.ausweisapp.openFirewall = true;
-
-  # Mount for storage box
-  fileSystems."/mnt/share" = {
-    device = "//u366465.your-storagebox.de/backup";
-    fsType = "cifs";
-    options = [
-      "x-systemd.automount"
-      "noauto"
-      "x-systemd.idle-timeout=60"
-      "x-systemd.device-timeout=5s"
-      "x-systemd.mount-timeout=5s"
-      "credentials=${config.clan.core.vars.generators.storagebox-secret.files."secret".path}"
-      "uid=1000"
-      "gid=100"
-    ];
-  };
 
   system.stateVersion = "23.05";
 }
