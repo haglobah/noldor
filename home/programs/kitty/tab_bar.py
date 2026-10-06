@@ -7,7 +7,15 @@ import termios
 from collections import Counter
 
 IDLE, RUNNING, BLOCKED = "idle", "running", "blocked"
-ICONS = {IDLE: "○", RUNNING: "▶", BLOCKED: "◆"}
+# Bold SGR and text per state, in Catppuccin Mocha colors. Blocked is a
+# badge: base-colored "!" on red, since terminal cells cannot have borders.
+ICONS = {
+    IDLE: ("1;38:2:166:227:161", "○"),
+    RUNNING: ("1;38:2:249:226:175", "▶"),
+    BLOCKED: ("1;38:2:30:30:46;48:2:243:139:168", " ! "),
+}
+# A blocked tab's label and window count turn red too.
+BLOCKED_LABEL_SGR = "1;38:2:243:139:168"
 # Claude Code prefixes its title with ✳ while it waits for input
 # and with a spinner character while it works.
 CLAUDE_WAITING_PREFIX = "✳"
@@ -51,7 +59,10 @@ def tab_state(states):
 
 
 def format_title(label, num_windows, state):
-    return f"{label} {num_windows} {ICONS[state]}"
+    """kitty applies SGR escapes in the title and resets them after each tab."""
+    sgr, icon = ICONS[state]
+    prefix = f"\x1b[{BLOCKED_LABEL_SGR}m" if state == BLOCKED else ""
+    return f"{prefix}{label} {num_windows} \x1b[{sgr}m{icon}\x1b[22;39;49m"
 
 
 def draw_title(data):
