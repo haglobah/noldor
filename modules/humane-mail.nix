@@ -59,6 +59,30 @@ let
     '';
   };
 
+  # The Google OAuth client for "Sign in with Google" (ht FDR-003). Its own
+  # generator, separate from `bridge`, so entering or rotating the client
+  # never regenerates CREDENTIALS_KEY. One client serves both instances; its
+  # redirect URIs must list each origin + /api/oauth/google/callback.
+  googleOAuth = {
+    files."google_env" = { };
+    prompts."client-id" = {
+      type = "line";
+      description = "Google OAuth client ID for Humane Mail (client_id in the downloaded JSON)";
+    };
+    prompts."client-secret" = {
+      type = "hidden";
+      description = "Google OAuth client secret for Humane Mail (client_secret in the downloaded JSON)";
+    };
+    runtimeInputs = [ pkgs.coreutils ];
+    script = ''
+      {
+        echo "GOOGLE_OAUTH_CLIENT_ID=$(cat "$prompts/client-id")"
+        echo "GOOGLE_OAUTH_CLIENT_SECRET=$(cat "$prompts/client-secret")"
+      } > "$out/google_env"
+    '';
+  };
+  googleEnv = config.clan.core.vars.generators.humane-mail-google.files.google_env.path;
+
   common = {
     enable = true;
     frontend = mailPackages.mail-frontend;
@@ -75,6 +99,7 @@ in
   clan.core.vars.generators = {
     humane-mail-prod = bridge "https://mail.humane.tools";
     humane-mail-dev = bridge "https://dev.mail.humane.tools";
+    humane-mail-google = googleOAuth;
   };
 
   clan.core.state.humane-mail = {
@@ -92,6 +117,7 @@ in
       metricsPort = 3209;
       authServiceUrl = "https://todos.humane.tools";
       environmentFile = config.clan.core.vars.generators.humane-mail-prod.files.mail_env.path;
+      extraEnvironmentFiles = [ googleEnv ];
       autoUpdate = common.autoUpdate // {
         strategy = "tag";
         tagPattern = "v*";
@@ -103,6 +129,7 @@ in
       metricsPort = 3309;
       authServiceUrl = "https://dev.todos.humane.tools";
       environmentFile = config.clan.core.vars.generators.humane-mail-dev.files.mail_env.path;
+      extraEnvironmentFiles = [ googleEnv ];
       autoUpdate = common.autoUpdate // {
         strategy = "branch";
         branch = "main";
