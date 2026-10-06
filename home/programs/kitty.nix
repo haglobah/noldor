@@ -34,6 +34,20 @@ in
       # "<majority cwd> <windows> <state>", see kitty/tab_bar.py.
       tab_title_template = "{custom}";
       watcher = "tab_bar_refresh.py";
+      # Plain text tabs on the terminal background: full white for the active tab,
+      # gray for the rest (Catppuccin Mocha colors; these override the theme include).
+      tab_bar_style = "separator";
+      tab_separator = "\"   \"";
+      tab_bar_margin_height = "4 2";
+      tab_bar_margin_width = 8;
+      tab_bar_background = "#1E1E2E";
+      tab_bar_margin_color = "#1E1E2E";
+      active_tab_font_style = "normal";
+      inactive_tab_font_style = "normal";
+      active_tab_foreground = "#FFFFFF";
+      active_tab_background = "#1E1E2E";
+      inactive_tab_foreground = "#9399B2";
+      inactive_tab_background = "#1E1E2E";
       # This is for enabling a global visual bell. However, this doesn't seem to work (only makes the screen brighter, not less bright again)
       # enable_audio_bell = "no";
       # visual_bell_duration = 0;
