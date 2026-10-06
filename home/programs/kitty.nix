@@ -42,7 +42,7 @@ in
       tab_bar_margin_width = 8;
       tab_bar_background = "#1E1E2E";
       tab_bar_margin_color = "#1E1E2E";
-      active_tab_font_style = "normal";
+      active_tab_font_style = "bold";
       inactive_tab_font_style = "normal";
       active_tab_foreground = "#FFFFFF";
       active_tab_background = "#1E1E2E";

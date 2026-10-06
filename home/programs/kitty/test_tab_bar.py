@@ -94,19 +94,18 @@ def test_empty_tab_is_idle():
     assert tab_state([]) == IDLE
 
 
-RED = "\x1b[1;38:2:243:139:168m"
 RED_BADGE = "\x1b[1;38:2:30:30:46;48:2:243:139:168m"
-YELLOW = "\x1b[1;38:2:249:226:175m"
+ORANGE = "\x1b[1;38:2:250:179:135m"
 GREEN = "\x1b[1;38:2:166:227:161m"
 RESET = "\x1b[22;39;49m"
 
 
-def test_blocked_tab_is_red_with_exclamation_mark_badge():
-    assert format_title("noldor", 2, BLOCKED) == f"{RED}noldor 2 {RED_BADGE} ! {RESET}"
+def test_blocked_tab_keeps_tab_color_and_ends_in_exclamation_mark_badge():
+    assert format_title("noldor", 2, BLOCKED) == f"noldor 2 {RED_BADGE} ! {RESET}"
 
 
-def test_running_tab_shows_yellow_triangle():
-    assert format_title("ht", 1, RUNNING) == f"ht 1 {YELLOW}▶{RESET}"
+def test_running_tab_shows_orange_triangle():
+    assert format_title("ht", 1, RUNNING) == f"ht 1 {ORANGE}▶{RESET}"
 
 
 def test_idle_tab_shows_green_circle():
