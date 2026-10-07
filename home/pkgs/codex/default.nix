@@ -96,6 +96,9 @@ symlinkJoin {
             "mcp_servers.playwright.command=\"${lib.getExe playwright-mcp}\""
             "--config"
             ''mcp_servers.playwright.args=["--headless", "--isolated"]''
+            # "Ready | <project>" when idle, read by kitty/tab_bar.py.
+            "--config"
+            ''tui.terminal_title=["run-state", "project-name"]''
           ]
         )
       }

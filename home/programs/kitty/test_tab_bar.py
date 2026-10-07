@@ -72,6 +72,14 @@ def test_stale_blocked_flag_is_ignored_while_claude_works():
     assert state("◐ Kitty tab title customization", claude_blocked=True) == RUNNING
 
 
+def test_codex_ready_for_next_prompt_is_idle():
+    assert state("Ready | noldor") == IDLE
+
+
+def test_working_codex_is_running():
+    assert state("Working | noldor") == RUNNING
+
+
 def test_echo_off_line_mode_is_password_prompt():
     assert is_password_prompt(termios.ICANON)
 

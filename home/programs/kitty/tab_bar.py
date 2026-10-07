@@ -20,6 +20,9 @@ CLAUDE_WAITING_PREFIX = "✳"
 # Set by Claude Code hooks while a question or permission dialog is open,
 # see claude-kitty-state.sh. The title alone cannot tell this apart from ✳.
 CLAUDE_STATE_VAR = "claude_state"
+# Codex leads its title with its run state, see tui.terminal_title in
+# pkgs/codex. It shows "Working" during approval prompts too.
+CODEX_READY_PREFIX = "Ready | "
 
 
 def dir_label(cwds, active_cwd, home):
@@ -46,6 +49,8 @@ def window_state(title, at_prompt, password_prompt, claude_blocked):
         return BLOCKED
     if title.startswith(CLAUDE_WAITING_PREFIX):
         return BLOCKED if claude_blocked else IDLE
+    if title.startswith(CODEX_READY_PREFIX):
+        return IDLE
     return IDLE if at_prompt else RUNNING
 
 
