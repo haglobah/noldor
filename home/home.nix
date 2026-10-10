@@ -275,6 +275,7 @@
             "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
           ];
           rotate-video-lock-static = [ "XF86RotationLockToggle" ];
+          screensaver = [ "<Shift><Super>l" ];
         };
 
         "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
