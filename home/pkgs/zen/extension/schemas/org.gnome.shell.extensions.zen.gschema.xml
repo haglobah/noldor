@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.zen" path="/org/gnome/shell/extensions/zen/">
+    <key name="enter-zen" type="as">
+      <default><![CDATA[['<Super>z']]]></default>
+      <summary>Enter zen mode</summary>
+    </key>
+    <key name="exit-zen" type="as">
+      <default><![CDATA[['<Primary><Alt><Super>Escape']]]></default>
+      <summary>Leave zen mode</summary>
+    </key>
+    <key name="banners-muted" type="b">
+      <default>false</default>
+      <summary>Zen turned notification banners off and must turn them back on</summary>
+    </key>
+  </schema>
+</schemalist>

@@ -1,0 +1,8 @@
+{
+  "uuid": "zen@noldor",
+  "name": "Zen",
+  "description": "Blur every window but the focused one and block window switching.",
+  "shell-version": ["50"],
+  "session-modes": ["user", "unlock-dialog"],
+  "settings-schema": "org.gnome.shell.extensions.zen"
+}
