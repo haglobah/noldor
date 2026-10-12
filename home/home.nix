@@ -27,6 +27,7 @@
     ./secrets.nix
 
     ./programs/git.nix
+    ./programs/jujutsu.nix
     ./programs/kitty.nix
     # ./programs/vscode.nix
     # ./programs/nvf.nix
