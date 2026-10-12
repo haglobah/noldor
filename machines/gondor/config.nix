@@ -13,6 +13,7 @@
     ./hardware.nix
     ../../modules/storagebox-secret.nix
     ../../modules/storagebox-share.nix
+    ../../modules/nix-access-tokens.nix
     # ../../modules/ollama.nix
     ../../modules/catppuccin-cache.nix
     ../../modules/gnome.nix
