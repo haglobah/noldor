@@ -166,6 +166,9 @@
               inherit (pkgs) lib;
             };
 
+            # GNOME VM test of the zen extension (home/pkgs/zen).
+            checks.zen = import ./tests/zen.nix { inherit pkgs; };
+
             # Rule unit tests and dashboard lint for modules/metrics/, no VM.
             checks.metrics-config = import ./tests/metrics-config.nix {
               inherit pkgs;

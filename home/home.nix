@@ -24,6 +24,7 @@
     ./modules/monitor-brightness.nix
     ./modules/screen-above.nix
     ./modules/protonvpn.nix
+    ./modules/zen.nix
     ./secrets.nix
 
     ./programs/git.nix
