@@ -1258,17 +1258,17 @@
       },
       "locked": {
         "dir": "web",
-        "lastModified": 1791707172,
-        "narHash": "sha256-RTxLJP3cb9HdfgJI2OwEsQALSn17sm1rrYz+uMEL2f8=",
-        "ref": "automerge-sync",
-        "rev": "4411965bc03c01350f8733c9c510c551139e06f0",
-        "revCount": 1466,
+        "lastModified": 1791768573,
+        "narHash": "sha256-OxDmQnJs5jVg8XMVzc1bCcTQSum5fqz6FEFSc4E+e0k=",
+        "ref": "main",
+        "rev": "d21f7452bae352a9eeca012643bfb2056333964b",
+        "revCount": 1489,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/notable.git"
       },
       "original": {
         "dir": "web",
-        "ref": "automerge-sync",
+        "ref": "main",
         "type": "git",
         "url": "ssh://git@github.com/haglobah/notable.git"
       }
