@@ -52,6 +52,12 @@
       flake = false;
     };
 
+    # difftastic with a faster graph search. See home/pkgs/difftastic.
+    difftastic-src = {
+      url = "github:haglobah/difftastic/faster-graph-search";
+      flake = false;
+    };
+
     herdr = {
       url = "github:herdrdev/herdr";
       inputs.nixpkgs.follows = "nixpkgs";

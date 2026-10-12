@@ -392,6 +392,23 @@
         "type": "github"
       }
     },
+    "difftastic-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791488427,
+        "narHash": "sha256-vusBSYUEphU6xCteov3HIeVFTi9J+Z49cH3st8159d0=",
+        "owner": "haglobah",
+        "repo": "difftastic",
+        "rev": "9f587f239273075685c16a742b9662021f28b8a3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "haglobah",
+        "ref": "faster-graph-search",
+        "repo": "difftastic",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -1337,6 +1354,7 @@
         "claude-code-version": "claude-code-version",
         "codex-bin": "codex-bin",
         "colab": "colab",
+        "difftastic-src": "difftastic-src",
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts_3",
         "gastown": "gastown",

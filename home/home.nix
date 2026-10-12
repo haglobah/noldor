@@ -75,6 +75,8 @@
         ripgrep
         fd
         emacs-lsp-booster
+        # Structural diffs for difftastic.el in magit
+        (pkgs.callPackage ./pkgs/difftastic { inherit (inputs) difftastic-src; })
 
         # For screen flickering notification
         brightnessctl
