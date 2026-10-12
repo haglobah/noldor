@@ -256,6 +256,8 @@ in
           # ./modules/code-server.nix
           ./modules/sslh.nix
           ./modules/media-inbox-notify.nix
+          inputs.notable.nixosModules.default
+          ./modules/notable.nix
 
           # Only here until the grafana service gets fixed
           # ./modules/grafana-secret.nix

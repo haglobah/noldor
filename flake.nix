@@ -82,6 +82,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     colab.url = "git+ssh://git@github.com/haglobah/colab.git?ref=noldor-deploy";
+    notable = {
+      url = "git+ssh://git@github.com/haglobah/notable.git?ref=main&dir=web";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # donethat.url = "git+ssh://git@github.com/haglobah/donethat-electron.git";
   };
 

@@ -1267,6 +1267,29 @@
         "type": "github"
       }
     },
+    "notable": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "web",
+        "lastModified": 1791771537,
+        "narHash": "sha256-ODnE18WosK/Eyb1shNoL2VoUFIwqSncptd0nvKeH2RY=",
+        "ref": "main",
+        "rev": "61f3fe89144d95cd2c94634ccf94746948d09124",
+        "revCount": 1492,
+        "type": "git",
+        "url": "ssh://git@github.com/haglobah/notable.git"
+      },
+      "original": {
+        "dir": "web",
+        "ref": "main",
+        "type": "git",
+        "url": "ssh://git@github.com/haglobah/notable.git"
+      }
+    },
     "portless": {
       "inputs": {
         "flake-parts": [
@@ -1367,6 +1390,7 @@
         "nix-openclaw": "nix-openclaw",
         "nixpkgs": "nixpkgs_10",
         "nixpkgs-24-11": "nixpkgs-24-11",
+        "notable": "notable",
         "vimium-options": "vimium-options"
       }
     },
