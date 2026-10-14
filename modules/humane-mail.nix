@@ -92,6 +92,11 @@ let
       repo = "git@github.com:haglobah/ht.git";
       # The same deploy key Todo's updaters use; it is registered on GitHub.
       sshKeyFile = sshKey;
+      # nix-builds (clanServices/nix-builds) builds ht's buildJobs into R2;
+      # orthanc only downloads. 12 ticks of 5 minutes give a build an hour
+      # before a commit counts as bad.
+      substituteOnly = true;
+      buildAttempts = 12;
     };
   };
 in

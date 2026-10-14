@@ -106,6 +106,11 @@ in
       interval = "*:0/1";
       # This key is added to github
       sshKeyFile = sshKey;
+      # nix-builds (clanServices/nix-builds) builds ht's buildJobs into R2;
+      # orthanc only downloads. 60 ticks of a minute give a build an hour
+      # before a commit counts as bad.
+      substituteOnly = true;
+      buildAttempts = 60;
       # NOTE: This is the derivation the autoupdater tries to build.
       # Optimally, I'd like this to be derived from `services.todo-home.<name>.frontend`,
       # and get rid of the sync server coupling in ht/flake.nix
@@ -136,6 +141,11 @@ in
       interval = "*:0/1";
       # This key is added to github
       sshKeyFile = sshKey;
+      # nix-builds (clanServices/nix-builds) builds ht's buildJobs into R2;
+      # orthanc only downloads. 60 ticks of a minute give a build an hour
+      # before a commit counts as bad.
+      substituteOnly = true;
+      buildAttempts = 60;
       # NOTE: This is the derivation the autoupdater tries to build.
       # Optimally, I'd like this to be derived from `services.todo-home.<name>.frontend`,
       # and get rid of the sync server coupling in ht/flake.nix
