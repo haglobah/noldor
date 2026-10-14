@@ -1,7 +1,18 @@
 """Tests for the custom tab title. Run: python3 -m pytest home/programs/kitty"""
 import termios
 
-from tab_bar import BLOCKED, IDLE, RUNNING, dir_label, format_title, is_password_prompt, tab_state, window_state
+from tab_bar import (
+    BLOCKED,
+    IDLE,
+    RUNNING,
+    dir_label,
+    format_title,
+    git_branch,
+    is_password_prompt,
+    majority_cwd,
+    tab_state,
+    window_state,
+)
 
 HOME = "/home/beat"
 
@@ -38,6 +49,54 @@ def test_no_known_cwd_gives_empty_label():
 
 def test_trailing_slash_is_ignored():
     assert dir_label(["/home/beat/noldor/"], None, HOME) == "noldor"
+
+
+def test_majority_cwd_returns_the_full_path():
+    cwds = ["/home/beat/noldor", "/home/beat/projects/ht", "/home/beat/projects/ht"]
+    assert majority_cwd(cwds, "/home/beat/noldor") == "/home/beat/projects/ht"
+
+
+def test_majority_cwd_of_no_known_cwd_is_none():
+    assert majority_cwd([None], None) is None
+
+
+def test_branch_is_read_from_head_of_enclosing_repo(tmp_path):
+    (tmp_path / ".git").mkdir()
+    (tmp_path / ".git" / "HEAD").write_text("ref: refs/heads/feature/tabs\n")
+    (tmp_path / "src").mkdir()
+    assert git_branch(str(tmp_path / "src")) == "feature/tabs"
+
+
+def test_detached_head_shows_short_commit(tmp_path):
+    (tmp_path / ".git").mkdir()
+    (tmp_path / ".git" / "HEAD").write_text("2e78bfb0123456789abcdef0123456789abcdef0\n")
+    assert git_branch(str(tmp_path)) == "2e78bfb"
+
+
+def test_worktree_branch_is_read_through_gitdir_file(tmp_path):
+    gitdir = tmp_path / "main" / ".git" / "worktrees" / "wt"
+    gitdir.mkdir(parents=True)
+    (gitdir / "HEAD").write_text("ref: refs/heads/wt-branch\n")
+    (tmp_path / "wt").mkdir()
+    (tmp_path / "wt" / ".git").write_text(f"gitdir: {gitdir}\n")
+    assert git_branch(str(tmp_path / "wt")) == "wt-branch"
+
+
+def test_relative_gitdir_is_resolved_from_the_worktree(tmp_path):
+    gitdir = tmp_path / "main" / ".git" / "worktrees" / "wt"
+    gitdir.mkdir(parents=True)
+    (gitdir / "HEAD").write_text("ref: refs/heads/wt-branch\n")
+    (tmp_path / "wt").mkdir()
+    (tmp_path / "wt" / ".git").write_text("gitdir: ../main/.git/worktrees/wt\n")
+    assert git_branch(str(tmp_path / "wt")) == "wt-branch"
+
+
+def test_no_repo_has_no_branch(tmp_path):
+    assert git_branch(str(tmp_path)) is None
+
+
+def test_unknown_cwd_has_no_branch():
+    assert git_branch(None) is None
 
 
 def state(title="~/p/ht", at_prompt=False, password_prompt=False, claude_blocked=False):
@@ -106,6 +165,7 @@ RED_BADGE = "\x1b[1;38:2:30:30:46;48:2:243:139:168m"
 ORANGE = "\x1b[1;38:2:250:179:135m"
 GREEN = "\x1b[1;38:2:166:227:161m"
 RESET = "\x1b[22;39;49m"
+GRAY = "\x1b[22;38:2:147:153:178m"
 
 
 def test_blocked_tab_keeps_tab_color_and_ends_in_exclamation_mark_badge():
@@ -118,3 +178,7 @@ def test_running_tab_shows_orange_triangle():
 
 def test_idle_tab_shows_green_circle():
     assert format_title("~", 3, IDLE) == f"~ 3 {GREEN}○{RESET}"
+
+
+def test_branch_goes_on_a_gray_second_line():
+    assert format_title("ht", 1, IDLE, "main") == f"ht 1 {GREEN}○{RESET}\n{GRAY}main{RESET}"

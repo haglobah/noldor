@@ -31,14 +31,18 @@ in
       allow_remote_control = "yes";
       hide_window_decorations = "yes";
       font_size = 16;
-      # "<majority cwd> <windows> <state>", see kitty/tab_bar.py.
+      # "<majority cwd> <windows> <state>" with the git branch below it, see kitty/tab_bar.py.
       tab_title_template = "{custom}";
       watcher = "tab_bar_refresh.py";
+      # Vertical so that all tabs fit; a horizontal bar cuts off tabs past its width.
+      tab_bar_edge = "left";
+      tab_title_max_lines = 2;
       # Plain text tabs on the terminal background: full white for the active tab,
       # gray for the rest (Catppuccin Mocha colors; these override the theme include).
       tab_bar_style = "separator";
-      tab_separator = "\"   \"";
+      # Left/right of the bar for a vertical bar (outer inner, in pts).
       tab_bar_margin_height = "4 2";
+      # Above/below the bar for a vertical bar.
       tab_bar_margin_width = 8;
       tab_bar_background = "#1E1E2E";
       tab_bar_margin_color = "#1E1E2E";
@@ -61,6 +65,9 @@ in
         "launch --cwd=current --type=tab fish --interactive --init-command \"direnv exec . claude\"";
       "alt+left" = "prev_tab";
       "alt+right" = "next_tab";
+      # Up/down too, for the vertical tab bar.
+      "alt+up" = "prev_tab";
+      "alt+down" = "next_tab";
       "alt+shift+left" = "move_tab_backward";
       "alt+shift+right" = "move_tab_forward";
       "ctrl+]" = "launch --cwd=current --location=vsplit";

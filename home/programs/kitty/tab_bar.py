@@ -1,4 +1,5 @@
-"""Custom tab title: majority working directory, window count, state.
+"""Custom tab title: majority working directory, window count, state,
+and the git branch of that directory on a second line.
 
 kitty calls draw_title() for `{custom}` in tab_title_template.
 """
@@ -23,20 +24,51 @@ CLAUDE_STATE_VAR = "claude_state"
 # Codex leads its title with its run state, see tui.terminal_title in
 # pkgs/codex. It shows "Working" during approval prompts too.
 CODEX_READY_PREFIX = "Ready | "
+# Catppuccin Mocha overlay2, the inactive tab color, without bold.
+BRANCH_SGR = "22;38:2:147:153:178"
 
 
-def dir_label(cwds, active_cwd, home):
-    """Last path component of the most common cwd; ties go to the active window."""
+def majority_cwd(cwds, active_cwd):
+    """The most common cwd; ties go to the active window."""
     counts = Counter(os.path.normpath(c) for c in cwds if c)
     if not counts:
-        return ""
+        return None
     top = max(counts.values())
     candidates = [c for c, n in counts.items() if n == top]
     active = os.path.normpath(active_cwd) if active_cwd else None
-    path = active if active in candidates else candidates[0]
+    return active if active in candidates else candidates[0]
+
+
+def dir_label(cwds, active_cwd, home):
+    """Last path component of the majority cwd."""
+    path = majority_cwd(cwds, active_cwd)
+    if path is None:
+        return ""
     if path == os.path.normpath(home):
         return "~"
     return os.path.basename(path) or path
+
+
+def git_branch(path):
+    """Branch checked out in the repo enclosing path, or the short commit if detached.
+
+    Reads HEAD directly: draw_title runs on every redraw, too often to spawn git.
+    """
+    while path:
+        dot_git = os.path.join(path, ".git")
+        try:
+            if os.path.isfile(dot_git):  # worktree or submodule
+                with open(dot_git) as f:
+                    gitdir = f.read().strip().removeprefix("gitdir: ")
+                dot_git = os.path.join(path, gitdir)
+            with open(os.path.join(dot_git, "HEAD")) as f:
+                head = f.read().strip()
+        except OSError:
+            parent = os.path.dirname(path)
+            path = None if parent == path else parent
+            continue
+        return head.removeprefix("ref: refs/heads/") if head.startswith("ref: ") else head[:7]
+    return None
 
 
 def is_password_prompt(lflag):
@@ -61,10 +93,16 @@ def tab_state(states):
     return IDLE
 
 
-def format_title(label, num_windows, state):
-    """kitty applies SGR escapes in the title and resets them after each tab."""
+def format_title(label, num_windows, state, branch=None):
+    """kitty applies SGR escapes in the title and resets them after each tab.
+
+    The vertical tab bar shows the branch line (tab_title_max_lines 2).
+    """
     sgr, icon = ICONS[state]
-    return f"{label} {num_windows} \x1b[{sgr}m{icon}\x1b[22;39;49m"
+    title = f"{label} {num_windows} \x1b[{sgr}m{icon}\x1b[22;39;49m"
+    if branch:
+        title += f"\n\x1b[{BRANCH_SGR}m{branch}\x1b[22;39;49m"
+    return title
 
 
 def draw_title(data):
@@ -75,13 +113,11 @@ def draw_title(data):
         return data["title"]
     windows = list(tab)
     active = tab.active_window
-    label = dir_label(
-        [w.cwd_of_child for w in windows],
-        active.cwd_of_child if active else None,
-        os.path.expanduser("~"),
-    )
+    cwds = [w.cwd_of_child for w in windows]
+    active_cwd = active.cwd_of_child if active else None
+    label = dir_label(cwds, active_cwd, os.path.expanduser("~"))
     state = tab_state([_live_window_state(w) for w in windows])
-    return format_title(label, len(windows), state)
+    return format_title(label, len(windows), state, git_branch(majority_cwd(cwds, active_cwd)))
 
 
 def _live_window_state(w):
