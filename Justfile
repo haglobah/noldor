@@ -32,8 +32,8 @@ dash:
         -L 18085:127.0.0.1:8085 \
         formenos
 
-# gondor pushes what it builds on its own (docs/nix-cache.md); this pushes
-# a whole closure on demand, including paths cache.nixos.org already has.
+# gondor pushes what it builds on its own (clanServices/nix-builds); this
+# pushes a whole closure on demand, including paths cache.nixos.org has.
 # Build an installable and push its closure, signed, to the R2 cache.
 cache-push installable:
     nix build --no-link --print-out-paths {{installable}} | xargs sudo nix-cache push
@@ -42,17 +42,13 @@ cache-push installable:
 cache-check installable:
     nix build --no-link --print-out-paths {{installable}} | xargs sudo nix-cache info
 
-# aule, the on-demand Hetzner build machine (docs/nix-builder.md). Billed
-# per started hour while it exists; it deletes itself when idle.
-# Create aule from its newest snapshot; nix-daemon then builds there.
-builder-up:
-    nix-builder up
-
-# Delete aule now; builds go back to gondor.
+# aule, the on-demand build machine (docs/nix-builder.md). The scheduler on
+# orthanc starts it; it deletes itself when idle. Billed per started hour.
+# Delete aule now.
 builder-down:
     nix-builder down
 
-# Show aule, its snapshots and the address nix-daemon uses.
+# Show aule, its snapshots and the address `clan machines update aule` uses.
 builder-status:
     nix-builder status
 

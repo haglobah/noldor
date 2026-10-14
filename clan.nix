@@ -25,8 +25,8 @@ in
       deploy.targetHost = "root@127.0.0.1";
       tags = [ "client" ];
     };
-    # On-demand Hetzner build machine (docs/nix-builder.md). `aule` is an
-    # ssh alias on gondor that `nix-builder up` points at the current IP.
+    # On-demand Hetzner build machine (clanServices/nix-builds). `aule` is
+    # an ssh alias on gondor that `nix-builder up` points at the current IP.
     # Not "server": instances for long-lived servers should skip it.
     aule = {
       deploy.targetHost = "root@aule";
@@ -34,8 +34,26 @@ in
     };
   };
 
+  modules."@beat/nix-builds" = import ./clanServices/nix-builds;
+
   # Docs: See https://docs.clan.lol/reference/clanServices
   inventory.instances = {
+
+    # Private R2 binary cache and on-demand builds of the GitHub App's repos
+    # (clanServices/nix-builds/README.md).
+    nix-builds = {
+      module = {
+        name = "@beat/nix-builds";
+        input = "self";
+      };
+      roles.client.tags.all = { };
+      roles.pusher.machines.gondor = { };
+      roles.builder.machines.aule = { };
+      roles.scheduler.machines.orthanc.settings = {
+        domain = "builds.hagenlocher.me";
+        ntfyGenerator = "updater-alerts";
+      };
+    };
 
     openclaw = {
       module = {
@@ -59,10 +77,7 @@ in
         input = "clan-core";
       };
       roles.default.tags.all = { };
-      roles.default.extraModules = [
-        ./modules/resolved.nix
-        ./modules/nix-cache.nix
-      ];
+      roles.default.extraModules = [ ./modules/resolved.nix ];
     };
 
     # Docs: https://docs.clan.lol/reference/clanServices/admin/

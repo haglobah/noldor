@@ -1,0 +1,15 @@
+[project]
+name = "nix-builds"
+version = "0.1.0"
+description = "Builds registered repos' buildJobs on an on-demand Hetzner machine"
+requires-python = ">=3.12"
+
+[project.scripts]
+nix-builds = "nix_builds.main:main"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["nix_builds"]

@@ -1,8 +1,7 @@
-# aule: on-demand Hetzner Cloud build machine for gondor. gondor creates it
-# from a snapshot (./nix-builder-client.nix), sends builds over ssh-ng, and
-# aule deletes itself when idle. It holds no cache credentials: gondor's
-# post-build hook pushes what aule builds once the outputs are copied back.
-# See docs/nix-builder.md.
+# Role `builder` (aule): the on-demand Hetzner Cloud build machine. The
+# scheduler creates it from a snapshot and sends derivations over ssh-ng;
+# aule builds them, signs and pushes the outputs to R2 with its own key
+# (./pusher.nix), and deletes itself when idle. See ./README.md.
 {
   config,
   lib,
@@ -11,10 +10,10 @@
 }:
 let
   generators = config.clan.core.vars.generators;
-  builderKey = generators.nix-builder-ssh.files."id_ed25519.pub";
+  schedulerKey = generators.nix-builds-ssh.files."id_ed25519.pub";
   state = "/run/nix-builder-reaper";
 
-  reap-decide = pkgs.callPackage ./nix-builder/reap-decide.nix { };
+  reap-decide = pkgs.callPackage ./reaper/reap-decide.nix { };
 
   reaper = pkgs.writeShellApplication {
     name = "nix-builder-reaper";
@@ -33,7 +32,8 @@ let
 
       # Busy: a client is connected to nix-daemon (each connection is a
       # child of the main daemon; builds, copies and substitutions all
-      # run under one), gondor's ssh-ng session is open (nix-ssh), or
+      # run under one), the scheduler's ssh-ng session is open (nix-ssh),
+      # a push is uploading, or
       # someone is logged in (clan machines update, a debugging shell).
       # Live process state, not a marker file: a marker that builds touch
       # goes stale when a build crashes or a client hangs mid-transfer.
@@ -42,6 +42,7 @@ let
         main=$(systemctl show --property MainPID --value nix-daemon.service)
         { [ "$main" != 0 ] && pgrep -P "$main" > /dev/null; } \
           || pgrep -u nix-ssh > /dev/null \
+          || systemctl is-active --quiet nix-cache-push.service \
           || [ -n "$(loginctl list-sessions --no-legend)" ]
       }
 
@@ -94,20 +95,26 @@ let
   };
 in
 {
-  imports = [ ./nix-builder-vars.nix ];
+  imports = [
+    ./builder-vars.nix
+    ./pusher.nix
+  ];
 
-  # gondor's nix-daemon logs in as nix-ssh, which may only run
-  # `nix-daemon --stdio`. It must be trusted to build derivations that are
-  # not signed by a key aule trusts; that is equivalent to root on the store.
+  nixBuilds.pusher.signingKey = "nix-builds-builder-key";
+
+  # The scheduler logs in as nix-ssh, which may only run `nix-daemon
+  # --stdio`. Untrusted: it can copy derivations (content-addressed) and
+  # have them built, but cannot import unsigned paths, so a compromised
+  # orthanc cannot get arbitrary paths signed by aule's push hook.
   nix.sshServe = {
     enable = true;
     protocol = "ssh-ng";
-    trusted = true;
-    keys = lib.optional builderKey.exists builderKey.value;
+    trusted = false;
+    keys = lib.optional schedulerKey.exists schedulerKey.value;
   };
-  warnings = lib.optional (!builderKey.exists) ''
-    nix-builder: no gondor key for nix-ssh yet. Run
-    `clan vars generate gondor -g nix-builder-ssh` (docs/nix-builder.md).
+  warnings = lib.optional (!schedulerKey.exists) ''
+    nix-builds: no scheduler key for nix-ssh yet. Run
+    `clan vars generate orthanc` (clanServices/nix-builds/README.md).
   '';
 
   nix.settings = {

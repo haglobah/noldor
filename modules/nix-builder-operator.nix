@@ -1,7 +1,8 @@
-# gondor's side of the on-demand build machine aule (./nix-builder.nix):
-# nix-daemon sends builds to it while it exists and builds locally while it
-# does not. The `nix-builder` CLI and the `builder-*` recipes in the
-# Justfile create and delete it. See docs/nix-builder.md.
+# gondor's operator tools for aule, the nix-builds build machine
+# (clanServices/nix-builds): the `nix-builder` CLI behind the `builder-*`
+# recipes (status, down, snapshot refresh) and the ssh alias `aule` that
+# `clan machines update aule` uses. gondor does not build on aule; the
+# scheduler on orthanc starts it. See docs/nix-builder.md.
 {
   config,
   lib,
@@ -36,13 +37,10 @@ let
   };
 in
 {
-  imports = [ ./nix-builder-vars.nix ];
+  imports = [ ../clanServices/nix-builds/builder-vars.nix ];
 
-  clan.core.vars.generators = {
-    nix-builder-ssh.files.id_ed25519.deploy = true;
-    # The CLI runs as beat.
-    hcloud-token.files.token.owner = "beat";
-  };
+  # The CLI runs as beat.
+  clan.core.vars.generators.hcloud-token.files.token.owner = "beat";
 
   environment.systemPackages = [ nix-builder ];
 
@@ -51,33 +49,10 @@ in
     verify it. Run `clan vars generate aule` (docs/nix-builder.md).
   '';
 
-  nix.distributedBuilds = true;
-  nix.buildMachines = [
-    {
-      hostName = "aule";
-      sshUser = "nix-ssh";
-      sshKey = generators.nix-builder-ssh.files.id_ed25519.path;
-      protocol = "ssh-ng";
-      system = "x86_64-linux";
-      maxJobs = 4;
-      # Only ranks remote builders against each other. Nix tries a free
-      # remote slot before building locally anyway, and builds locally when
-      # the connection fails.
-      speedFactor = 2;
-      supportedFeatures = [
-        "big-parallel"
-        "benchmark"
-      ];
-    }
-  ];
-  # aule fetches build inputs from cache.nixos.org and R2 itself instead of
-  # receiving them over gondor's uplink.
-  nix.settings.builders-use-substitutes = true;
-
   # `nix-builder up` writes `Host aule / HostName <ip>` to ${sshConfig}; ssh
   # takes the first value it sees, so the include wins over the fallback
   # below. Without the file, aule.invalid fails to resolve at once (RFC
-  # 6761) and Nix builds locally without waiting. HostKeyAlias makes ssh
+  # 6761), so ssh fails at once. HostKeyAlias makes ssh
   # check the pinned key under `aule` instead of the changing IP.
   # Keepalives notice a server that deleted itself mid-build in ~1 min.
   programs.ssh.extraConfig = ''

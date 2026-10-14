@@ -1,4 +1,4 @@
-# Pure decision for aule's self-deletion; ../nix-builder.nix feeds it the
+# Pure decision for aule's self-deletion; ../builder.nix feeds it the
 # clock, the server's creation time and the build activity.
 { writeShellApplication }:
 writeShellApplication {

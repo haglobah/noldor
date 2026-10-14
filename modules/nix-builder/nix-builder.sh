@@ -1,7 +1,8 @@
 # nix-builder up|down|status|snapshot|sync
 #
-# Creates and deletes aule, gondor's on-demand Hetzner build machine, from
-# its newest snapshot. See docs/nix-builder.md. Set by the Nix wrapper:
+# Creates and deletes aule, the nix-builds build machine, from its newest
+# snapshot. The scheduler on orthanc starts it for builds; gondor uses this
+# for snapshots and `clan machines update aule`. See docs/nix-builder.md. Set by the Nix wrapper:
 # token_file, ssh_config.
 
 name=aule
@@ -42,7 +43,7 @@ write_ssh_config() {
 forget_address() {
   if [ -e "$ssh_config" ]; then
     rm -f "$ssh_config"
-    echo "removed $ssh_config: nix builds locally again"
+    echo "removed $ssh_config"
   fi
 }
 
@@ -125,7 +126,7 @@ cmd_status() {
     echo "$ssh_config:"
     sed 's/^/  /' "$ssh_config"
   else
-    echo "$ssh_config: absent, nix builds locally"
+    echo "$ssh_config: absent"
   fi
 }
 
@@ -150,8 +151,7 @@ cmd_snapshot() {
 }
 
 # Run by nix-builder-sync.timer: aule deletes itself without telling gondor,
-# and a stale address makes every remote build attempt wait for the ssh
-# timeout. Only asks the API while an address is recorded.
+# and a stale address would point `clan machines update aule` at a stranger. Only asks the API while an address is recorded.
 cmd_sync() {
   local server ip
   [ -e "$ssh_config" ] || return 0

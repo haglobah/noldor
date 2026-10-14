@@ -173,8 +173,14 @@
             # GNOME VM test of the zen extension (home/pkgs/zen).
             checks.zen = import ./tests/zen.nix { inherit pkgs; };
 
-            # aule's idle/billing-hour self-deletion decision (modules/nix-builder.nix).
+            # aule's idle/billing-hour self-deletion decision (clanServices/nix-builds).
             checks.nix-builder-reaper = import ./tests/nix-builder-reaper.nix { inherit pkgs; };
+
+            # The scheduler talks to the builder as an untrusted nix user.
+            checks.nix-builds-untrusted = import ./tests/nix-builds-untrusted.nix { inherit pkgs; };
+
+            # The nix-builds scheduler's unit tests run in its checkPhase.
+            checks.nix-builds-scheduler = pkgs.callPackage ./clanServices/nix-builds/scheduler/package.nix { };
 
             # Rule unit tests and dashboard lint for modules/metrics/, no VM.
             checks.metrics-config = import ./tests/metrics-config.nix {

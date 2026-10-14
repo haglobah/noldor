@@ -1,13 +1,12 @@
-# aule, the smith: on-demand Hetzner Cloud build machine for gondor.
-# Created from a snapshot when needed, deletes itself when idle.
-# See docs/nix-builder.md and ../../modules/nix-builder.nix.
+# aule, the smith: on-demand Hetzner Cloud build machine (role `builder` of
+# clanServices/nix-builds). Created from a snapshot when needed, deletes
+# itself when idle. See docs/nix-builder.md.
 { lib, modulesPath, ... }:
 {
   imports = [
     # virtio drivers for Hetzner's KVM guests. No facter.json on purpose:
     # the snapshot boots on CX53 (Intel or AMD) and CCX33 (AMD) alike.
     (modulesPath + "/profiles/qemu-guest.nix")
-    ../../modules/nix-builder.nix
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";

@@ -1,8 +1,8 @@
-# Unit test of aule's self-deletion decision (modules/nix-builder/reap-decide.sh).
+# Unit test of aule's self-deletion decision (clanServices/nix-builds/reaper/reap-decide.sh).
 # Times are Unix seconds; the server was created at t=0.
 { pkgs }:
 let
-  decide = pkgs.callPackage ../modules/nix-builder/reap-decide.nix { };
+  decide = pkgs.callPackage ../clanServices/nix-builds/reaper/reap-decide.nix { };
 in
 pkgs.runCommand "nix-builder-reaper" { nativeBuildInputs = [ decide ]; } ''
   fail=0

@@ -5,15 +5,18 @@
 A Cloudflare R2 bucket, `nix-cache`, that holds Nix store paths built in
 this clan. It is private: every request is signed with an R2 API token.
 
-- **All machines** read it as an extra substituter, after
-  `cache.nixos.org` (priority 50 vs. 40). They only accept paths signed
-  with the clan's cache key (`noldor-nix-cache-1`). See
-  `modules/nix-cache.nix`, imported for every machine via the `common`
-  instance in `clan.nix`.
-- **gondor** pushes. Every derivation it builds, locally or on a remote
-  builder, is queued by a `post-build-hook` and uploaded, signed, by
-  `nix-cache-push.service`. `just cache-push` pushes a whole closure on
-  demand. See `modules/nix-cache-push.nix`.
+It is part of the nix-builds clan service
+(`clanServices/nix-builds/README.md`).
+
+- **All machines** (role `client`, `client.nix`) read it as an extra
+  substituter, after `cache.nixos.org` (priority 50 vs. 40). They accept
+  paths signed by gondor's key (`noldor-nix-cache-1`) or aule's
+  (`noldor-aule-1`).
+- **gondor** (role `pusher`) and **aule** (role `builder`) push, each with
+  its own key. Every derivation they build is queued by a
+  `post-build-hook` and uploaded, signed, by `nix-cache-push.service`
+  (`pusher.nix`). `just cache-push` pushes a whole closure from gondor on
+  demand.
 
 Store URL (`<ACCOUNT_ID>` is the Cloudflare account ID):
 
@@ -39,16 +42,17 @@ not read them from `nix.conf`. So:
 | ----------------------- | -------------------------------------- | -------------------------- |
 | `nix-cache-account`     | account ID, public                     | all (read at eval time)    |
 | `nix-cache-read`        | read-only token, profile `nix-cache-read`   | all                   |
-| `nix-cache-write`       | read-write token, profile `nix-cache-write` | gondor                |
-| `nix-cache-signing-key` | `public-key` public, `secret-key` secret    | public: all; secret: gondor |
+| `nix-cache-write`       | read-write token, profile `nix-cache-write` | gondor, aule          |
+| `nix-cache-signing-key` | gondor's key: `public-key` public, `secret-key` secret | public: all; secret: gondor |
+| `nix-builds-builder-key` | aule's key, same layout                | public: all; secret: aule  |
 
-All four are shared clan vars. nix-daemon gets
+All are shared clan vars (`vars.nix`). nix-daemon gets
 `AWS_SHARED_CREDENTIALS_FILE=/run/secrets/vars/nix-cache-read/credentials`.
 The push side (`nix-cache` script, run as root) points the same variable
 at the write token. The `profile=` in each URL picks the matching section.
 
-Until `nix-cache-account` and `nix-cache-signing-key` are generated, the
-machines evaluate without the cache and print a `nix-cache:` warning.
+Until the account ID and both public keys are generated, the machines
+evaluate without the cache and print a `nix-builds:` warning.
 
 ### When R2 is down or unreachable
 
@@ -175,8 +179,7 @@ nix-store -r /nix/store/...-r2-test-...
 
 ## Not covered here
 
-- Garbage collection in the bucket. Nothing deletes old paths yet; an R2
-  object lifecycle rule (delete after N days) is the simple option.
-- The build machine aule (docs/nix-builder.md) does not push and holds no
-  write token or signing key: gondor's hook pushes its outputs once they
-  are copied back.
+- Garbage collection in the bucket. Nothing deletes old paths yet. Do not
+  use an R2 lifecycle rule that deletes by age: it can delete a NAR while
+  its `.narinfo` stays, and machines then fail to fetch a path the cache
+  claims to have. niks3 (Mic92) tracks references for a safe GC.
