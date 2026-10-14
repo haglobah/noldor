@@ -25,6 +25,13 @@ in
       deploy.targetHost = "root@127.0.0.1";
       tags = [ "client" ];
     };
+    # On-demand Hetzner build machine (docs/nix-builder.md). `aule` is an
+    # ssh alias on gondor that `nix-builder up` points at the current IP.
+    # Not "server": instances for long-lived servers should skip it.
+    aule = {
+      deploy.targetHost = "root@aule";
+      tags = [ "builder" ];
+    };
   };
 
   # Docs: See https://docs.clan.lol/reference/clanServices

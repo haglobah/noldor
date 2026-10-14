@@ -9,6 +9,11 @@ deploy-formenos:
 orthanc:
     clan ssh orthanc -c fish
 
+# Same for the other 4GB VPS: orthanc OOMs on nix builds. gondor hands the
+# work to aule when it is up, and pushes the results to the R2 cache.
+deploy-orthanc:
+    clan machines update orthanc --build-host localhost
+
 storage-box:
     ssh -p 23 u366465@u366465.your-storagebox.de
 
@@ -36,3 +41,25 @@ cache-push installable:
 # Show whether an installable's outputs are in the R2 cache, with signatures.
 cache-check installable:
     nix build --no-link --print-out-paths {{installable}} | xargs sudo nix-cache info
+
+# aule, the on-demand Hetzner build machine (docs/nix-builder.md). Billed
+# per started hour while it exists; it deletes itself when idle.
+# Create aule from its newest snapshot; nix-daemon then builds there.
+builder-up:
+    nix-builder up
+
+# Delete aule now; builds go back to gondor.
+builder-down:
+    nix-builder down
+
+# Show aule, its snapshots and the address nix-daemon uses.
+builder-status:
+    nix-builder status
+
+# Boots the old image, deploys the current config (built on aule itself),
+# snapshots it, drops older snapshots and deletes the server.
+# Bake aule's current config into a new snapshot.
+builder-snapshot:
+    nix-builder up
+    clan machines update aule
+    nix-builder snapshot

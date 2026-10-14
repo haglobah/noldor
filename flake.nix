@@ -173,6 +173,9 @@
             # GNOME VM test of the zen extension (home/pkgs/zen).
             checks.zen = import ./tests/zen.nix { inherit pkgs; };
 
+            # aule's idle/billing-hour self-deletion decision (modules/nix-builder.nix).
+            checks.nix-builder-reaper = import ./tests/nix-builder-reaper.nix { inherit pkgs; };
+
             # Rule unit tests and dashboard lint for modules/metrics/, no VM.
             checks.metrics-config = import ./tests/metrics-config.nix {
               inherit pkgs;

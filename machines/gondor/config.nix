@@ -17,6 +17,7 @@
     # ../../modules/ollama.nix
     ../../modules/catppuccin-cache.nix
     ../../modules/nix-cache-push.nix
+    ../../modules/nix-builder-client.nix
     ../../modules/gnome.nix
     ../../modules/protonvpn.nix
     inputs.home-manager.nixosModules.home-manager
