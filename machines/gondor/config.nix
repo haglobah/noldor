@@ -201,6 +201,10 @@
 
   # Services
   services.fwupd.enable = true;
+  # Goodix 27c6:609c reader. fprintd turns on fprintAuth for every PAM service;
+  # keep sudo password-only so a touch alone never grants root.
+  services.fprintd.enable = true;
+  security.pam.services.sudo.fprintAuth = false;
   services.printing.enable = true;
   services.upower.percentageLow = 30;
   services.upower.percentageCritical = 15;
