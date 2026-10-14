@@ -12,6 +12,7 @@ in
 {
   # Custom kitten; tests: nix run nixpkgs#python3Packages.pytest -- home/programs/kitty
   xdg.configFile."kitty/balance_splits.py".source = ./kitty/balance_splits.py;
+  xdg.configFile."kitty/toggle_tab_bar.py".source = ./kitty/toggle_tab_bar.py;
   # Provides draw_title() for {custom} in the tab title template.
   xdg.configFile."kitty/tab_bar.py".source = ./kitty/tab_bar.py;
   xdg.configFile."kitty/tab_bar_refresh.py".source = ./kitty/tab_bar_refresh.py;
@@ -77,6 +78,8 @@ in
       "ctrl+space>w>s" = "launch --cwd=current --location=hsplit";
       "ctrl+space>w>t" = "launch --cwd=current --location=vsplit";
       "ctrl+space>w>colon" = "kitten balance_splits.py workspace";
+      # SPC t b: toggle the tab bar, Doom's SPC t toggle prefix.
+      "ctrl+space>t>b" = "kitten toggle_tab_bar.py";
       # `resize_window reset` only sets each split to 50/50 (A | (B | C) -> 1/2|1/4|1/4).
       # The kitten weights each split by column/row count, so all columns get equal width.
       "ctrl+space>w>equal" = "kitten balance_splits.py";
