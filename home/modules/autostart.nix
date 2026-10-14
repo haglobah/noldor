@@ -14,15 +14,6 @@
       X-GNOME-Autostart-enabled=true
       OnlyShowIn=GNOME;
     '';
-    ".config/autostart/emacs-mycelium.desktop".text = ''
-      [Desktop Entry]
-      Type=Application
-      Name=Emacs Mycelium
-      Comment=Start a separate Emacs instance sporting mycelium (and other docs stuff)
-      Exec=${pkgs.emacs}/bin/emacs --name "mycelium"
-      X-GNOME-Autostart-enabled=true
-      OnlyShowIn=GNOME;
-    '';
     ".config/autostart/todos-humane-tools.desktop".text = ''
       [Desktop Entry]
       Type=Application
@@ -51,7 +42,6 @@
     #   "${pkgs.librewolf}/share/applications/librewolf.desktop";
     ".config/autostart/chromium.desktop".source =
       "${pkgs.chromium}/share/applications/chromium-browser.desktop";
-    ".config/autostart/emacs.desktop".source = "${pkgs.emacs}/share/applications/emacs.desktop";
     # ".config/autostart/obsidian.desktop".source =
     # "${pkgs.obsidian}/share/applications/obsidian.desktop";
   };

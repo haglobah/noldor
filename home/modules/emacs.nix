@@ -5,15 +5,29 @@
   ...
 }:
 let
-  emacsWithPackages = (pkgs.emacsPackagesFor pkgs.emacs31).emacsWithPackages (epkgs: [
-    epkgs.mu4e
-  ]);
+  # pgtk is the native Wayland build. The default Lucid build runs under
+  # Xwayland, whose cursor size follows the largest monitor scale, so
+  # Emacs showed a huge cursor after plugging in a HiDPI monitor.
+  emacsWithPackages = (pkgs.emacsPackagesFor pkgs.emacs31-pgtk).emacsWithPackages (epkgs: [ ]);
 in
 {
   config = {
     home.packages = [ emacsWithPackages ];
 
-    # `doom sync` snapshots absolute /nix/store paths (e.g. the mu4e
+    home.file = {
+      ".config/autostart/emacs-mycelium.desktop".text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Emacs Mycelium
+        Comment=Start a separate Emacs instance sporting mycelium (and other docs stuff)
+        Exec=${emacsWithPackages}/bin/emacs --name "mycelium"
+        X-GNOME-Autostart-enabled=true
+        OnlyShowIn=GNOME;
+      '';
+      ".config/autostart/emacs.desktop".source = "${emacsWithPackages}/share/applications/emacs.desktop";
+    };
+
+    # `doom sync` snapshots absolute /nix/store paths (e.g. package
     # site-lisp) into its generated init file, so a rebuild that changes
     # the Emacs closure leaves Doom loading stale elisp until the next
     # sync. Re-sync whenever the Emacs store path differs from the
@@ -31,8 +45,8 @@ in
         # doom sync regenerates ~/.config/emacs/.local/env when it
         # exists, snapshotting this process's environment. Doom loads
         # that file at startup and it REPLACES Emacs's PATH, so the
-        # PATH here must contain the user session bins (mbsync, mu,
-        # ...) or mu4e and friends break until the next `doom env`.
+        # PATH here must contain the user session bins, or packages that
+        # shell out to them break until the next `doom env`.
         # Activation runs with a minimal PATH, so list them explicitly.
         if run env PATH="${
           lib.makeBinPath [
@@ -47,7 +61,7 @@ in
         else
           # Do not record the path on failure: the sync retries on the
           # next activation instead of silently staying stale.
-          warnEcho "doomSync: doom sync failed; mu4e may load stale elisp"
+          warnEcho "doomSync: doom sync failed; Doom may load stale elisp"
           warnEcho "doomSync: run 'doom sync' manually, or re-activate to retry"
         fi
       fi
