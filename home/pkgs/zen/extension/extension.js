@@ -1,6 +1,7 @@
-// Zen mode: Super+Z blurs every window but the focused one, blocks window
+// Zen mode: Super+Z blurs and freezes every window but the focused one, blocks window
 // switching and mutes notification banners. Ctrl+Alt+Super+Escape ends it.
 // Closing the zen window or disabling the extension ends it too.
+import Clutter from 'gi://Clutter';
 import GObject from 'gi://GObject';
 import Gio from 'gi://Gio';
 import Meta from 'gi://Meta';
@@ -32,6 +33,7 @@ const BLURRED_TYPES = [
 ];
 
 const EFFECT = 'zen-blur';
+const SNAPSHOT = 'zen-snapshot';
 
 // run-or-raise grabs its shortcuts as accelerators, which the keybinding
 // filter cannot tell apart from media keys. Zen blocks its signal handler.
@@ -42,10 +44,13 @@ class Zen {
         this._window = window;
         this._settings = settings;
         this._signals = [];
-        this._blurred = new Map(); // actor => its destroy handler
+        this._blurred = new Map(); // actor => {signals, snapshot, hidden}
         this._pausedHandler = null;
         this._injections = new InjectionManager();
 
+        // Direct scanout shows a fullscreen window without compositing,
+        // which skips its blur. Mutter allows it despite static effects.
+        global.compositor.disable_unredirect();
         for (const actor of global.get_window_actors())
             this._blur(actor);
         this._connect(global.window_manager, 'map', (wm, actor) => this._blur(actor));
@@ -77,11 +82,16 @@ class Zen {
         for (const [object, id] of this._signals)
             object.disconnect(id);
         this._signals = [];
-        for (const [actor, id] of this._blurred) {
-            actor.disconnect(id);
+        for (const [actor, blurred] of this._blurred) {
+            for (const id of blurred.signals)
+                actor.disconnect(id);
+            blurred.snapshot.destroy();
+            for (const [child, opacity] of blurred.hidden)
+                child.opacity = opacity;
             actor.remove_effect_by_name(EFFECT);
         }
         this._blurred.clear();
+        global.compositor.enable_unredirect();
     }
 
     _connect(object, signal, handler) {
@@ -107,7 +117,39 @@ class Zen {
             brightness: 0.6,
             mode: Shell.BlurMode.ACTOR,
         }));
-        this._blurred.set(actor, actor.connect('destroy', () => this._blurred.delete(actor)));
+        this._blurred.set(actor, this._freeze(actor));
+    }
+
+    // Cover the window with a snapshot and hide its live surfaces, so
+    // nothing that happens in it shows through the blur.
+    _freeze(actor) {
+        let content = null;
+        try {
+            content = actor.paint_to_content(null);
+        } catch (e) {
+            console.error(`zen: cannot snapshot "${actor.meta_window.title}"; hiding it instead: ${e}`);
+        }
+        const hidden = new Map(); // child => its opacity
+        const hide = child => {
+            if (child.name === SNAPSHOT || hidden.has(child))
+                return;
+            hidden.set(child, child.opacity);
+            child.opacity = 0;
+        };
+        actor.get_children().forEach(hide);
+        const snapshot = new Clutter.Actor({
+            name: SNAPSHOT,
+            content,
+            width: actor.width,
+            height: actor.height,
+        });
+        actor.add_child(snapshot);
+        const signals = [
+            actor.connect('child-added', (a, child) => hide(child)),
+            actor.connect('child-removed', (a, child) => hidden.delete(child)),
+            actor.connect('destroy', () => this._blurred.delete(actor)),
+        ];
+        return {signals, snapshot, hidden};
     }
 
     // Clicks, new windows and gestures can move focus; send it back. Focus

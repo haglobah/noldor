@@ -92,6 +92,12 @@ pkgs.testers.runNixOSTest {
               blurred: Object.fromEntries(global.get_window_actors().map(a => [
                   a.meta_window.title,
                   a.get_effects().some(e => e instanceof Shell.BlurEffect)])),
+              // A frozen window shows only zen's snapshot of it.
+              frozen: Object.fromEntries(global.get_window_actors().map(a => [
+                  a.meta_window.title,
+                  a.get_children().some(c => c.name === 'zen-snapshot' && c.content) &&
+                  a.get_children().every(c => c.name === 'zen-snapshot' || c.opacity === 0)])),
+              unredirectInhibits: global.zenUnredirectInhibits ?? 0,
               overview: Main.overview.visible,
               banners: new Gio.Settings({schema_id: 'org.gnome.desktop.notifications'})
                   .get_boolean('show-banners'),
@@ -126,10 +132,14 @@ pkgs.testers.runNixOSTest {
       leave = "ctrl-alt-meta_l-esc"
 
       def in_zen(s):
-          return s["blurred"].get("beta") and not s["blurred"].get("alpha")
+          # Direct scanout of a fullscreen window would skip its blur.
+          return (s["blurred"].get("beta") and not s["blurred"].get("alpha")
+                  and s["frozen"].get("beta") and not s["frozen"].get("alpha")
+                  and s["unredirectInhibits"] == 1)
 
       def no_blur(s):
-          return not any(s["blurred"].values())
+          return (not any(s["blurred"].values()) and not any(s["frozen"].values())
+                  and s["unredirectInhibits"] == 0)
 
       with subtest("GNOME starts with the extensions enabled"):
           machine.wait_for_unit("display-manager.service")
@@ -142,6 +152,14 @@ pkgs.testers.runNixOSTest {
           for uuid in ["${zen.extensionUuid}", "${runOrRaise.extensionUuid}"]:
               assert js(f"Main.extensionManager.lookup('{uuid}')?.state") == 1, uuid
           js("Main.overview.hide()")
+          js("""(() => {
+              const c = global.compositor;
+              global.zenUnredirectInhibits = 0;
+              const disable = c.disable_unredirect.bind(c);
+              const enable = c.enable_unredirect.bind(c);
+              c.disable_unredirect = () => { global.zenUnredirectInhibits++; disable(); };
+              c.enable_unredirect = () => { global.zenUnredirectInhibits--; enable(); };
+          })()""")
           spawn("beta")
           wait_for(focus_is("beta"), "beta")
           spawn("alpha")
@@ -157,7 +175,7 @@ pkgs.testers.runNixOSTest {
           activate("alpha")
           wait_for(focus_is("alpha"), "alpha")
 
-      with subtest("Super+Z blurs every window but the focused one"):
+      with subtest("Super+Z blurs and freezes every window but the focused one"):
           press(enter)
           wait_for(in_zen, "zen")
           assert not state()["banners"], "banners stay on in zen"
@@ -179,7 +197,8 @@ pkgs.testers.runNixOSTest {
           activate("beta")
           wait_for(focus_is("alpha"), "focus to return")
           spawn("gamma")
-          wait_for(lambda s: s["blurred"].get("gamma"), "gamma to be blurred")
+          wait_for(lambda s: s["blurred"].get("gamma") and s["frozen"].get("gamma"),
+                   "gamma to be blurred and frozen")
           wait_for(focus_is("alpha"), "focus to return from gamma")
 
       with subtest("Ctrl+Alt+Super+Escape restores everything"):
