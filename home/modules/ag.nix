@@ -25,45 +25,6 @@
     };
   };
 
-  accounts.email.accounts = {
-    ag = rec {
-      address = "beat.hagenlocher@active-group.de";
-      realName = "Beat Hagenlocher";
-      userName = address;
-      passwordCommand = "cat ~/.agpassword";
-      imap = {
-        host = "mail.active-group.de";
-        port = null;
-        tls = {
-          enable = true;
-          useStartTls = true;
-        };
-      };
-      smtp = {
-        host = "mail.active-group.de";
-        port = null;
-      };
-
-      mbsync = {
-        enable = true;
-        create = "both";
-        remove = "both";
-        expunge = "both";
-        patterns = [
-          "*"
-          "!Drafts"
-          "!Deleted Messages"
-        ];
-      };
-      mu.enable = true;
-      msmtp = {
-        enable = true;
-        extraConfig = {
-          "syslog" = "LOG_USER";
-        };
-      };
-    };
-  };
   programs.git = {
     includes = [
       {

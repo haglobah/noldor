@@ -16,7 +16,6 @@
     ./modules/browsers.nix
     ./modules/autostart.nix
     ./modules/registry.nix
-    ./modules/email.nix
     ./modules/run-or-raise.nix
     ./modules/school-networks.nix
     ./modules/emacs.nix
