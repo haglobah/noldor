@@ -26,3 +26,13 @@ dash:
         -L 19093:127.0.0.1:9093 \
         -L 18085:127.0.0.1:8085 \
         formenos
+
+# gondor pushes what it builds on its own (docs/nix-cache.md); this pushes
+# a whole closure on demand, including paths cache.nixos.org already has.
+# Build an installable and push its closure, signed, to the R2 cache.
+cache-push installable:
+    nix build --no-link --print-out-paths {{installable}} | xargs sudo nix-cache push
+
+# Show whether an installable's outputs are in the R2 cache, with signatures.
+cache-check installable:
+    nix build --no-link --print-out-paths {{installable}} | xargs sudo nix-cache info

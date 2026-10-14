@@ -52,7 +52,10 @@ in
         input = "clan-core";
       };
       roles.default.tags.all = { };
-      roles.default.extraModules = [ ./modules/resolved.nix ];
+      roles.default.extraModules = [
+        ./modules/resolved.nix
+        ./modules/nix-cache.nix
+      ];
     };
 
     # Docs: https://docs.clan.lol/reference/clanServices/admin/
