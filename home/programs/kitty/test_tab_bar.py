@@ -11,6 +11,7 @@ from tab_bar import (
     is_password_prompt,
     majority_cwd,
     tab_state,
+    window_cwd,
     window_state,
 )
 
@@ -182,3 +183,19 @@ def test_idle_tab_shows_green_circle():
 
 def test_branch_goes_on_a_gray_second_line():
     assert format_title("ht", 1, IDLE, "main") == f"ht 1 {GREEN}○{RESET}\n{GRAY}main{RESET}"
+
+
+class FakeChild:
+    current_cwd = "/home/beat/noldor"
+
+
+class FakeWindow:
+    child = FakeChild()
+
+    @property
+    def cwd_of_child(self):
+        raise AssertionError("scans /proc on every call; too slow for each tab bar redraw")
+
+
+def test_window_cwd_reads_the_shell_cwd_without_scanning_processes():
+    assert window_cwd(FakeWindow()) == "/home/beat/noldor"

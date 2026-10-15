@@ -105,6 +105,12 @@ def format_title(label, num_windows, state, branch=None):
     return title
 
 
+def window_cwd(w):
+    """The window's shell cwd. kitty's cwd_of_child finds the foreground process
+    by reading every /proc/*/stat, about 9 ms per window on each redraw."""
+    return w.child.current_cwd
+
+
 def draw_title(data):
     from kitty.fast_data_types import get_boss
 
@@ -113,8 +119,8 @@ def draw_title(data):
         return data["title"]
     windows = list(tab)
     active = tab.active_window
-    cwds = [w.cwd_of_child for w in windows]
-    active_cwd = active.cwd_of_child if active else None
+    cwds = [window_cwd(w) for w in windows]
+    active_cwd = window_cwd(active) if active else None
     label = dir_label(cwds, active_cwd, os.path.expanduser("~"))
     state = tab_state([_live_window_state(w) for w in windows])
     return format_title(label, len(windows), state, git_branch(majority_cwd(cwds, active_cwd)))
