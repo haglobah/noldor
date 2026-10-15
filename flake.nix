@@ -77,15 +77,9 @@
     hx.url = "github:haglobah/hx";
     nix-openclaw.url = "github:openclaw/nix-openclaw";
     ht.url = "git+ssh://git@github.com/haglobah/ht.git";
-    media-inbox = {
-      url = "git+ssh://git@github.com/haglobah/media-inbox.git";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    media-inbox.url = "git+ssh://git@github.com/haglobah/media-inbox.git";
     colab.url = "git+ssh://git@github.com/haglobah/colab.git?ref=noldor-deploy";
-    notable = {
-      url = "git+ssh://git@github.com/haglobah/notable.git?ref=main&dir=web";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    notable.url = "git+ssh://git@github.com/haglobah/notable.git?ref=main&dir=web";
     # donethat.url = "git+ssh://git@github.com/haglobah/donethat-electron.git";
   };
 
