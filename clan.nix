@@ -282,6 +282,8 @@ in
           ./modules/media-inbox-notify.nix
           inputs.notable.nixosModules.default
           ./modules/notable.nix
+          inputs.notes.nixosModules.default
+          ./modules/notes.nix
 
           # Only here until the grafana service gets fixed
           # ./modules/grafana-secret.nix

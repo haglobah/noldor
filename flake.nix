@@ -80,6 +80,7 @@
     media-inbox.url = "git+ssh://git@github.com/haglobah/media-inbox.git";
     colab.url = "git+ssh://git@github.com/haglobah/colab.git?ref=noldor-deploy";
     notable.url = "git+ssh://git@github.com/haglobah/notable.git?ref=main&dir=web";
+    notes.url = "git+ssh://git@github.com/haglobah/notes.git?ref=main";
     # donethat.url = "git+ssh://git@github.com/haglobah/donethat-electron.git";
   };
 
