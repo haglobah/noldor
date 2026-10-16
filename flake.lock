@@ -781,11 +781,11 @@
         "portless": "portless"
       },
       "locked": {
-        "lastModified": 1791772926,
-        "narHash": "sha256-sCCRIRSYL4S92fzF+5uZAJX322mxMlEd/Gf8a5ivyCQ=",
+        "lastModified": 1792024114,
+        "narHash": "sha256-eEuM+iW4wrKawc6aQOD5kT/6DHywzLj0yicIC2c+Y38=",
         "ref": "refs/heads/main",
-        "rev": "bff8839868e4c55059f5aca01b50e055b0ef5e1c",
-        "revCount": 836,
+        "rev": "729e0ace519585ff8ffb98e888a156932bbcc2b1",
+        "revCount": 843,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/ht.git"
       },
@@ -824,11 +824,11 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1790923567,
-        "narHash": "sha256-tLCWgg/aGcJ1nYuDTLmJ0FwFOuIwa808WRigXNx1tBg=",
+        "lastModified": 1791958279,
+        "narHash": "sha256-U32zhC5Y40+G/7A2RD9HItrJlKFURz+FOUBLNv5ccsI=",
         "ref": "refs/heads/main",
-        "rev": "33fdc9abab4dfb30c2b437aa567a89ca54f312fc",
-        "revCount": 289,
+        "rev": "48baa957ffabc7a40a26c1d0b72d653130ab8517",
+        "revCount": 290,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/media-inbox.git"
       },
@@ -1091,11 +1091,11 @@
     },
     "nixpkgs_12": {
       "locked": {
-        "lastModified": 1791734076,
-        "narHash": "sha256-i5qk1kLiit98rRbh1AXmWBNT9QXC/y4l5Wk/u5EdpDQ=",
+        "lastModified": 1791594108,
+        "narHash": "sha256-XK4KceonkwD8LuMAt/vNrz982mXJM5jeHAxMwsUXXAQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "7fd4004d0511991fff3a0524856a9be09e28c5f0",
+        "rev": "6510408d147d8c5e6d76043e899e9251756f6a75",
         "type": "github"
       },
       "original": {
@@ -1221,11 +1221,11 @@
     },
     "nixpkgs_8": {
       "locked": {
-        "lastModified": 1791734076,
-        "narHash": "sha256-i5qk1kLiit98rRbh1AXmWBNT9QXC/y4l5Wk/u5EdpDQ=",
+        "lastModified": 1786106723,
+        "narHash": "sha256-zDSUbpoeo/9ZmD2+wXnzxoo1+uhL8vxc0b8yuYMKYq0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "7fd4004d0511991fff3a0524856a9be09e28c5f0",
+        "rev": "f13ff45afd1bb73e640eaa08a7066dbed07e3238",
         "type": "github"
       },
       "original": {
@@ -1257,11 +1257,11 @@
       },
       "locked": {
         "dir": "web",
-        "lastModified": 1791876997,
-        "narHash": "sha256-j3/GTLE2pQsMYI+Mmk8OohfLt4DqlW85Bzimzh2G00M=",
+        "lastModified": 1791958279,
+        "narHash": "sha256-28BQyul1iMyh1ygHlxx6q1DQDmqJxUyzSo3hxB3cA9M=",
         "ref": "main",
-        "rev": "6eaea9fc8b2bfbbcbcd08416984f0ed39460cef1",
-        "revCount": 1495,
+        "rev": "9a61a0eb98b9521ee2838f6192dc8df47f331ce7",
+        "revCount": 1496,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/notable.git"
       },
