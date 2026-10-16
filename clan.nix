@@ -205,6 +205,7 @@ in
           ./modules/sslh.nix
           ./modules/catppuccin-cache.nix
           ./modules/metrics-shipper.nix
+          ./modules/server-housekeeping.nix
         ]
         ++ lib.optionals todoHomeBackupEnabled [ ./modules/todo-home-backup-source.nix ];
 
@@ -273,6 +274,7 @@ in
           ./modules/paperless.nix
           ./modules/monitoring.nix
           ./modules/metrics.nix
+          ./modules/server-housekeeping.nix
           ./modules/immich.nix
           ./modules/storagebox-secret.nix
           ./modules/audiobookshelf.nix
@@ -308,14 +310,6 @@ in
         # the flake registry; `nix shell nixpkgs#...` will fetch it instead
         nixpkgs.flake.setNixPath = false;
         nixpkgs.flake.setFlakeRegistry = false;
-
-        # Old generations pile up and the deploy needs old + new closures
-        # to coexist during the switch
-        nix.gc = {
-          automatic = true;
-          options = "--delete-older-than 7d";
-        };
-        nix.optimise.automatic = true;
 
         # Home Manager configuration
         home-manager.useGlobalPkgs = true;
