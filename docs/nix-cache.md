@@ -81,9 +81,11 @@ Facts from the Nix 2.34 source (`src/libstore/build/derivation-building-goal.cc`
 
 So the hook only writes the output paths into
 `/var/lib/nix-cache-push/queue/` and always exits 0. A path unit starts
-`nix-cache-push.service`, which uploads each entry with `--no-recursive`
-(only the outputs: their dependencies were substituted, so a cache has
-them, or built here and queued on their own). A failed upload stays queued,
+`nix-cache-push.service`, which uploads each entry with its closure. A
+binary cache only accepts a path whose references it already holds, and
+dependencies that aule substituted from cache.nixos.org or got as copied
+sources are never queued. `nix copy` skips what R2 already has, so the
+upstream part of a closure is uploaded once. A failed upload stays queued,
 fails the unit (visible in `systemctl --failed`), and the timer retries
 every 15 min.
 

@@ -173,6 +173,7 @@
 
             # The scheduler talks to the builder as an untrusted nix user.
             checks.nix-builds-untrusted = import ./tests/nix-builds-untrusted.nix { inherit pkgs; };
+            checks.nix-builds-push = import ./tests/nix-builds-push.nix { inherit pkgs; };
 
             # The nix-builds scheduler's unit tests run in its checkPhase.
             checks.nix-builds-scheduler = pkgs.callPackage ./clanServices/nix-builds/scheduler/package.nix { };
