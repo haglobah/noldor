@@ -96,6 +96,9 @@ in
       "ctrl+shift+up" = "move_window up";
       "ctrl+shift+down" = "move_window down";
       "ctrl+plus" = "change_font_size all +1.0";
+      # On a US layout ctrl+plus arrives as ctrl+shift+equal, which kitty's
+      # default binds to +2.0 and would outrank ctrl+plus.
+      "ctrl+shift+equal" = "change_font_size all +1.0";
       "ctrl+equal" = "change_font_size all 10.0";
       "ctrl+minus" = "change_font_size all -1.0";
       "ctrl+s" = "send_text all \\x17";
