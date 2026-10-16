@@ -115,6 +115,7 @@ def webhook_server(
 def serve(config: dict):
     os.makedirs(config["stateDir"], exist_ok=True)
     state = State(os.path.join(config["stateDir"], "state.sqlite"))
+    state.requeue_interrupted()
 
     gh_cfg = config["github"]
     github = GitHub(jwt=lambda: app_jwt(gh_cfg["appId"], gh_cfg["privateKeyFile"]))

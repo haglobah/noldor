@@ -47,6 +47,7 @@ class StateTest(unittest.TestCase):
         self.state.enqueue(push("b"))
         self.state.close()
         self.state = State(os.path.join(self.dir.name, "state.sqlite"))
+        self.state.requeue_interrupted()
         self.assertEqual(self.state.take().sha, "b")
         self.assertIsNone(self.state.take())
 
@@ -73,7 +74,16 @@ class StateTest(unittest.TestCase):
         self.state.take()
         self.state.close()
         self.state = State(os.path.join(self.dir.name, "state.sqlite"))
+        self.state.requeue_interrupted()
         self.assertEqual(self.state.take().sha, "a")
+
+    def test_reading_the_state_leaves_a_running_job_alone(self):
+        # `nix-builds status` opens the database while the daemon builds.
+        self.state.enqueue(push("a"))
+        job = self.state.take()
+        State(os.path.join(self.dir.name, "state.sqlite")).close()
+        self.state.finish(job, "success", "built 1 outputs")
+        self.assertIsNone(self.state.take())
 
     def test_last_result(self):
         self.state.enqueue(push("a"))

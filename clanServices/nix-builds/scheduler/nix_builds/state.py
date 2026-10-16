@@ -3,7 +3,7 @@
 One queued job per (repo, ref): a newer commit replaces an older one that
 has not started. A commit with a result (success, failure, skipped) is not
 queued again; `nix-builds retry` deletes the result. A job that was running
-when the scheduler stopped is queued again on the next start.
+when the daemon stopped is queued again when it starts.
 """
 
 import sqlite3
@@ -36,8 +36,12 @@ class State:
     def __init__(self, path: str):
         self.db = sqlite3.connect(path)
         self.db.executescript(SCHEMA)
+
+    def requeue_interrupted(self):
+        """Queue jobs that were running when the daemon stopped, unless a
+        newer commit already waits. Only the daemon calls this, at start:
+        the CLI opens the same database while a job runs."""
         with self.db:
-            # Requeue interrupted jobs, unless a newer commit already waits.
             self.db.execute(
                 "delete from jobs where running = 1 and exists (select 1 from jobs q"
                 " where q.repo = jobs.repo and q.ref = jobs.ref and q.running = 0)"
