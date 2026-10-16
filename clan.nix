@@ -47,7 +47,6 @@ in
         input = "self";
       };
       roles.client.tags.all = { };
-      roles.pusher.machines.gondor = { };
       roles.builder.machines.aule = { };
       roles.scheduler.machines.orthanc.settings = {
         domain = "builds.hagenlocher.me";

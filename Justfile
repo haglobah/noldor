@@ -9,8 +9,7 @@ deploy-formenos:
 orthanc:
     clan ssh orthanc -c fish
 
-# Same for the other 4GB VPS: orthanc OOMs on nix builds. gondor hands the
-# work to aule when it is up, and pushes the results to the R2 cache.
+# Same for the other 4GB VPS: orthanc OOMs on nix builds.
 deploy-orthanc:
     clan machines update orthanc --build-host localhost
 
@@ -32,15 +31,11 @@ dash:
         -L 18085:127.0.0.1:8085 \
         formenos
 
-# gondor pushes what it builds on its own (clanServices/nix-builds); this
-# pushes a whole closure on demand, including paths cache.nixos.org has.
-# Build an installable and push its closure, signed, to the R2 cache.
-cache-push installable:
-    nix build --no-link --print-out-paths {{installable}} | xargs sudo nix-cache push
-
+# Only aule pushes to the R2 cache (clanServices/nix-builds). Evaluates
+# without building, so a missing output shows as missing.
 # Show whether an installable's outputs are in the R2 cache, with signatures.
 cache-check installable:
-    nix build --no-link --print-out-paths {{installable}} | xargs sudo nix-cache info
+    nix eval --raw {{installable}}.outPath | xargs sudo nix-cache-info
 
 # aule, the on-demand build machine (docs/nix-builder.md). The scheduler on
 # orthanc starts it; it deletes itself when idle. Billed per started hour.

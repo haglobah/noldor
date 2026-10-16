@@ -1,6 +1,8 @@
-# Clan vars shared between the nix-builds roles. Every generator is shared:
-# one value for the whole clan, generated once. A machine declares the
-# generators it reads; `deploy` decides which secrets it receives.
+# Clan vars of the nix-builds roles. clan requires a shared generator to be
+# declared alike on every machine (deploy flag included), and encrypts its
+# secrets for all of them. So only what every machine needs is shared; a
+# secret one machine needs lives on that machine, and the others read its
+# public half from the repo (`nixBuilds.publicVar`).
 { lib, pkgs, ... }:
 let
   # One AWS-style credentials file per R2 token, picked by the `profile=`
@@ -12,7 +14,7 @@ let
     in
     {
       share = true;
-      files.credentials.deploy = lib.mkDefault false;
+      files.credentials = { };
       prompts.access-key-id = {
         type = "line";
         description = "R2 ${label} token: Access Key ID";
@@ -30,12 +32,10 @@ let
       '';
     };
 
-  # A cache signing key: the public half is trusted everywhere, the secret
-  # half only goes to the one machine that signs with it.
+  # A cache signing key, per machine: the public half is trusted everywhere.
   signingKey = keyName: {
-    share = true;
     files.public-key.secret = false;
-    files.secret-key.deploy = lib.mkDefault false;
+    files.secret-key = { };
     runtimeInputs = [ pkgs.nix ];
     script = ''
       nix --extra-experimental-features nix-command \
@@ -46,13 +46,45 @@ let
   };
 in
 {
-  options.nixBuilds.vars = lib.mkOption {
-    type = lib.types.raw;
-    internal = true;
-    description = "Generator builders, shared with the role modules.";
+  options.nixBuilds = {
+    vars = lib.mkOption {
+      type = lib.types.raw;
+      internal = true;
+      description = "Generator builders, shared with the role modules.";
+    };
+    builderName = lib.mkOption {
+      type = lib.types.str;
+      internal = true;
+      description = "The machine with role `builder`; set by ./default.nix.";
+    };
+    schedulerName = lib.mkOption {
+      type = lib.types.str;
+      internal = true;
+      description = "The machine with role `scheduler`; set by ./default.nix.";
+    };
+    publicVar = lib.mkOption {
+      type = lib.types.raw;
+      internal = true;
+      description = "machine: generator: file: { exists; value; } of a public var in the repo.";
+    };
   };
 
   config.nixBuilds.vars = { inherit awsCredentials signingKey; };
+
+  config.nixBuilds.publicVar =
+    machine: generator: file:
+    let
+      path = ../../vars/per-machine/${machine}/${generator}/${file}/value;
+      exists = builtins.pathExists path;
+    in
+    {
+      inherit exists;
+      value =
+        if exists then
+          lib.fileContents path
+        else
+          throw "nix-builds: ${machine}'s ${generator}/${file} is not generated";
+    };
 
   config.clan.core.vars.generators = {
     nix-cache-account = {
@@ -67,10 +99,5 @@ in
     };
 
     nix-cache-read = awsCredentials "nix-cache-read" "read-only";
-
-    # gondor's key (role `pusher`). The name predates nix-builds.
-    nix-cache-signing-key = signingKey "noldor-nix-cache-1";
-    # aule's key (role `builder`).
-    nix-builds-builder-key = signingKey "noldor-aule-1";
   };
 }

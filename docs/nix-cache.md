@@ -10,13 +10,11 @@ It is part of the nix-builds clan service
 
 - **All machines** (role `client`, `client.nix`) read it as an extra
   substituter, after `cache.nixos.org` (priority 50 vs. 40). They accept
-  paths signed by gondor's key (`noldor-nix-cache-1`) or aule's
-  (`noldor-aule-1`).
-- **gondor** (role `pusher`) and **aule** (role `builder`) push, each with
-  its own key. Every derivation they build is queued by a
-  `post-build-hook` and uploaded, signed, by `nix-cache-push.service`
-  (`pusher.nix`). `just cache-push` pushes a whole closure from gondor on
-  demand.
+  paths signed by aule's key (`noldor-aule-1`).
+- **Only aule** (role `builder`) pushes. Every derivation it builds is
+  queued by a `post-build-hook` and uploaded, signed, by
+  `nix-cache-push.service` (`push.nix`). gondor and the servers never
+  write to the bucket.
 
 Store URL (`<ACCOUNT_ID>` is the Cloudflare account ID):
 
@@ -42,16 +40,21 @@ not read them from `nix.conf`. So:
 | ----------------------- | -------------------------------------- | -------------------------- |
 | `nix-cache-account`     | account ID, public                     | all (read at eval time)    |
 | `nix-cache-read`        | read-only token, profile `nix-cache-read`   | all                   |
-| `nix-cache-write`       | read-write token, profile `nix-cache-write` | gondor, aule          |
-| `nix-cache-signing-key` | gondor's key: `public-key` public, `secret-key` secret | public: all; secret: gondor |
-| `nix-builds-builder-key` | aule's key, same layout                | public: all; secret: aule  |
+| `nix-cache-write`       | read-write token, profile `nix-cache-write` | aule                  |
+| `nix-builds-builder-key` | aule's key: `public-key` public, `secret-key` secret | public: all; secret: aule |
 
-All are shared clan vars (`vars.nix`). nix-daemon gets
+The account ID and the two tokens are shared clan vars (`vars.nix`).
+aule's key is a per-machine var on aule (`push.nix`); the other machines
+read its public half from `vars/per-machine/aule/`. clan wants a shared
+generator declared alike on every machine and encrypts its secrets for
+all of them, so a secret only one machine needs is never shared.
+nix-daemon gets
 `AWS_SHARED_CREDENTIALS_FILE=/run/secrets/vars/nix-cache-read/credentials`.
-The push side (`nix-cache` script, run as root) points the same variable
-at the write token. The `profile=` in each URL picks the matching section.
+aule's push side (`nix-cache` script, run as root) points the same
+variable at the write token. `nix-cache-info` (all machines, root) uses
+the read token. The `profile=` in each URL picks the matching section.
 
-Until the account ID and both public keys are generated, the machines
+Until the account ID and aule's public key are generated, the machines
 evaluate without the cache and print a `nix-builds:` warning.
 
 ### When R2 is down or unreachable
@@ -84,9 +87,9 @@ them, or built here and queued on their own). A failed upload stays queued,
 fails the unit (visible in `systemctl --failed`), and the timer retries
 every 15 min.
 
-Everything gondor builds ends up in the bucket, including store paths that
-carry secrets. The bucket is private, but every machine's read token can
-read all of it.
+Everything aule builds ends up in the bucket. aule only builds the
+`buildJobs` of registered repos, so keep secrets out of those outputs. The
+bucket is private, but every machine's read token can read all of it.
 
 ## Setup (one time)
 
@@ -107,75 +110,35 @@ read all of it.
    - Copy **Access Key ID** and **Secret Access Key**. The secret is shown
      only once. (The "Token value" is not needed.)
 4. Same again: name `nix-cache-write`, permission **Object Read & Write**,
-   bucket `nix-cache` only.
+   bucket `nix-cache` only. Only aule gets this one.
 
-### 2. Clan vars
+### 2. Clan vars and deploy
 
-Type the values in when prompted:
+See the setup steps in `clanServices/nix-builds/README.md`. The vars are
+generated with `clan vars generate aule`, which prompts for the account
+ID and both tokens. Commit the new files under `vars/`.
 
-```sh
-clan vars generate gondor -g nix-cache-account      # Account ID
-clan vars generate gondor -g nix-cache-signing-key  # no prompt
-clan vars generate gondor -g nix-cache-read         # read-only key id + secret
-clan vars generate gondor -g nix-cache-write        # read-write key id + secret
-clan vars generate orthanc
-clan vars generate formenos
-```
+aule's first push writes `nix-cache-info`; until it exists, readers warn
+that they cannot open the cache.
 
-The last two only add orthanc and formenos as recipients of the shared
-vars (nothing to type for the cache). `clan vars check <machine>` confirms.
-Commit the new files under `vars/shared/nix-cache-*`.
+## Verify
 
-### 3. Deploy
-
-Deploy gondor first and push something (below). The first push writes
-`nix-cache-info`; until it exists, readers warn that they cannot open the
-cache. Then deploy orthanc and formenos.
-
-## Push and verify
-
-On gondor (the `nix-cache` script needs root for the write token):
+From any machine, with the read token:
 
 ```sh
-just cache-push .#nixosConfigurations.orthanc.config.system.build.toplevel
-just cache-check nixpkgs#hello           # path-info --sigs from R2
-sudo nix-cache push --no-recursive /nix/store/...-foo   # outputs only
-sudo nix-cache info /nix/store/...-foo
+just cache-check nixpkgs#hello           # gondor: evaluates, then nix-cache-info
+sudo nix-cache-info /nix/store/...-foo   # path-info --sigs from R2
 ```
 
-`cache-push` uploads the whole closure, including paths `cache.nixos.org`
-already has. That costs storage; prefer `--no-recursive` for single paths.
+A cached path lists a `noldor-aule-1:` signature. A missing one reports
+that the path is not valid in the store.
 
-Queue state:
+aule's upload queue, while aule exists:
 
 ```sh
-sudo ls /var/lib/nix-cache-push/queue
-systemctl status nix-cache-push.service
-journalctl -u nix-cache-push.service
+ssh root@aule ls /var/lib/nix-cache-push/queue
+ssh root@aule journalctl -u nix-cache-push.service
 ```
-
-Raw check from any machine, with the read token:
-
-```sh
-sudo env AWS_SHARED_CREDENTIALS_FILE=/run/secrets/vars/nix-cache-read/credentials \
-  nix path-info --sigs \
-  --store 's3://nix-cache?endpoint=https://<ACCOUNT_ID>.r2.cloudflarestorage.com&region=auto&profile=nix-cache-read' \
-  /nix/store/...-foo
-```
-
-The output must list a `noldor-nix-cache-1:` signature.
-
-End to end:
-
-```sh
-# gondor: build something unique; the hook queues and uploads it
-nix build --print-out-paths --impure --expr \
-  "(import <nixpkgs> {}).runCommand \"r2-test-$(date +%s)\" {} \"echo hi > \$out\""
-# orthanc or formenos: fetch it through nix-daemon's substituters
-nix-store -r /nix/store/...-r2-test-...
-```
-
-`nix-store -r` must report `copying path ... from 's3://nix-cache?...'`.
 
 ## Not covered here
 

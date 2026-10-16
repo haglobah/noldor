@@ -1,7 +1,6 @@
-# Signs and pushes build outputs to the R2 cache. Used by role `pusher`
-# (gondor, its own key) and role `builder` (aule, its own key); the key is
-# `nixBuilds.pusher.signingKey`. A post-build hook queues every output;
-# nix-cache-push.service uploads the queue.
+# aule's push side (role `builder`): a post-build hook queues every output;
+# nix-cache-push.service signs them with aule's key and uploads the queue.
+# No other machine pushes.
 {
   config,
   lib,
@@ -10,9 +9,8 @@
 }:
 let
   generators = config.clan.core.vars.generators;
-  cfg = config.nixBuilds.pusher;
   cache = config.nixBuilds.cache;
-  secretKey = generators.${cfg.signingKey}.files.secret-key.path;
+  secretKey = generators.nix-builds-builder-key.files.secret-key.path;
   spool = "/var/lib/nix-cache-push";
 
   # `nix-cache push [--no-recursive] PATH...` uploads, `nix-cache info PATH...`
@@ -69,25 +67,16 @@ let
   '';
 in
 {
-  # The store URL and the write-token generator come from the client role.
+  # The store URL comes from the client role.
   imports = [ ./client.nix ];
-
-  options.nixBuilds.pusher.signingKey = lib.mkOption {
-    type = lib.types.enum [
-      "nix-cache-signing-key"
-      "nix-builds-builder-key"
-    ];
-    description = "The vars generator whose secret key signs the pushes.";
-  };
 
   config = lib.mkMerge [
     {
-      clan.core.vars.generators.${cfg.signingKey}.files.secret-key.deploy = true;
+      # Per machine: only aule holds the secret half.
+      clan.core.vars.generators.nix-builds-builder-key = config.nixBuilds.vars.signingKey "noldor-aule-1";
+      # Shared like the read token, but only aule declares it.
       clan.core.vars.generators.nix-cache-write =
-        config.nixBuilds.vars.awsCredentials "nix-cache-write" "read-write"
-        // {
-          files.credentials.deploy = true;
-        };
+        config.nixBuilds.vars.awsCredentials "nix-cache-write" "read-write";
     }
 
     # The store URL needs the account id; ./client.nix warns until it exists.

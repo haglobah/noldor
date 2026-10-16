@@ -18,8 +18,8 @@ Design and decisions: `docs/nix-builds-plan.md`.
    replaces a queued one. One job runs at a time.
 3. It evaluates `buildJobs.x86_64-linux` of that commit (GitHub tarball,
    App installation token) and asks R2 for every output.
-4. All outputs cached (for example because gondor pushed them): done,
-   green commit status. aule stays off.
+4. All outputs cached (an earlier build, or the same outputs from another
+   commit): done, green commit status. aule stays off.
 5. Otherwise it starts aule from its newest snapshot (CX53, then CCX33;
    fsn1, then nbg1), copies the derivations over `ssh-ng`, and builds them
    there. aule fetches sources and dependencies itself.
@@ -44,8 +44,7 @@ A failure posts to ntfy. An error posts once per commit while it retries.
 
 | Role        | Machines | What it does                                                                                   |
 | ----------- | -------- | ---------------------------------------------------------------------------------------------- |
-| `client`    | all      | Substitutes from R2 after cache.nixos.org; trusts aule's and gondor's keys.                    |
-| `pusher`    | gondor   | Signs everything it builds with gondor's own key and pushes it.                                |
+| `client`    | all      | Substitutes from R2 after cache.nixos.org; trusts aule's key.                                  |
 | `builder`   | aule     | Builds for the scheduler as the untrusted `nix-ssh` user; signs and pushes with aule's key; reaps itself. |
 | `scheduler` | orthanc  | The daemon: webhook, poll, queue, cache checks, starting aule, commit statuses.                |
 
@@ -54,8 +53,7 @@ A failure posts to ntfy. An error posts once per commit while it retries.
 | Secret                           | Where                     | Why                                     |
 | -------------------------------- | ------------------------- | --------------------------------------- |
 | R2 read token                    | every machine (nix-daemon), the scheduler | substitute, check the cache |
-| R2 write token                   | gondor, aule              | push                                    |
-| gondor's signing key             | gondor                    | sign its own builds                     |
+| R2 write token                   | aule                      | push                                    |
 | aule's signing key               | aule                      | sign builds for the scheduler           |
 | GitHub App private key, webhook secret | orthanc             | installation tokens, verify webhooks    |
 | Hetzner token                    | orthanc, aule, gondor     | create; self-delete; refresh the snapshot |
@@ -97,8 +95,9 @@ noldor does not change when a repo adds, removes or changes outputs.
      key (.pem).
 4. **Vars**, entered at the prompts:
    ```
-   clan vars generate gondor   # R2 account id and tokens, Hetzner token, gondor's key
-   clan vars generate aule     # host key, aule's signing key
+   clan vars generate aule     # R2 account id and both tokens, Hetzner token, host key, aule's signing key
+   clan vars generate gondor   # nothing new to type: gondor joins the shared vars
+   clan vars generate formenos # same
    clan vars generate orthanc  # GitHub App ID and .pem, webhook secret, scheduler SSH key
    clan vars get orthanc nix-builds-github/webhook-secret   # paste into the App
    ```

@@ -3,6 +3,24 @@
 # pushed to the private R2 cache, on an on-demand Hetzner machine that only
 # exists (and bills) while there is something to build. See ./README.md.
 { ... }:
+let
+  # Each role reads the other roles' public vars from the repo, so it needs
+  # their machine names. Secrets stay per machine: clan requires a shared
+  # generator to be declared alike everywhere, deploy flag included.
+  one =
+    role: roles:
+    let
+      ms = builtins.attrNames (roles.${role}.machines or { });
+    in
+    if builtins.length ms == 1 then
+      builtins.head ms
+    else
+      throw "nix-builds: exactly one machine needs the ${role} role, found ${toString ms}";
+  names = roles: {
+    nixBuilds.builderName = one "builder" roles;
+    nixBuilds.schedulerName = one "scheduler" roles;
+  };
+in
 {
   _class = "clan.service";
   manifest.name = "@beat/nix-builds";
@@ -13,20 +31,11 @@
   roles.client = {
     description = "Substitutes from the R2 cache and trusts its signing keys";
     perInstance =
-      { ... }:
-      {
-        nixosModule = ./client.nix;
-      };
-  };
-
-  roles.pusher = {
-    description = "Signs and pushes everything it builds itself, with its own key (gondor)";
-    perInstance =
-      { ... }:
+      { roles, ... }:
       {
         nixosModule = {
-          imports = [ ./pusher.nix ];
-          nixBuilds.pusher.signingKey = "nix-cache-signing-key";
+          imports = [ ./client.nix ];
+          config = names roles;
         };
       };
   };
@@ -34,9 +43,12 @@
   roles.builder = {
     description = "The on-demand build machine; signs and pushes what it builds (aule)";
     perInstance =
-      { ... }:
+      { roles, ... }:
       {
-        nixosModule = ./builder.nix;
+        nixosModule = {
+          imports = [ ./builder.nix ];
+          config = names roles;
+        };
       };
   };
 
@@ -89,19 +101,10 @@
       };
     perInstance =
       { settings, roles, ... }:
-      let
-        builders = builtins.attrNames (roles.builder.machines or { });
-        builderName =
-          if builtins.length builders == 1 then
-            builtins.head builders
-          else
-            throw "nix-builds: exactly one machine needs the builder role, found ${toString builders}";
-      in
       {
-        nixosModule = import ./scheduler.nix {
-          inherit settings builderName;
-          # The builder's host key, a public clan var in this repo.
-          hostKeyFile = ../../vars/per-machine/${builderName}/openssh/ssh.id_ed25519.pub/value;
+        nixosModule = {
+          imports = [ (import ./scheduler.nix { inherit settings; }) ];
+          config = names roles;
         };
       };
   };

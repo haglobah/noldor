@@ -1,7 +1,7 @@
 # Role `builder` (aule): the on-demand Hetzner Cloud build machine. The
 # scheduler creates it from a snapshot and sends derivations over ssh-ng;
 # aule builds them, signs and pushes the outputs to R2 with its own key
-# (./pusher.nix), and deletes itself when idle. See ./README.md.
+# (./push.nix), and deletes itself when idle. See ./README.md.
 {
   config,
   lib,
@@ -10,7 +10,10 @@
 }:
 let
   generators = config.clan.core.vars.generators;
-  schedulerKey = generators.nix-builds-ssh.files."id_ed25519.pub";
+  # The scheduler's key, read from the repo: its generator lives there.
+  schedulerKey =
+    config.nixBuilds.publicVar config.nixBuilds.schedulerName "nix-builds-ssh"
+      "id_ed25519.pub";
   state = "/run/nix-builder-reaper";
 
   reap-decide = pkgs.callPackage ./reaper/reap-decide.nix { };
@@ -97,10 +100,8 @@ in
 {
   imports = [
     ./builder-vars.nix
-    ./pusher.nix
+    ./push.nix
   ];
-
-  nixBuilds.pusher.signingKey = "nix-builds-builder-key";
 
   # The scheduler logs in as nix-ssh, which may only run `nix-daemon
   # --stdio`. Untrusted: it can copy derivations (content-addressed) and

@@ -1,23 +1,39 @@
 # Role `client`: substitute from the private R2 cache, after
-# cache.nixos.org, and trust the two signing keys: aule's (it builds for
-# the scheduler) and gondor's (it pushes what it builds itself). Either key
-# can be revoked on its own.
+# cache.nixos.org, and trust aule's signing key. Only aule pushes.
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
   generators = config.clan.core.vars.generators;
   accountId = generators.nix-cache-account.files.account-id;
+  # aule's public key, read from the repo: the generator lives on aule only.
   keys = [
-    generators.nix-builds-builder-key.files.public-key
-    generators.nix-cache-signing-key.files.public-key
+    (config.nixBuilds.publicVar config.nixBuilds.builderName "nix-builds-builder-key" "public-key")
   ];
 
   # Public vars are read at eval time. Until they are generated, leave the
   # cache out with a warning instead of breaking the whole machine's eval.
   ready = accountId.exists && lib.all (k: k.exists) keys;
+
+  # `nix-cache-info PATH...`: what R2 holds for these paths, with
+  # signatures. Root only: the read token is root-owned.
+  nix-cache-info = pkgs.writeShellApplication {
+    name = "nix-cache-info";
+    runtimeInputs = [ config.nix.package ];
+    text = ''
+      if [ "$(id -u)" != 0 ]; then
+        echo "nix-cache-info: run as root (sudo); the R2 read token is root-only" >&2
+        exit 1
+      fi
+      export AWS_SHARED_CREDENTIALS_FILE=${generators.nix-cache-read.files.credentials.path}
+      nix --extra-experimental-features nix-command path-info --sigs \
+        --option narinfo-cache-negative-ttl 0 \
+        --store "${config.nixBuilds.cache.store "nix-cache-read"}" "$@"
+    '';
+  };
 in
 {
   imports = [ ./vars.nix ];
@@ -25,7 +41,7 @@ in
   options.nixBuilds.cache = lib.mkOption {
     type = lib.types.raw;
     internal = true;
-    description = "The cache's endpoint, for the pusher and scheduler roles.";
+    description = "The cache's endpoint, for the builder and scheduler roles.";
   };
 
   config = {
@@ -37,12 +53,12 @@ in
       store = profile: "s3://nix-cache?endpoint=${endpoint}&region=auto&profile=${profile}";
     };
 
-    clan.core.vars.generators.nix-cache-read.files.credentials.deploy = true;
-
     warnings = lib.optional (!ready) ''
       nix-builds: the R2 substituter is not configured yet. Run the
       `clan vars generate` steps in clanServices/nix-builds/README.md.
     '';
+
+    environment.systemPackages = lib.mkIf ready [ nix-cache-info ];
 
     nix.settings = lib.mkIf ready {
       # Priority 50 puts it after cache.nixos.org (40), so paths that are

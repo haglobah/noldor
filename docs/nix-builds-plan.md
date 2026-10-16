@@ -93,9 +93,8 @@ What exists now, moved into the service:
 
 ### Role `client` (all machines)
 
-Substitute from R2 and trust two public keys: aule's and gondor's. gondor
-keeps its own push hook with its own, separate key, so either key can be
-revoked alone.
+Substitute from R2 and trust aule's public key. (Superseded: gondor
+first kept its own push hook and key; see decision 4.)
 
 ## Changes per repo
 
@@ -121,8 +120,16 @@ revoked alone.
 1. Webhook domain: `builds.hagenlocher.me`.
 2. Commit statuses: yes. The App gets Commit statuses write; the scheduler
    posts pending, success and failure per commit (context `nix-builds`).
-3. gondor does not use aule. It builds locally or downloads; its push hook
-   stays.
+3. gondor does not use aule. It builds locally or downloads.
+4. gondor does not push (2026-10-15). Only aule writes to the bucket and
+   only aule's key is trusted. gondor's `pusher` role, its signing key and
+   `just cache-push` are gone; `just cache-check` uses the read token.
+5. Secrets one machine needs are per-machine vars (2026-10-15): aule's
+   signing key on aule, the scheduler's SSH key on orthanc. Others read
+   the public halves from `vars/per-machine/`. Shared generators with a
+   per-machine `deploy` failed `clan vars generate` ("different
+   definitions for shared generator"), and clan encrypts shared secrets
+   for every machine that declares them.
 
 ## Out of scope, recorded
 

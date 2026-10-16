@@ -2,11 +2,7 @@
 # (and a poll every pollInterval) tells it about new commits of installed
 # repos; it evaluates their buildJobs, asks R2 what is missing, and builds
 # that on aule, starting aule first if needed. See ./README.md.
-{
-  settings,
-  builderName,
-  hostKeyFile,
-}:
+{ settings }:
 {
   config,
   lib,
@@ -21,13 +17,16 @@ let
 
   package = pkgs.callPackage ./scheduler/package.nix { };
 
-  hostKeyReady = builtins.pathExists hostKeyFile;
+  builderName = config.nixBuilds.builderName;
+  # The builder's host key, a public clan var in this repo.
+  hostKey = config.nixBuilds.publicVar builderName "openssh" "ssh.id_ed25519.pub";
+  hostKeyReady = hostKey.exists;
   appId = generators.nix-builds-github.files.app-id;
   ready = hostKeyReady && appId.exists && cache.ready;
   # The host key lives in the snapshot, so every aule has the same one;
   # ssh checks it under the alias `aule` (HostKeyAlias), not the new IP.
   knownHosts = pkgs.writeText "aule-known-hosts" (
-    lib.optionalString hostKeyReady "aule ${lib.fileContents hostKeyFile}\n"
+    lib.optionalString hostKeyReady "aule ${hostKey.value}\n"
   );
 
   configFile = pkgs.writeText "nix-builds.json" (
@@ -84,8 +83,15 @@ in
   ];
 
   clan.core.vars.generators = {
-    nix-builds-ssh.files.id_ed25519 = readable // {
-      deploy = true;
+    # The scheduler logs in to aule's nix-ssh user with this key. Per
+    # machine; aule reads the public half from the repo.
+    nix-builds-ssh = {
+      files.id_ed25519 = readable;
+      files."id_ed25519.pub".secret = false;
+      runtimeInputs = [ pkgs.openssh ];
+      script = ''
+        ssh-keygen -t ed25519 -N "" -C "nix-builds-scheduler" -f "$out/id_ed25519"
+      '';
     };
     hcloud-token.files.token = readable;
     nix-cache-read.files.credentials.group = "nix-builds";
