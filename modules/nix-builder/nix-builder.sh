@@ -137,6 +137,9 @@ cmd_snapshot() {
     echo "nix-builder: $name does not exist; run 'nix-builder up' first" >&2
     exit 1
   fi
+  # The deploy's own build queued aule's system for upload. Left in the
+  # snapshot, every new aule would retry that entry at boot.
+  ssh "root@$name" 'rm -f /var/lib/nix-cache-push/queue/*'
   # Powered off, the disk is consistent; snapshotting a running server is
   # allowed but may catch half-written files.
   hcloud server shutdown --wait --wait-timeout 3m "$name"
