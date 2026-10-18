@@ -86,9 +86,13 @@ in
     # carry over to Mail; the prefix is new, so every user signs in once more
     # after the first rollout. Mail's origin must be trusted or Better Auth
     # refuses its proxied cookie-bearing requests (sign-out) as "Invalid origin".
+    # Notes on pushout (./pushout-notes.nix) signs in the same way.
     sharedCookieDomain = "humane.tools";
     cookiePrefix = "humane-shared";
-    trustedOrigins = [ "https://mail.humane.tools" ];
+    trustedOrigins = [
+      "https://mail.humane.tools"
+      "https://notes.humane.tools"
+    ];
     authPort = 3001;
     syncPort = 3030;
     # Loopback only; vmagent scrapes it (./metrics-shipper.nix).

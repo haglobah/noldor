@@ -195,6 +195,8 @@ in
           ./modules/todo-home.nix
           inputs.ht.nixosModules.mail
           ./modules/humane-mail.nix
+          inputs.pushout.nixosModules.notes
+          ./modules/pushout-notes.nix
           inputs.media-inbox.nixosModules.worker
           ./modules/links-worker.nix
           ./modules/updater-alerts.nix
