@@ -36,8 +36,8 @@ in
     # Beat's release key (~/.local/share/pushout/keys/beat.json on his laptop).
     trustedKeys."eb28c90d5d264a5985cef88a4584f3f7863c83fdd863b50adf3d3f4cddcfefba" = "beat";
     # Beat's app doc, which author.ts publishes into; every other account
-    # gets a clone that follows it. Unset until the first publish.
-    canonicalApp = null;
+    # gets a clone that follows it.
+    canonicalApp = "automerge:2TzrjzR6xQ9uYkoSxmv8UHPqgNQw";
   };
 
   services.caddy.virtualHosts.${domain}.extraConfig = ''
