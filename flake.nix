@@ -69,6 +69,12 @@
     #   inputs.home-manager.follows = "home-manager";
     # };
 
+    # Rust re-implementation of the Nix client (zimbatm). See machines/gondor.
+    iets = {
+      url = "github:numtide/iets";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     vimium-options.url = "github:uimataso/vimium-nixos";
 
     alles.url = "github:haglobah/alles";
