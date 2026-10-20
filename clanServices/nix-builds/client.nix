@@ -77,5 +77,14 @@ in
     systemd.services.nix-daemon.environment = lib.mkIf ready {
       AWS_SHARED_CREDENTIALS_FILE = generators.nix-cache-read.files.credentials.path;
     };
+
+    # root's nix opens the store itself (store = auto), so it queries R2 in
+    # its own process, without the daemon's environment: `clan machines
+    # update` got HTTP 400 and built instead. The SDK's default file reaches
+    # every root process, ssh sessions without a login shell included.
+    systemd.tmpfiles.rules = lib.mkIf ready [
+      "d /root/.aws 0700 root root -"
+      "L+ /root/.aws/credentials - - - - ${generators.nix-cache-read.files.credentials.path}"
+    ];
   };
 }
