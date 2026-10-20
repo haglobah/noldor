@@ -20,8 +20,8 @@
     ../../modules/gnome.nix
     ../../modules/protonvpn.nix
     inputs.home-manager.nixosModules.home-manager
-    # Puts `iets` on PATH. The classic names (iets.classic.enable) stay off
-    # while iets is this young, so nix and nixos-rebuild keep the real Nix.
+    # Puts `iets` on PATH; iets.classic below routes nix, nix-build,
+    # nix-shell and nixos-rebuild through it.
     inputs.iets.nixosModules.default
     # inputs.orca.nixosModules.default
   ];
@@ -261,6 +261,10 @@
   programs.dconf.enable = true;
 
   programs.nix-ld.enable = true;
+
+  # iets answers to the classic Nix names and falls back to the real nix
+  # for what it doesn't implement. It sets nix.package, so don't set that here.
+  iets.classic.enable = true;
 
   programs.steam = {
     enable = true;
