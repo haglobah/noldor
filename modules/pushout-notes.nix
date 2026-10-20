@@ -9,7 +9,9 @@
 # The code agent (pushout-notes-agent) works as Beat's account, the admin's,
 # with a CLI token of it (var pushout-notes-agent/notes-token: mint it with
 # `pushout-notes-admin token EMAIL agent` here). On first start it asks to be
-# trusted: approve "code agent …" in the app's code pane.
+# trusted: approve "code agent …" in the app's code pane. Claude runs on
+# Beat's subscription (var pushout-notes-agent-claude/claude-token, from
+# `claude setup-token`).
 {
   config,
   lib,
@@ -45,6 +47,7 @@ in
     agent = {
       enable = true;
       tokenFile = config.clan.core.vars.generators.pushout-notes-agent.files.notes-token.path;
+      claudeTokenFile = config.clan.core.vars.generators.pushout-notes-agent-claude.files.claude-token.path;
     };
   };
 
@@ -55,6 +58,15 @@ in
       description = "A CLI token of Beat's notes.humane.tools account: `pushout-notes-admin token EMAIL agent` on orthanc";
     };
     script = ''cp "$prompts/notes-token" "$out/notes-token"'';
+  };
+  # Beat's Claude subscription, which the agent's Claude Code runs on.
+  clan.core.vars.generators.pushout-notes-agent-claude = {
+    files.claude-token = { };
+    prompts.claude-token = {
+      type = "hidden";
+      description = "Beat's Claude subscription token for the code agent: `claude setup-token`";
+    };
+    script = ''cp "$prompts/claude-token" "$out/claude-token"'';
   };
 
   services.caddy.virtualHosts.${domain}.extraConfig = ''
