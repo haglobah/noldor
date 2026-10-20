@@ -81,7 +81,7 @@
     colab.url = "git+ssh://git@github.com/haglobah/colab.git?ref=noldor-deploy";
     notable.url = "git+ssh://git@github.com/haglobah/notable.git?ref=main&dir=web";
     notes.url = "git+ssh://git@github.com/haglobah/notes.git?ref=main";
-    pushout.url = "git+ssh://git@github.com/haglobah/pushout.git?ref=t7-browser";
+    pushout.url = "git+ssh://git@github.com/haglobah/pushout.git?ref=main";
     # donethat.url = "git+ssh://git@github.com/haglobah/donethat-electron.git";
   };
 

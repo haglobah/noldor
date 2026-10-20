@@ -1530,16 +1530,16 @@
         "nixpkgs": "nixpkgs_14"
       },
       "locked": {
-        "lastModified": 1792344432,
-        "narHash": "sha256-NOMAj6qA3YdCr2a1QITRncAmyWKz4IE3niiK+WFLh+c=",
-        "ref": "t7-browser",
-        "rev": "cae902032ab6b299ad9ec6f4d555938616ce162c",
-        "revCount": 124,
+        "lastModified": 1792469409,
+        "narHash": "sha256-yV/EE/OfWEPfpSKqfVsdabxsjWRRqrHUNoPAhDQSblA=",
+        "ref": "main",
+        "rev": "cd0025f8b6a0e39ed026717ae15ec0348abc9a2a",
+        "revCount": 145,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/pushout.git"
       },
       "original": {
-        "ref": "t7-browser",
+        "ref": "main",
         "type": "git",
         "url": "ssh://git@github.com/haglobah/pushout.git"
       }

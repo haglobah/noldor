@@ -6,6 +6,10 @@
 # DNS: notes.humane.tools has an A record to orthanc.
 # Admin: `pushout-notes-admin token EMAIL` mints a CLI token for author.ts
 # once that account has signed in.
+# The code agent (pushout-notes-agent) works as Beat's account, the admin's,
+# with a CLI token of it (var pushout-notes-agent/notes-token: mint it with
+# `pushout-notes-admin token EMAIL agent` here). On first start it asks to be
+# trusted: approve "code agent …" in the app's code pane.
 {
   config,
   lib,
@@ -38,6 +42,19 @@ in
     # Beat's app doc, which author.ts publishes into; every other account
     # gets a clone that follows it.
     canonicalApp = "automerge:2TzrjzR6xQ9uYkoSxmv8UHPqgNQw";
+    agent = {
+      enable = true;
+      tokenFile = config.clan.core.vars.generators.pushout-notes-agent.files.notes-token.path;
+    };
+  };
+
+  clan.core.vars.generators.pushout-notes-agent = {
+    files.notes-token = { };
+    prompts.notes-token = {
+      type = "hidden";
+      description = "A CLI token of Beat's notes.humane.tools account: `pushout-notes-admin token EMAIL agent` on orthanc";
+    };
+    script = ''cp "$prompts/notes-token" "$out/notes-token"'';
   };
 
   services.caddy.virtualHosts.${domain}.extraConfig = ''
@@ -48,4 +65,6 @@ in
     folders = [ state ];
     preBackupScript = "${snapshot}";
   };
+  # The agent's key, which the app doc trusts, and Claude Code's sessions.
+  clan.core.state.pushout-notes-agent.folders = [ "/var/lib/private/pushout-notes-agent" ];
 }
