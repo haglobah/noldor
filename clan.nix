@@ -197,6 +197,7 @@ in
           ./modules/humane-mail.nix
           inputs.pushout.nixosModules.notes
           ./modules/pushout-notes.nix
+          ./modules/agents-container.nix
           inputs.media-inbox.nixosModules.worker
           ./modules/links-worker.nix
           ./modules/updater-alerts.nix
