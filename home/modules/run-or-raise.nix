@@ -138,7 +138,9 @@ let
       generic = {
         key = "<Super>e";
         command = "emacs";
-        wmClass = "Emacs";
+        # The Lucid build under Xwayland reported WM_CLASS "Emacs"; the pgtk
+        # build reports its Wayland app_id, which is lowercase.
+        wmClass = "/^[Ee]macs$/";
       };
       claims = [
         {
