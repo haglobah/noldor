@@ -262,11 +262,11 @@
 
   programs.nix-ld.enable = true;
 
-  # programs.steam = {
-  #   enable = true;
-  #   remotePlay.openFirewall = true;
-  #   dedicatedServer.openFirewall = true;
-  # };
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+  };
 
   programs.ausweisapp.enable = true;
   programs.ausweisapp.openFirewall = true;
