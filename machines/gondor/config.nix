@@ -11,6 +11,7 @@
 {
   imports = [
     ./hardware.nix
+    ./studio-display-watchdog.nix
     ../../modules/storagebox-secret.nix
     ../../modules/storagebox-share.nix
     ../../modules/nix-access-tokens.nix
