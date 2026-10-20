@@ -20,6 +20,9 @@
     ../../modules/gnome.nix
     ../../modules/protonvpn.nix
     inputs.home-manager.nixosModules.home-manager
+    # Puts `iets` on PATH. The classic names (iets.classic.enable) stay off
+    # while iets is this young, so nix and nixos-rebuild keep the real Nix.
+    inputs.iets.nixosModules.default
     # inputs.orca.nixosModules.default
   ];
 
