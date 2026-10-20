@@ -1,0 +1,90 @@
+# Hourly Hetzner beats Cloudflare for Nix builds
+
+Cloudflare Containers is the wrong place to run Nix builds. It costs about **$0.10 per vCPU-hour** at full load, three to thirty times what an hourly European VM costs. It also caps every instance at **4 vCPU, 12 GiB RAM and 20 GB of ephemeral disk**, and no source confirms the Nix sandbox works inside it. Cloudflare's real value for this setup is **R2 as the binary cache**: $0.015/GB-month, zero egress, roughly $1.50–7.35/month at 100–500 GB. The earlier recommendation still holds in shape: an on-demand Hetzner Cloud builder (create, build, push, delete) writing to R2. The numbers changed, though. Hetzner's 15 June 2026 repricing more than doubled CCX33 to **€0.2219/h**, so 100 builder-hours now cost about €22 instead of about €10. Hetzner's shared lines (CX, CAX) are still about eight times cheaper per vCPU-hour, but they are reportedly not orderable since September 2026. The best runner-up is nixbuild.net, a pay-per-CPU-hour SSH remote builder with zero operations and 25 free CPU-hours per month. Spot VMs on GCP or Azure are the cheapest raw compute, at about $0.06/h for 8 vCPU, but they cost more setup work. On the AX42 dedicated server, the official Hetzner price of **€97.30/month plus €49 setup** is the better-sourced figure. The €187 used earlier in this conversation has no traceable source and should be dropped. The conclusion does not change: a dedicated box only pays off for an always-on builder.
+
+## Cloudflare Containers fails on disk, RAM and sandbox before price
+
+Cloudflare's own price list gives $0.000020 per vCPU-second, $0.0000025 per GiB-second and $0.00000007 per GB-second of disk ([CF Containers pricing](https://developers.cloudflare.com/containers/pricing/)). A standard-4 at full CPU therefore costs **$0.401/h**: $0.288 for CPU, $0.108 for memory and $0.005 for disk. Workers Paid ($5/month) includes 375 vCPU-minutes, 25 GiB-hours and 200 GB-hours. That allowance is worth about $0.73, or roughly 1.8 hours of a busy standard-4. Active-CPU pricing, in place since November 2025, means a container that waits on downloads bills less than the full-load rate ([CF Containers changelog](https://developers.cloudflare.com/changelog/product/containers/)). Even at a generous discount, the per-vCPU price stays several times that of a European VM.
+
+Price is not the binding problem. **Standard-4 is still the largest instance, including custom types: 4 vCPU, 12 GiB, 20 GB disk** ([CF Containers limits](https://developers.cloudflare.com/containers/platform-details/limits/)). A NixOS system closure plus its build inputs regularly exceeds 20 GB. LLVM, Chromium or kernel builds exceed 12 GiB of RAM. The disk is ephemeral, so every instance starts with an empty `/nix/store` unless you use the new snapshot API, which is in public beta and also capped at 20 GB ([CF Containers limits](https://developers.cloudflare.com/containers/platform-details/limits/)). Each instance is a Firecracker microVM with its own kernel. 2026 added Docker-in-Docker and SSH through Wrangler as a `ProxyCommand` ([CF Containers architecture](https://developers.cloudflare.com/containers/platform-details/architecture/); [changelog](https://developers.cloudflare.com/changelog/product/containers/)). An `ssh-ng://` remote builder is therefore plausible. But no changelog entry or report mentions user namespaces, and Nix's `sandbox = true` needs them ([NixOS Discourse](https://discourse.nixos.org/t/sandbox-true-requires-linux-user-namespaces-what-gives/77519)). Docker-in-Docker suggests enough privilege. That is an inference, not a fact, and needs a test. The strengths are real but minor for this use: 1–3 second cold starts and no machine lifecycle to script. Workers, as stated in the brief, cannot build at all.
+
+## Every option on one page
+
+The table normalises cost to a per-vCPU-hour figure for ranking. € and $ are listed as published. Their exchange rate does not change any ranking below. "Ops" rates the work to set up and keep running: low means a config line, medium means a script or module, high means cloud accounts, images and eviction handling.
+
+| Option | Size (vCPU / RAM / disk) | Price per hour | Per vCPU-h | Billing | Nix fit | Ops |
+|---|---|---|---|---|---|---|
+| **Cloudflare Containers standard-4** | 4 / 12 GiB / 20 GB ephemeral | $0.40 + $5/mo | ~$0.10 | per second, active CPU | Sandbox unverified; SSH via Wrangler only; store lost on stop; x86_64 | Medium |
+| **Hetzner CCX33** (dedicated AMD) | 8 / 32 / 240 | €0.2219 | €0.028 | per started hour, billed until deleted | Full KVM VM, sandbox works; plain SSH; x86_64 | Medium |
+| Hetzner CX43 / CX53 (shared x86) | 8/16/160, 16/32/320 | €0.0256 / €0.0473 | €0.003 | same | Full VM; reportedly not orderable since Sep 2026 | Medium |
+| Hetzner CAX31 (shared ARM) | 8 / 16 / 160 | €0.0336 | €0.004 | same | Native aarch64; same availability doubt | Medium |
+| Hetzner CPX42 (shared AMD) | 8 / 16 / 320 | €0.1114 | €0.014 | same | Full VM; noisy neighbours | Medium |
+| Scaleway POP2-HC-8C-16G | 8 / 16 / block extra | €0.2128 + €0.004 IPv4 | €0.027 | hourly, 60-min minimum; **not billed when off** | Full VM; keeps store while stopped | Medium |
+| GCP c4a-standard-8 spot (NL) | 8 / 32 / disk extra | $0.056 | $0.007 | spot, evictable | Full VM; aarch64 only | High |
+| Azure D8ps_v6 spot / D8as_v6 spot | 8 / 32 / disk extra | $0.062 / $0.081 | $0.008–0.010 | spot, evictable | Full VM; ARM or x86 | High |
+| AWS m8g.2xlarge on-demand (FRA) | 8 / 32 / EBS extra | $0.430 | $0.054 | per second | Full VM; aarch64 | High |
+| Fly.io performance-8x (fra) | 8 / 32 / 8 GB rootfs + volume | $0.577 | $0.072 | per second; volume $0.15/GB-mo | microVM; sandbox untested | Medium |
+| **nixbuild.net** | 1–16 vCPU per build, RAM auto | €0.12 per CPU-h, 25 free | €0.12 | per CPU actually used | Native SSH builder; x86_64, aarch64; no darwin | **Low** |
+| Ubicloud runner (8 vCPU) | 8 / 32 / unstated | $0.30 | $0.038 | per minute, $2.50 credit | GitHub Actions only, no `--builders` | Low |
+| RunsOn on own AWS (8 vCPU spot) | 8 / config. | ~$0.14 + $7/mo | ~$0.017 | per second | GitHub Actions only | High |
+| GitHub hosted standard runner | 2/8/14 (private), 4/16/14 (public) | free on public; 2,000 min free private, then $0.36 | $0.18 (private) | per minute | 14 GB disk is tight; CI only | Low |
+| Garnix | unpublished | $25/mo for 10,000 min | n/a | per minute | CI on push + cache; no remote builder | Low |
+| Netcup RS 2000 / VPS 2000 ARM | 8/16/256 | €39.34 / €26.92 per month | €0.007 / €0.005 always-on | monthly, 12-mo term | Persistent store; KVM | Medium |
+| Hetzner AX42-1 dedicated | 8C/16T / 64 GB / 2×512 GB | €97.30/mo + €49 setup | €0.017 always-on | monthly | Persistent store, no cold start | Medium |
+| Home mini PC, 64 GB, new | 8–12C / 64 / 2 TB | €40–60/mo amortised | n/a | capex + power | Persistent store, LAN latency | Medium |
+| Oracle Always Free A1 | 2 OCPU / 12 GB / 200 GB | $0 | $0 | free, reclaimable when idle | aarch64; too small, unreliable | Medium |
+
+Sources for the table: Hetzner prices from the official repricing page ([Hetzner Docs](https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/)), with billing rules from [Hetzner billing FAQ](https://docs.hetzner.com/cloud/billing/faq/) and the availability report from [WZ-IT](https://wz-it.com/en/blog/hetzner-price-increase-june-2026-cpx-ccx-alternatives/). Scaleway from [Scaleway pricing](https://www.scaleway.com/en/pricing/virtual-instances/) and [billing FAQ](https://www.scaleway.com/en/docs/billing/faq/). GCP from [gcloud-compute.com](https://gcloud-compute.com/c4a-standard-8.html), Azure from the [Azure Retail Prices API](https://prices.azure.com/api/retail/prices), AWS from the [AWS pricing feed](https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/EU%20(Frankfurt)/Linux/index.json). Fly from [Fly.io pricing](https://docs.fly.io/about/pricing). nixbuild.net from [nixbuild.net](https://nixbuild.net/). Runners from [Ubicloud](https://www.ubicloud.com/docs/about/pricing), [RunsOn](https://runs-on.com/pricing/) and [GitHub Docs](https://docs.github.com/en/billing/reference/actions-runner-pricing). Garnix from [garnix pricing](http://garnix.io/pricing/). Netcup from [netcup root server](https://www.netcup.com/en/server/root-server) and [netcup ARM](https://www.netcup.com/en/server/arm-server). Oracle from [Oracle Always Free](https://docs.oracle.com/en-us/iaas/Content/FreeTier/resourceref.htm). The Hetzner Cloud vCPU/RAM/disk specs come from prior product knowledge, not a 2026 page; the prices are verified.
+
+Three Nix facts sort the field. First, **only full VMs give a known-good sandbox**: Hetzner, Scaleway, OVH, Netcup, the hyperscalers and a home box. Cloudflare, Fly, Modal and Railway are container or microVM platforms where the sandbox is unverified or, for gVisor-based Modal and seccomp-locked Railway, unlikely ([Northflank blog](https://northflank.com/blog/daytona-vs-modal); [Railway Station](https://station.railway.com/questions/staging-service-needs-a-container-securi-d3d3154a)). Second, **only SSH-reachable machines work as `nix.buildMachines`**. Every GitHub runner vendor, Garnix and NixCI builds on push only, so a laptop's uncommitted `nix build` cannot use them. Third, **persistent store versus ephemeral store** decides whether R2 matters. An ephemeral builder relies on R2 and cache.nixos.org as substituters to avoid rebuilding dependencies each time.
+
+## Monthly cost at 10, 40 and 100 builder-hours
+
+Figures are compute only, at full load, excluding IPv4, block storage and VAT. Hetzner rounds each started hour up, so many short sessions cost more than the table shows. A builder kept up for a working session and deleted when idle fits the billing best.
+
+| Option | 10 h | 40 h | 100 h |
+|---|---|---|---|
+| Cloudflare standard-4 (4 vCPU), incl. $5 and allowance | $8.30 | $20.30 | $44.40 |
+| Cloudflare, 8-vCPU equivalent (2× standard-4 hours) | $12.30 | $36.35 | $84.50 |
+| **Hetzner CCX33** (8 dedicated) | **€2.22** | **€8.88** | **€22.19** |
+| Hetzner CX53 (16 shared), if orderable | €0.47 | €1.89 | €4.73 |
+| Hetzner CPX42 (8 shared AMD) | €1.11 | €4.46 | €11.14 |
+| Scaleway POP2-HC-8C-16G, incl. IPv4 while running | €2.17 | €8.67 | €21.68 |
+| GCP c4a-standard-8 spot, aarch64 | $0.56 | $2.22 | $5.56 |
+| Azure D8as_v6 spot, x86_64 | $0.81 | $3.25 | $8.11 |
+| AWS m8g.2xlarge on-demand | $4.30 | $17.21 | $43.02 |
+| Fly performance-8x/32 fra, plus $30/mo for a 200 GB volume | $35.77 | $53.08 | $87.70 |
+| **nixbuild.net**, 8 vCPU fully used | **€6.60** | **€35.40** | **€93.00** |
+| Ubicloud 8 vCPU, after $2.50 credit | $0.50 | $9.50 | $27.50 |
+| RunsOn 8 vCPU spot, incl. $7 control plane | $8.38 | $12.52 | $20.80 |
+| GitHub standard runner, private repo (2 vCPU) | $0 | $2.40 | $24.00 |
+| Garnix (Free to 25 h, then Individual) | $0 | $25 | $25 |
+| Netcup RS 2000, always-on | €39.34 | €39.34 | €39.34 |
+| Hetzner AX42-1, always-on (+€49 once) | €97.30 | €97.30 | €97.30 |
+| Home mini PC, new 64 GB, amortised over 36 months | €40–60 | €40–60 | €40–60 |
+
+Add the cache to every row except Garnix: **R2 at 100 GB costs about $1.35/month and at 500 GB about $7.35**, with free egress ([Cloudflare R2 pricing](https://developers.cloudflare.com/r2/pricing/)). Derived figures above are arithmetic from the cited unit prices.
+
+The nixbuild.net row overstates real cost. It bills CPU actually allocated per derivation, and many derivations are single-threaded, so an hour of wall-clock building rarely uses all 8 vCPUs ([nixbuild.net](https://nixbuild.net/)). The Fly row shows why a persistent volume ruins cheap per-second compute at low hours. The home box loses on money below roughly 200–270 hours per month, because a 64 GB DDR5 SO-DIMM kit cost **€999 on 13 October 2026** ([geizhals.de](https://geizhals.de/crucial-so-dimm-kit-64gb-ct2k32g56c46s5-a2988656.html)). The 2026 RAM price spike reversed the old rule that a home box is the cheap option.
+
+## The AX42 figure is €97.30, and dedicated still loses below 400 hours
+
+Hetzner's own repricing page lists **AX42-1 at €97.30/month plus €49 setup**, excluding VAT and IPv4, for Falkenstein and Helsinki ([Hetzner Docs](https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/)). It also lists cheaper limited-supply variants: AX42-1-LTD at €77.30 plus €39, and AX41-1-LTD at €57.30 with no setup fee. The €187 figure comes from a third-party mirror, and the notes found no citable URL for it. It does not match the official price even with 19% German VAT added (€115.79). Treat **€97.30 as the better-sourced figure**. The earlier answer's €187 overstated the cost by about €90/month. The correction does not flip the conclusion. At 100 builder-hours, AX42 costs about **€0.97 per builder-hour**, against €0.22 for CCX33. It only wins above roughly 440 hours a month. What it buys is a warm, large, persistent `/nix/store` and no cold start. Server Auction boxes, exempt from the repricing, are reported at €40–55 for a 64 GB Ryzen, but that figure comes from a competitor blog with an unclear date ([valebyte](https://valebyte.com/en/blog/hetzner-cloud-vs-hetzner-auction-vs-hetzner-dedicated-which-to-choose/)).
+
+## Hetzner's 2026 repricing narrows the gap but keeps the lead
+
+The June repricing raised CCX by 2.1–2.7× and CPX by 2.4–2.8×, while CX and CAX rose only 31–37% ([Hetzner Docs](https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/)). That reshapes the Hetzner menu. A **CX53 with 16 shared vCPU and 32 GB costs €0.0473/h**, a fifth of CCX33 for twice the vCPU count. CAX gives native aarch64 at the same price class. The catch: WZ-IT reports both lines as "Currently not available" since early September 2026, plus a capacity notice limiting new cloud provisioning since 26 June ([WZ-IT](https://wz-it.com/en/blog/hetzner-price-increase-june-2026-cpx-ccx-alternatives/)). That report is secondary and needs a console check. Billing still runs while a server is powered off, so only deletion stops the meter ([Hetzner billing FAQ](https://docs.hetzner.com/cloud/billing/faq/)). The create/build/delete pattern therefore remains correct.
+
+Scaleway is the closest alternative with a better lifecycle. It stops compute billing on power-off, so a builder can keep its `/nix/store` on block storage between sessions ([Scaleway billing FAQ](https://www.scaleway.com/en/docs/billing/faq/)). POP2-HC costs about the same per hour as CCX33. Hyperscaler spot is the price floor. GCP c4a spot in the Netherlands costs **$0.056/h for 8 vCPU and 32 GB**, and Azure D8ps_v6 spot costs $0.062/h. Nix tolerates eviction, because a failed build simply reruns. The added work is real, though: cloud IAM, a NixOS image, a wake-on-demand hook and an eviction policy. At 40 hours a month the saving over CCX33 is about €6. That does not pay for the extra moving parts unless usage grows well beyond 100 hours.
+
+## R2 plus niks3 is the cache, whatever builds
+
+For the cache, the notes converge on R2. The niks3 wiki rates R2 "Excellent" and its top choice, citing native zstd Content-Encoding and the built-in CDN ([niks3 wiki](https://github.com/Mic92/niks3/wiki/S3-Provider-Comparison)). Backblaze B2 and Wasabi are cheaper per GB but need a Cloudflare proxy, and Wasabi bills a 1 TB minimum with 90-day retention ([Wasabi pricing FAQ](https://wasabi.com/pricing/faq)). Hetzner Object Storage was measured with **narinfo lookups of 10 s or more** ([niks3 wiki](https://github.com/Mic92/niks3/wiki/S3-Provider-Comparison)). Cachix now hides its prices behind "contact" ([Cachix pricing](https://www.cachix.org/pricing)). FlakeHub Cache accepts pushes only from supported CI runners, so an external builder cannot write to it ([FlakeHub Cache docs](https://docs.determinate.systems/flakehub/cache)).
+
+Plain `nix copy` to R2 works but has no safe garbage collection. Age-based lifecycle rules delete NARs that live narinfos still point to. niks3 fixes this. Readers fetch from R2 directly, the server tracks references in PostgreSQL, and GC respects them. Pushers authenticate with a token or GitHub OIDC and never hold S3 credentials. Clan's own infrastructure runs it, and v1.15.0 shipped on 12 October 2026 ([niks3 README](https://github.com/Mic92/niks3)). The signing key is the real security boundary, because every clan machine trusts any path it signs. Keep it in clan vars or sops-nix, scope the R2 token to one bucket, and never set `require-sigs = false`.
+
+## Conclusion
+
+The best setup as of October 2026 has three parts. **Cloudflare R2 holds the cache**, served from a custom domain and managed by niks3 once GC matters. **An on-demand Hetzner Cloud builder does the heavy builds**, created from a NixOS image by a script, added to `nix.buildMachines`, deleted when idle. Try CX53 first. If it is not orderable, use CCX33. CPX42 is a middle ground when shared vCPU noise is acceptable. **GitHub Actions on public repos**, or the 2,000 free minutes on private ones, evaluates flakes and pushes small closures to R2. Total cost at 40 builder-hours: about €9 on CCX33 plus $1–7 for R2. Cloudflare Containers would cost $20–36 for less capable hardware.
+
+The first runner-up is **nixbuild.net**. Pick it if scripting server lifecycles is the larger cost to you. It is a native SSH remote builder, covers aarch64-linux, needs no images, and stays free under 25 CPU-hours. It becomes the expensive option near 100 busy hours. The second runner-up is **GCP or Azure spot**, if usage grows past 100 hours and the euros start to matter. A Netcup RS 2000 at €39/month or an AX41-1-LTD at €57.30 makes sense only if you want an always-warm store, for example to host buildbot-nix as CI and remote builder on one box. Two things remain open and need a hands-on check: whether Hetzner CX/CAX can be ordered today, and whether `sandbox = true` works in a Cloudflare container. The second matters only if Cloudflare raises its 4 vCPU / 20 GB ceiling.
