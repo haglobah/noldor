@@ -3,7 +3,6 @@
   asdbctl,
   coreutils,
   ddcutil,
-  gawk,
   libnotify,
   util-linux,
 }:
@@ -13,7 +12,6 @@ writeShellApplication {
     asdbctl
     coreutils
     ddcutil
-    gawk
     libnotify
     util-linux
   ];
