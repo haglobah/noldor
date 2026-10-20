@@ -89,27 +89,16 @@ rerun, or `just builder-down`.
    the partition on the first boot of a bigger server. If CX23 is "not
    available", take the smallest x86 type that is (e.g. CPX22).
 
-   Install from Hetzner's **rescue system**, not from Ubuntu: Ubuntu
-   26.04's kernel (7.0) refuses nixos-anywhere's kexec (`kexec_file_load
-   failed: Address not available`, with the 25.05 and the 26.05 installer
-   image). The rescue kernel (6.12) works. Seen 2026-10-15.
-
    ```sh
    export HCLOUD_TOKEN=$(cat /run/secrets/vars/hcloud-token/token)
    nix run nixpkgs#hcloud -- server create --name aule --type cx23 \
      --location fsn1 --image ubuntu-24.04 --ssh-key <your key name> \
      --label machine=aule
-   nix run nixpkgs#hcloud -- server enable-rescue --ssh-key <your key name> aule
-   nix run nixpkgs#hcloud -- server reset aule      # boots into rescue
    nix run nixpkgs#hcloud -- server ip aule
-   ssh-keygen -R <ip>                               # rescue has its own host key
    clan machines install aule --target-host root@<ip>
    ```
 
-   In the Console: Rescue → Enable rescue & power cycle (linux64, your
-   SSH key).
-
-   Use the IP, not `aule`: the rescue host key is not the pinned one. No
+   Use the IP, not `aule`: Ubuntu's host key is not the pinned one. No
    `--update-hardware-config`: aule uses the generic qemu-guest profile so
    one image boots on CX and CCX hosts.
 5. **Check and snapshot**:
