@@ -1566,11 +1566,11 @@
         "nixpkgs": "nixpkgs_14"
       },
       "locked": {
-        "lastModified": 1792481194,
-        "narHash": "sha256-wmYE+TWU+5sdUO1KIkZnKbwhyMnK3bbDLOe5YoBaLrI=",
+        "lastModified": 1792484381,
+        "narHash": "sha256-hYMG2WvQzSziR6PYS9qB8+e3NxOBig/vsl7mVDNeB0A=",
         "ref": "main",
-        "rev": "91ae7549b413063f43cd3a7103740795bf9be640",
-        "revCount": 149,
+        "rev": "ca7d6fb6f570cc1840c88ac72932c7dfdab964c0",
+        "revCount": 152,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/pushout.git"
       },
