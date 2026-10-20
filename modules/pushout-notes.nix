@@ -12,8 +12,12 @@
 # trusted: approve "code agent …" in the app's code pane. Claude runs on
 # Beat's subscription (var pushout-notes-agent-claude/claude-token, from
 # `claude setup-token`).
+# Deploys: pushout's pull updater (pushout-notes-updater, every minute)
+# deploys each push to pushout's main once nix-builds has built it on aule;
+# a noldor deploy only changes the module and the seed release.
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -39,15 +43,30 @@ in
     origin = "https://${domain}";
     htAuthUrl = "http://127.0.0.1:${toString config.services.todo-home.prod.authPort}";
     htAccountUrl = "https://todos.humane.tools";
-    # Beat's release key (~/.local/share/pushout/keys/beat.json on his laptop).
-    trustedKeys."eb28c90d5d264a5985cef88a4584f3f7863c83fdd863b50adf3d3f4cddcfefba" = "beat";
+    # Beat's release key (~/.local/share/pushout/keys/beat.json on his
+    # laptop), from pushout's flake, as the updater's releases carry it.
+    trustedKeys = inputs.pushout.lib.notesDeployKeys;
     # Beat's app doc, which author.ts publishes into; every other account
     # gets a clone that follows it.
     canonicalApp = "automerge:2TzrjzR6xQ9uYkoSxmv8UHPqgNQw";
     agent = {
       enable = true;
       tokenFile = config.clan.core.vars.generators.pushout-notes-agent.files.notes-token.path;
-      claudeTokenFile = config.clan.core.vars.generators.pushout-notes-agent-claude.files.claude-token.path;
+      claudeTokenFile =
+        config.clan.core.vars.generators.pushout-notes-agent-claude.files.claude-token.path;
+    };
+    autoUpdate = {
+      enable = true;
+      repo = "git@github.com:haglobah/pushout.git";
+      branch = "main";
+      interval = "*:0/1";
+      # orthanc's host key, a key of Beat's GitHub account.
+      sshKeyFile = config.clan.core.vars.generators.openssh.files."ssh.id_ed25519".path;
+      # nix-builds (clanServices/nix-builds) builds pushout's buildJobs into
+      # R2; orthanc only downloads. 60 ticks of a minute give a build an
+      # hour before a commit counts as bad.
+      substituteOnly = true;
+      buildAttempts = 60;
     };
   };
 

@@ -1,6 +1,7 @@
-# A failed Todo or Mail updater run on orthanc posts to the same secret
-# ntfy.sh topic that Gatus pages on (./monitoring.nix). ht's OnFailure unit
-# says whether the updater rolled back, and quotes the failed run's log.
+# A failed Todo, Mail or pushout-notes updater run on orthanc posts to the
+# same secret ntfy.sh topic that Gatus pages on (./monitoring.nix). The
+# updater's OnFailure unit says whether it rolled back, and quotes the
+# failed run's log.
 #
 # The topic is copied once from the gatus var instead of prompted again:
 #   clan vars get formenos gatus/env_file | clan vars set orthanc updater-alerts/env_file
@@ -29,4 +30,6 @@ in
   services.todo-home.dev.autoUpdate.notify = notify 3;
   services.humane-mail.instances.prod.autoUpdate.notify = notify 5;
   services.humane-mail.instances.dev.autoUpdate.notify = notify 3;
+  # Beat's own notes app: a plain warning, below prod's page.
+  services.pushout-notes.autoUpdate.notify = notify 4;
 }
