@@ -128,7 +128,7 @@ in
     max-jobs = 4;
     cores = 4;
     # Hard-linking every new path costs build time; the store lives an
-    # hour or two and is never snapshotted with build results in it.
+    # hour or two. The snapshot holds build inputs, never build outputs.
     auto-optimise-store = false;
     # Collect garbage during builds when free space drops below 10 GiB.
     min-free = 10 * 1024 * 1024 * 1024;

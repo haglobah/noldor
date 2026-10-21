@@ -1,4 +1,4 @@
-# nix-builder up|down|status|snapshot|sync
+# nix-builder up|down|status|warm FLAKE...|snapshot|sync
 #
 # Creates and deletes aule, the nix-builds build machine, from its newest
 # snapshot. The scheduler on orthanc starts it for builds; gondor uses this
@@ -130,6 +130,28 @@ cmd_status() {
   fi
 }
 
+# Realise the build inputs of each flake's buildJobs on the running aule,
+# so a server made from the next snapshot doesn't download them again for
+# every build. Evaluates here: aule cannot read the private repos. Only the
+# inputs (inputDerivation), not the outputs: an output already in aule's
+# store never runs the post-build hook, so it would never reach R2.
+cmd_warm() {
+  local flake json drvs=()
+  if [ -z "$(server_json)" ]; then
+    echo "nix-builder: $name does not exist; run 'nix-builder up' first" >&2
+    exit 1
+  fi
+  for flake in "$@"; do
+    echo "evaluating $flake"
+    json=$(nix eval --json "$flake#buildJobs.x86_64-linux" \
+      --apply 'jobs: map (d: d.inputDerivation.drvPath) (builtins.attrValues jobs)')
+    mapfile -t -O "${#drvs[@]}" drvs < <(jq -r '.[]' <<< "$json")
+  done
+  [ "${#drvs[@]}" -gt 0 ] || return 0
+  nix copy --derivation --to "ssh-ng://root@$name" "${drvs[@]}"
+  nix build --store "ssh-ng://root@$name" --no-link -L "${drvs[@]/%/^out}"
+}
+
 # Snapshot the running aule, keep only the new snapshot, delete the server.
 cmd_snapshot() {
   local id
@@ -173,8 +195,12 @@ cmd_sync() {
 
 case "${1:-}" in
   up | down | status | snapshot | sync) "cmd_$1" ;;
+  warm)
+    shift
+    cmd_warm "$@"
+    ;;
   *)
-    echo "usage: nix-builder up|down|status|snapshot|sync" >&2
+    echo "usage: nix-builder up|down|status|warm FLAKE...|snapshot|sync" >&2
     exit 1
     ;;
 esac

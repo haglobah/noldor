@@ -29,6 +29,7 @@ let
       pkgs.gnugrep
       pkgs.gnused
       pkgs.openssh
+      config.nix.package
     ];
     text = ''
       token_file=${generators.hcloud-token.files.token.path}

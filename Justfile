@@ -47,10 +47,16 @@ builder-down:
 builder-status:
     nix-builder status
 
+# Repos whose buildJobs' build inputs go into aule's snapshot, so a fresh
+# aule doesn't download them for every build. Missing a repo only costs time.
+builder_warm := "git+ssh://git@github.com/haglobah/ht.git git+ssh://git@github.com/haglobah/media-inbox.git git+ssh://git@github.com/haglobah/notable.git git+ssh://git@github.com/haglobah/pushout.git"
+
 # Boots the old image, deploys the current config (built on aule itself),
-# snapshots it, drops older snapshots and deletes the server.
-# Bake aule's current config into a new snapshot.
+# realises the build inputs of builder_warm, snapshots it, drops older
+# snapshots and deletes the server.
+# Bake aule's current config and build inputs into a new snapshot.
 builder-snapshot:
     nix-builder up
     clan machines update aule
+    nix-builder warm {{builder_warm}}
     nix-builder snapshot

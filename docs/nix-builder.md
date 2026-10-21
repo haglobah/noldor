@@ -64,13 +64,21 @@ ssh root@aule journalctl -u nix-builder-reaper -n 20
 ```sh
 just builder-status     # server, age, snapshots, recorded address
 just builder-down       # delete now (else it deletes itself)
-just builder-snapshot   # up, clan machines update aule, snapshot, prune, down
+just builder-snapshot   # up, clan machines update aule, warm, snapshot, prune, down
 ```
 
 Run `builder-snapshot` after changing aule's config, or after a nixpkgs
-bump to keep its closure current. It boots the old image, deploys the
-current config (built on aule itself), shuts it down, snapshots it,
-deletes older `machine=aule` snapshots and the server. If `clan machines
+or dependency bump in a registered repo: a fresh aule only finds in its
+store what the snapshot holds, and downloads the rest for every build. It
+boots the old image, deploys the current config (built on aule itself),
+realises the build inputs of the repos in the Justfile's `builder_warm`
+(`nix-builder warm`), shuts it down, snapshots it, deletes older
+`machine=aule` snapshots and the server.
+
+`warm` evaluates on gondor and builds each job's `inputDerivation` on
+aule, not the job itself. An output already in aule's store would never
+run the post-build hook, so it would never reach R2 and the scheduler
+would wait for it in vain. If `clan machines
 update aule` fails, the recipe stops and the server keeps running: fix and
 rerun, or `just builder-down`.
 

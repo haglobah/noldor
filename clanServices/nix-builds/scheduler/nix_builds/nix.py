@@ -131,7 +131,9 @@ class Nix:
             remaining = self.missing(remaining)
             if not remaining or self.clock() - start >= timeout:
                 return remaining
-            self.sleep(15)
+            # Small builds upload in seconds; every poll interval is added
+            # to the time until the commit turns green.
+            self.sleep(3)
 
     def build(self, ip: str, drvs: list):
         """Copies the derivations to aule and builds them there.
@@ -168,7 +170,7 @@ class Nix:
                     "-o HostKeyAlias=aule",
                     f"-o UserKnownHostsFile={self.known_hosts}",
                     "-o StrictHostKeyChecking=yes",
-                    "-o ConnectTimeout=10",
+                    "-o ConnectTimeout=5",
                     "-o ServerAliveInterval=15",
                     "-o ServerAliveCountMax=4",
                 ]

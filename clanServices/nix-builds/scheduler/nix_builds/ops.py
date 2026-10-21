@@ -48,12 +48,14 @@ class Ops:
         ip = self.hetzner.ensure()
         start = self.clock()
         # A fresh server boots in about a minute; nix-daemon answers last.
+        # Until sshd listens, a ping waits out ssh's ConnectTimeout (5 s),
+        # so a short sleep keeps the gap between tries small.
         while not self.nix.ping(ip):
             if self.clock() - start >= self.boot_timeout:
                 raise BuilderTimeout(
                     f"aule at {ip} did not answer within {self.boot_timeout}s; it still bills until its reaper deletes it"
                 )
-            self.sleep(5)
+            self.sleep(2)
         log.info("builder aule is up at %s", ip)
         return ip
 
