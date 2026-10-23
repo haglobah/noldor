@@ -236,6 +236,17 @@
   services.udev.packages = [ pkgs.asdbctl ];
   # Loads i2c-dev and grants the local desktop user access for ddcutil.
   hardware.i2c.enable = true;
+  # Keep the USB4 path awake: the USB4 host interfaces, their PCIe tunnel
+  # ports and the Thunderbolt routers. Runtime suspend on this path drops
+  # the whole Studio Display link now and then; it does not stop the
+  # display's own DP drops (see ./studio-display-watchdog.nix).
+  services.udev.extraRules = ''
+    # bind too: the thunderbolt driver re-enables runtime PM when it (re)probes,
+    # which follows add at boot and every rebind by studio-display-watchdog.
+    ACTION=="add|bind", SUBSYSTEM=="pci", ATTR{class}=="0x0c0340", ATTR{power/control}="on"
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x1022", ATTR{device}=="0x14ef", ATTR{power/control}="on"
+    ACTION=="add", SUBSYSTEM=="thunderbolt", ENV{DEVTYPE}=="thunderbolt_device", ATTR{power/control}="on"
+  '';
 
   # Tailscale
   services.tailscale = {
