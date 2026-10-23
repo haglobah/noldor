@@ -57,8 +57,11 @@
     # router can't do ipv6 at home
     # but enable it again for zerotier
     # "ipv6.disable=1"
+    # 0x410 disables PSR and Panel Replay against eDP flicker:
     # https://www.reddit.com/r/framework/comments/1goh7hc/anyone_else_get_this_screen_flickering_issue/
-    "amdgpu.dcdebugmask=0x410"
+    # 0x4 disables DSC (experiment): the Studio Display ran 5K@60 at 10 bpc
+    # with DSC and kept dropping its DP link; 8 bpc fits HBR3 x4 uncompressed.
+    "amdgpu.dcdebugmask=0x414"
   ];
 
   # Networking
