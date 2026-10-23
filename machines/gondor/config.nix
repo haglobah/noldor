@@ -20,6 +20,7 @@
     ../../modules/nix-builder-operator.nix
     ../../modules/gnome.nix
     ../../modules/protonvpn.nix
+    ../../modules/airplay-receiver.nix
     inputs.home-manager.nixosModules.home-manager
     # Puts `iets` on PATH; iets.classic below routes nix, nix-build,
     # nix-shell and nixos-rebuild through it.
