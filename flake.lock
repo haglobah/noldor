@@ -1452,11 +1452,11 @@
       },
       "locked": {
         "dir": "web",
-        "lastModified": 1791958279,
-        "narHash": "sha256-28BQyul1iMyh1ygHlxx6q1DQDmqJxUyzSo3hxB3cA9M=",
+        "lastModified": 1792538439,
+        "narHash": "sha256-265J2TkV49XaRdQOAhBTwc3OTG9Uhli0HDQkEEkiBM8=",
         "ref": "main",
-        "rev": "9a61a0eb98b9521ee2838f6192dc8df47f331ce7",
-        "revCount": 1496,
+        "rev": "b8bb14dd50f10b12a4ccaa9f698919ba10589461",
+        "revCount": 1506,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/notable.git"
       },
@@ -1566,11 +1566,11 @@
         "nixpkgs": "nixpkgs_14"
       },
       "locked": {
-        "lastModified": 1792532724,
-        "narHash": "sha256-sk1ZOTMzQ93IfPL7ioh1AHOjMAr1YOaqf1yU5YGD8Cg=",
+        "lastModified": 1792535696,
+        "narHash": "sha256-B5OL1SYGyLEeczRlwybLbxfPk5x3Mj8k+vD0DG+qZ+s=",
         "ref": "main",
-        "rev": "e0bebc2e3919ba8549535b5108b145e94a937a2c",
-        "revCount": 159,
+        "rev": "67e5e05f8eb549e36727122690832f81c1650664",
+        "revCount": 160,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/pushout.git"
       },
