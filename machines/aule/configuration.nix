@@ -19,7 +19,6 @@
     "sd_mod"
     "sr_mod"
   ];
-  boot.initrd.systemd.enable = true;
 
   # The snapshot comes from a small bootstrap disk; servers made from it
   # have 240-320 GB. Grow the partition and the filesystem on boot.

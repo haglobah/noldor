@@ -197,7 +197,18 @@
                 pkgs.nixfmt
                 # needed for backup testing
                 pkgs.borgbackup
-                clan-core.packages.${system}.clan-cli
+                # clan-core pins nix_2_31, which nixpkgs has removed, and
+                # passes "--unset VAR" as one makeWrapper argument, which
+                # buildPythonApplication no longer word-splits.
+                (
+                  (clan-core.packages.${system}.clan-cli.override { nix = pkgs.nixVersions.nix_2_34; })
+                  .overridePythonAttrs
+                    (old: {
+                      makeWrapperArgs = pkgs.lib.concatMap (
+                        arg: if pkgs.lib.hasPrefix "--unset " arg then pkgs.lib.splitString " " arg else [ arg ]
+                      ) old.makeWrapperArgs;
+                    })
+                )
                 pkgs.kanidm_1_11
               ];
 

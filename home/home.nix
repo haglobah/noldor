@@ -83,7 +83,8 @@
         brightnessctl
 
         # AI
-        aider-chat-with-playwright
+        # Broken in nixpkgs 2026-10-23 via python posthog.
+        # aider-chat-with-playwright
         python314
         # Latest GitHub release, falls back to nixpkgs once it has caught up
         (pkgs.callPackage ./pkgs/claude-code { inherit (inputs) claude-code-bin claude-code-version; })

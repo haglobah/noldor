@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790734419,
-        "narHash": "sha256-n7wew722m1OTBT9DOIMxNX/NF4zfsSUABAO5eW3wikE=",
+        "lastModified": 1792507013,
+        "narHash": "sha256-8tKjSQajD3mUND1GaAuaWTcuyUpgcGsh5V+l4ibzC7U=",
         "owner": "ryantm",
         "repo": "agenix",
-        "rev": "3daa710894355fa2fad8243380af373a2b4046ef",
+        "rev": "5e5b88a0c8e56f291a108c2fe9934054d9745b2e",
         "type": "github"
       },
       "original": {
@@ -208,11 +208,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1791795517,
-        "narHash": "sha256-hmF0FVrUW6UKQ74qyGJSepMYadnIqzVe2h7TQtZdbmo=",
+        "lastModified": 1792851666,
+        "narHash": "sha256-wDEAxTyksYFu9HVo8L6ozCRoW2k6QGlJkedujlY+VA4=",
         "owner": "catppuccin",
         "repo": "nix",
-        "rev": "2e605f61db52a45a7ff1db414df395ef566565a3",
+        "rev": "a08c7948f09cdd3c7f80f718b1d9b93eeaacca0c",
         "type": "github"
       },
       "original": {
@@ -252,7 +252,7 @@
     "claude-code-bin": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-rs9fm6gk1rWDycc0GUJ9xnNORniv8Tx58zsYQf2qkmQ=",
+        "narHash": "sha256-5lvPgsMstHLv3sfniBvJq9DLDd/4cvkOjXaaFzhNCzw=",
         "type": "tarball",
         "url": "https://github.com/anthropics/claude-code/releases/latest/download/claude-linux-x64.tar.gz"
       },
@@ -264,7 +264,7 @@
     "claude-code-version": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-dbibX4E7g8pjWyyyxVjpJenlD2snhBmjz/DKSu4QS30=",
+        "narHash": "sha256-f0m/UxXXGj/Zo8WcF4IeEndtn4yErndDR50lSVPYHF0=",
         "type": "file",
         "url": "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/latest"
       },
@@ -276,8 +276,8 @@
     "codex-bin": {
       "flake": false,
       "locked": {
-        "lastModified": 1791568736,
-        "narHash": "sha256-/oJx1K4O5dScMF4meLAqM2wsuOZEIHRX72MdsbTqNoI=",
+        "lastModified": 1792726299,
+        "narHash": "sha256-CwcMI0TQO61RxNx78rxUbkX+epSLK7sBNVmUQsrqsHE=",
         "type": "tarball",
         "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-unknown-linux-musl.tar.gz"
       },
@@ -326,11 +326,11 @@
     },
     "crane_2": {
       "locked": {
-        "lastModified": 1791754810,
-        "narHash": "sha256-cN0Mgk+sQtCJcGWs9H4M0CnLRAuC4I8aCwiBTcBJs6E=",
+        "lastModified": 1792350552,
+        "narHash": "sha256-292lvpvxTGKryKxh3/3tcIVi85CwYGdl4oOi113Sob8=",
         "owner": "ipetkov",
         "repo": "crane",
-        "rev": "bd63bf1d0a0f6dcacd7549c714a671ee63b0db6a",
+        "rev": "e675a36b7377bebe41d548388a2501cbb16d380d",
         "type": "github"
       },
       "original": {
@@ -478,11 +478,11 @@
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
-        "lastModified": 1791777760,
-        "narHash": "sha256-lHcmAXG2Ojsf3L8adc103rfb3Pz9wIQhbWhmioNJWtY=",
+        "lastModified": 1792945979,
+        "narHash": "sha256-tcqsR1GxSr7Ge3ZrQ0DFoSkCGt1FbUMwoFcN9DpmRL4=",
         "owner": "rycee",
         "repo": "nur-expressions",
-        "rev": "9c5dba317695191a6812749776f120e5638cf00f",
+        "rev": "90468e8bfea09d8b7f5184a410dfcb209ccf6bec",
         "type": "gitlab"
       },
       "original": {
@@ -824,11 +824,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1791812917,
-        "narHash": "sha256-JllxvjVGUQegynJEVmEs7B8pjQLumrjly0D/vrnS/oA=",
+        "lastModified": 1792792448,
+        "narHash": "sha256-s4TJ7vVMGxukdwl3IYNcvT+JgBgRFgwfdBWWhzohf7I=",
         "owner": "herdrdev",
         "repo": "herdr",
-        "rev": "212b710b929315044a2c049bbe34b091c82df47d",
+        "rev": "5608de0608918aba2f9d501e7793b984a0ca9cfa",
         "type": "github"
       },
       "original": {
@@ -866,11 +866,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791642191,
-        "narHash": "sha256-0bK0A59rVUn1SRZzo4cNi4VSqAe7vR1gL2/MZl53Frw=",
+        "lastModified": 1792896866,
+        "narHash": "sha256-/0tELNnhdSnP+bHSdWiEe6KpfSwi6WrTnT9cm/jNkjA=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c58f54c733a7894d84fa2fdff26cc12088c4b78c",
+        "rev": "c216bf5a1f173b0481bd5c8c489ebe5595ecc68c",
         "type": "github"
       },
       "original": {
@@ -908,11 +908,11 @@
         "portless": "portless"
       },
       "locked": {
-        "lastModified": 1792024114,
-        "narHash": "sha256-eEuM+iW4wrKawc6aQOD5kT/6DHywzLj0yicIC2c+Y38=",
+        "lastModified": 1792140618,
+        "narHash": "sha256-rcP9k9ezcA/i8t+HMw6+Ud8QqeGrC/HkNbmaimSrN8Y=",
         "ref": "refs/heads/main",
-        "rev": "729e0ace519585ff8ffb98e888a156932bbcc2b1",
-        "revCount": 843,
+        "rev": "5dd0773fa1857178628c1116f7d8f77a6c9642dd",
+        "revCount": 848,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/ht.git"
       },
@@ -950,11 +950,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792396882,
-        "narHash": "sha256-UihkjQETT/8dUjfD9W1TMfsOX7lp1bstqZheCTv4ghI=",
+        "lastModified": 1792933368,
+        "narHash": "sha256-P4MrEY/NqEcJFiinZiCXWDaKfTLnu7iEM6/alUwJwlg=",
         "owner": "numtide",
         "repo": "iets",
-        "rev": "bdd26f2c3a3b845f97fcc0c78aaa11afdf4bd476",
+        "rev": "e6fcea737373629c9c9f708f3ae00d82d1baa867",
         "type": "github"
       },
       "original": {
@@ -972,11 +972,11 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1791958279,
-        "narHash": "sha256-U32zhC5Y40+G/7A2RD9HItrJlKFURz+FOUBLNv5ccsI=",
+        "lastModified": 1792810268,
+        "narHash": "sha256-FXuo+TZ1oALrOrRfAiPxgOyHjfUUonafaQWuiGeUwpE=",
         "ref": "refs/heads/main",
-        "rev": "48baa957ffabc7a40a26c1d0b72d653130ab8517",
-        "revCount": 290,
+        "rev": "4f3f14b3c99ee0c53ede8edd011aaa273aff230d",
+        "revCount": 326,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/media-inbox.git"
       },
@@ -1013,11 +1013,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791711434,
-        "narHash": "sha256-LpIhxnuO0tYeZ4k7BbNMxsPs2zJpB4hWXO1jdhUuE7Q=",
+        "lastModified": 1792915725,
+        "narHash": "sha256-v75hPw5NJ+mRRcwUzKi2OQtVSVv1hgq6ceAlPQB2kEE=",
         "owner": "Mic92",
         "repo": "nix-index-database",
-        "rev": "9a2dd40780eeab8543aa97c59c26f11267025616",
+        "rev": "93696586f3463024cceb089353539be95a38ae2b",
         "type": "github"
       },
       "original": {
@@ -1035,11 +1035,11 @@
         "qmd": "qmd"
       },
       "locked": {
-        "lastModified": 1790163937,
-        "narHash": "sha256-oSsWtQ8mAH9KZkJKHeS3RedhrfDaMs1Ktrqs8rTP8PU=",
+        "lastModified": 1792876667,
+        "narHash": "sha256-s20U23XqdUmJdsxEIFgOFu2AXCNOoxIkqVf/PWBnSmY=",
         "owner": "openclaw",
         "repo": "nix-openclaw",
-        "rev": "f62d33f760bcbdbc6a52ac589eae22bf99201f90",
+        "rev": "4e5f44465d367839780be6f6111a1ab7ff6e315b",
         "type": "github"
       },
       "original": {
@@ -1238,11 +1238,11 @@
     },
     "nixpkgs_11": {
       "locked": {
-        "lastModified": 1791734076,
-        "narHash": "sha256-i5qk1kLiit98rRbh1AXmWBNT9QXC/y4l5Wk/u5EdpDQ=",
+        "lastModified": 1792773339,
+        "narHash": "sha256-rZLrzrC6i+jnTAlvPZHogKDulY7WWDEv9hJeHieO7Zw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "7fd4004d0511991fff3a0524856a9be09e28c5f0",
+        "rev": "3ec636362e1816bc2f0888fa0fa2c69f1bc9e504",
         "type": "github"
       },
       "original": {
@@ -1566,11 +1566,11 @@
         "nixpkgs": "nixpkgs_14"
       },
       "locked": {
-        "lastModified": 1792535696,
-        "narHash": "sha256-B5OL1SYGyLEeczRlwybLbxfPk5x3Mj8k+vD0DG+qZ+s=",
+        "lastModified": 1792571099,
+        "narHash": "sha256-i0ueLw3CxmlINrprhah/fE5FTZ4YJNXBWrjU8TbdChA=",
         "ref": "main",
-        "rev": "67e5e05f8eb549e36727122690832f81c1650664",
-        "revCount": 160,
+        "rev": "eb7149787e59e13ffde79ae4585bdcee0547aad4",
+        "revCount": 164,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/pushout.git"
       },

@@ -19,7 +19,12 @@ python3Packages.buildPythonApplication {
   };
   build-system = [ python3Packages.setuptools ];
 
-  makeWrapperArgs = [ "--prefix PATH : ${lib.makeBinPath [ openssl ]}" ];
+  makeWrapperArgs = [
+    "--prefix"
+    "PATH"
+    ":"
+    (lib.makeBinPath [ openssl ])
+  ];
 
   nativeCheckInputs = [ openssl ];
   checkPhase = ''
