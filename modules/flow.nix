@@ -113,7 +113,7 @@ in
     };
     ht = {
       authUrl = "https://todos.humane.tools";
-      allow = [ "bah@posteo.de" ];
+      allow = [ "hagenlob@posteo.de" ];
       # todo-home prod's cookiePrefix (./todo-home.nix)
       cookiePrefix = "humane-shared";
     };
