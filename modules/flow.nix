@@ -114,6 +114,8 @@ in
     ht = {
       authUrl = "https://todos.humane.tools";
       allow = [ "bah@posteo.de" ];
+      # todo-home prod's cookiePrefix (./todo-home.nix)
+      cookiePrefix = "humane-shared";
     };
   };
   # The checkout has to exist before the core can run from it, and so does
