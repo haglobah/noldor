@@ -279,6 +279,17 @@
   # iets answers to the classic Nix names and falls back to the real nix
   # for what it doesn't implement. It sets nix.package, so don't set that here.
   iets.classic.enable = true;
+  # Except to swap in an iets that hands shell completion (NIX_GET_COMPLETIONS)
+  # to the real nix: unpatched, completing `nix develop -c clan vars ge` in
+  # fish runs `clan vars ge` and prints its usage errors at the prompt.
+  nix.package = lib.mkForce (
+    inputs.iets.lib.mkClassic pkgs (
+      inputs.iets.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
+        (old: {
+          patches = (old.patches or [ ]) ++ [ ../../patches/iets-nix-completions.patch ];
+        })
+    ) config.iets.classic.nix
+  );
 
   programs.steam = {
     enable = true;

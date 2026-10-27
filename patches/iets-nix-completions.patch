@@ -1,0 +1,27 @@
+--- a/src/cli/classic/mod.rs
++++ b/src/cli/classic/mod.rs
+@@ -35,6 +35,12 @@
+ /// Runs the classic command `name`. `argv` is everything after `argv[0]`.
+ pub fn dispatch(name: &str, argv: &[String]) -> i32 {
+     log::set_classic();
++    // A shell asking `nix` for completions (NIX_GET_COMPLETIONS) wants the
++    // candidates, not the command run: `nix develop -c CMD` would run CMD on
++    // every keystroke. The real nix answers it, without the fallback line.
++    if name == "nix" && std::env::var_os("NIX_GET_COMPLETIONS").is_some() {
++        exec_real(name, argv)
++    }
+     match name {
+         "nix-instantiate" => instantiate::main(argv),
+         "nix-build" => build::main(argv),
+@@ -52,6 +58,11 @@
+         log::line(&format!("iets: no-fallback is set, not running {name}"));
+         exit(1)
+     }
++    exec_real(name, argv)
++}
++
++/// Execs the real `name` with the same arguments.
++fn exec_real(name: &str, argv: &[String]) -> ! {
+     let Some(real) = nixbin::real(name) else {
+         eprintln!("iets: cannot fall back to {name}: not found on PATH");
+         exit(1)
