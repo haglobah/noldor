@@ -186,6 +186,9 @@ in
     gondor = {
       imports = [
         (import ./machines/gondor/config.nix { inherit inputs; })
+        inputs.hotlustre.nixosModules.default
+        ./modules/flow-gondor.nix
+        ./modules/repo-command.nix
       ]
       ++ lib.optionals todoHomeBackupEnabled [
         (import ./modules/todo-home-backup-runner.nix { inherit inputs; })
@@ -280,6 +283,7 @@ in
           ./modules/server-housekeeping.nix
           inputs.hotlustre.nixosModules.default
           ./modules/flow.nix
+          ./modules/repo-command.nix
         ];
 
         environment.systemPackages = with pkgs; [

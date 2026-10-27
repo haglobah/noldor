@@ -1,7 +1,7 @@
 # hotlustre on cirdan at flow.humane.tools: the self-changing app, run as
 # beat from a checkout of its repository, as on gondor. Its agent's shell
 # sees /home/beat and Beat's repositories in ~/projects, cloned on first use
-# with `repo NAME`; only
+# with `repo NAME` (./repo-command.nix); only
 # hotlustre's core and version store are read-only to it (bubblewrap).
 # Module and docs: the hotlustre repo (nix/module.nix, docs/handoff.md).
 # Needs inputs.hotlustre.nixosModules.default, imported in clan.nix.
@@ -35,25 +35,7 @@ let
     gcc
     python3
     nodejs
-    repo
   ];
-
-  # Repositories are cloned lazily: `repo NAME` clones haglobah/NAME into
-  # ~/projects/NAME the first time and prints the path. Existing clones are
-  # left alone: they may hold work.
-  repo = pkgs.writeShellApplication {
-    name = "repo";
-    runtimeInputs = [
-      pkgs.git
-      pkgs.openssh
-    ];
-    text = ''
-      name=''${1:?usage: repo NAME (a repository of github.com/haglobah)}
-      dir=${home}/projects/$name
-      [ -d "$dir" ] || git clone --quiet "git@github.com:haglobah/$name.git" "$dir" >&2
-      echo "$dir"
-    '';
-  };
 
   # The version graph and the project repository to GitHub; nothing forced,
   # a rejected push fails the unit visibly.
@@ -120,8 +102,15 @@ in
     user = "beat";
     inherit checkout;
     dataDir = "${checkout}/data";
-    extraPackages = tools;
+    # Everything installed system-wide: the tools above and `repo`.
+    extraPackages = [ config.system.path ];
     environmentFile = vars.flow-claude.files.env.path;
+    # gondor fetches from and pushes to this instance (./flow-gondor.nix);
+    # this one merges when the two diverged.
+    sync = {
+      instance = "cirdan";
+      merges = true;
+    };
     ht = {
       authUrl = "https://todos.humane.tools";
       allow = [ "bah@posteo.de" ];
@@ -147,7 +136,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       User = "beat";
-      ExecStart = "${lib.getExe repo} hotlustre";
+      ExecStart = "${lib.getExe config.programs.repo.package} hotlustre";
     };
   };
 
