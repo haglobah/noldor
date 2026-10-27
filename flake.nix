@@ -88,6 +88,7 @@
     notable.url = "git+ssh://git@github.com/haglobah/notable.git?ref=main&dir=web";
     notes.url = "git+ssh://git@github.com/haglobah/notes.git?ref=main";
     pushout.url = "git+ssh://git@github.com/haglobah/pushout.git?ref=main";
+    hotlustre.url = "git+ssh://git@github.com/haglobah/hotlustre.git?ref=main";
     # donethat.url = "git+ssh://git@github.com/haglobah/donethat-electron.git";
   };
 

@@ -21,6 +21,13 @@ in
       deploy.targetHost = "root@91.99.217.220:443";
       tags = [ "client" ];
     };
+    # hotlustre at flow.humane.tools, its agent and Beat's repo clones.
+    # Hetzner CX43 in hel1, default project (not aule's: aule's token can
+    # delete every server in its project). sslh on 443 like orthanc.
+    cirdan = {
+      deploy.targetHost = "root@2.29.126.128:443";
+      tags = [ "server" ];
+    };
     gondor = {
       deploy.targetHost = "root@127.0.0.1";
       tags = [ "client" ];
@@ -123,6 +130,7 @@ in
       };
       roles.default.machines.orthanc = { };
       roles.default.machines.formenos = { };
+      roles.default.machines.cirdan = { };
       roles.default.settings = {
         user = "root";
         prompt = false;
@@ -259,6 +267,54 @@ in
           #   home.username = "openclaw";
           #   home.homeDirectory = "/home/openclaw";
           # };
+        };
+      };
+    cirdan =
+      { pkgs, lib, ... }:
+      {
+        _module.args = { inherit inputs; };
+        imports = [
+          inputs.home-manager.nixosModules.home-manager
+          ./modules/sslh.nix
+          ./modules/metrics-shipper.nix
+          ./modules/server-housekeeping.nix
+          inputs.hotlustre.nixosModules.default
+          ./modules/flow.nix
+        ];
+
+        environment.systemPackages = with pkgs; [
+          git
+          # needed for xterm-kitty being available
+          kitty.terminfo
+        ];
+
+        hardware.graphics.enable = lib.mkForce false;
+
+        # Builds and Claude processes spike memory; compressed in-RAM swap
+        # absorbs them, as on formenos.
+        zramSwap = {
+          enable = true;
+          memoryPercent = 50;
+        };
+
+        networking.firewall.allowedTCPPorts = [
+          80
+          443
+        ];
+
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.extraSpecialArgs = { inherit inputs; };
+        home-manager.users."root" = {
+          imports = [
+            ./home/programs/fish.nix
+            ./home/programs/shell-utils.nix
+            ./home/programs/starship.nix
+          ];
+          programs.broot.enable = lib.mkForce false;
+          home.stateVersion = "22.11";
+          home.username = "root";
+          home.homeDirectory = "/root";
         };
       };
     formenos =

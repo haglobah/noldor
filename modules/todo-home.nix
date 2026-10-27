@@ -92,6 +92,8 @@ in
     trustedOrigins = [
       "https://mail.humane.tools"
       "https://notes.humane.tools"
+      # hotlustre on cirdan (./flow.nix)
+      "https://flow.humane.tools"
     ];
     authPort = 3001;
     syncPort = 3030;
