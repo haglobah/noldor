@@ -1,7 +1,8 @@
 # Notable sync server: Automerge sync, blob store and accounts for the
 # Notable e-ink app and its PWA. Module and docs live in the notable repo
 # (web/nix/module.nix, web/server/README.md).
-# Accounts: `notable-admin user add <name>` on formenos.
+# Accounts: `notable-admin user add <name>` on formenos; humaneToolsLinks below
+# lets a humane tools account sign in as one.
 # Needs inputs.notable.nixosModules.default, imported in clan.nix: `inputs`
 # arrives via _module.args and can't be used in this module's imports.
 {
@@ -32,6 +33,12 @@ in
     # Behind Caddy every request comes from 127.0.0.1; the login rate limit
     # needs the client address from X-Forwarded-For.
     trustProxy = true;
+    # An email in the login form signs in with the humane tools account (Todos' Better Auth on
+    # orthanc, ./todo-home.nix) linked to a Notable account. Called server to server without
+    # cookies, so todo-home needn't trust this origin.
+    humaneToolsUrl = "https://todos.humane.tools";
+    # The same humane tools account as Flow's allowlist (./flow.nix).
+    humaneToolsLinks.beat = "hagenlob@posteo.de";
   };
 
   services.caddy = {

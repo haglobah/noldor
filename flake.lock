@@ -1487,11 +1487,11 @@
       },
       "locked": {
         "dir": "web",
-        "lastModified": 1792538439,
-        "narHash": "sha256-265J2TkV49XaRdQOAhBTwc3OTG9Uhli0HDQkEEkiBM8=",
+        "lastModified": 1793207032,
+        "narHash": "sha256-TGfz1WaDeh2XvhHkbhsZbnH4PiVNGbExBotvHyGGJOo=",
         "ref": "main",
-        "rev": "b8bb14dd50f10b12a4ccaa9f698919ba10589461",
-        "revCount": 1506,
+        "rev": "fcec4d9538b318038e6d20ae9a212cfe0b2701be",
+        "revCount": 1509,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/notable.git"
       },
