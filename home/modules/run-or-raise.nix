@@ -70,6 +70,11 @@ let
       command = "chromium-app https://mail.humane.tools";
       wmClass = "mail.humane.tools";
     }
+    {
+      key = "<Super>o";
+      command = "chromium-app https://flow.humane.tools";
+      wmClass = "flow.humane.tools";
+    }
   ];
 
   # Apps whose windows are split between shortcuts: each claim grabs the
