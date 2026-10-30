@@ -347,6 +347,7 @@ in
           ./modules/media-inbox-notify.nix
           inputs.notable.nixosModules.default
           ./modules/notable.nix
+          ./modules/aule-deploys.nix
           inputs.notes.nixosModules.default
           ./modules/notes.nix
 

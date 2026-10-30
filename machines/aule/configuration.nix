@@ -7,6 +7,7 @@
     # virtio drivers for Hetzner's KVM guests. No facter.json on purpose:
     # the snapshot boots on CX53 (Intel or AMD) and CCX33 (AMD) alike.
     (modulesPath + "/profiles/qemu-guest.nix")
+    ./deploys.nix
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
