@@ -927,11 +927,11 @@
         "portless": "portless"
       },
       "locked": {
-        "lastModified": 1792140618,
-        "narHash": "sha256-rcP9k9ezcA/i8t+HMw6+Ud8QqeGrC/HkNbmaimSrN8Y=",
+        "lastModified": 1793984147,
+        "narHash": "sha256-X9F5t1HJTZLaEHewWd2lUBEDYcIYS3JWuDjx+dcVln8=",
         "ref": "refs/heads/main",
-        "rev": "5dd0773fa1857178628c1116f7d8f77a6c9642dd",
-        "revCount": 848,
+        "rev": "88f4906b2e5f53ea651faf62e6104ad38529a6b6",
+        "revCount": 855,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/ht.git"
       },
@@ -1487,11 +1487,11 @@
       },
       "locked": {
         "dir": "web",
-        "lastModified": 1793354581,
-        "narHash": "sha256-5JKhACCffzH5yaGgxIGDNsDsui7RhBBWHAi5g6st3HU=",
+        "lastModified": 1793984883,
+        "narHash": "sha256-A0ObESnjjPoKX+RfnJdLqiZSDv3QkLueUBdpFFL6r78=",
         "ref": "main",
-        "rev": "c6b19099ba3796b40eef0478936fae31b466f91d",
-        "revCount": 1511,
+        "rev": "ebee60b6db4923994adff5689a81c01a17107a15",
+        "revCount": 1516,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/notable.git"
       },

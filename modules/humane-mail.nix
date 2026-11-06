@@ -101,6 +101,8 @@ let
   };
 in
 {
+  imports = [ ./humane-accounts.nix ];
+
   clan.core.vars.generators = {
     humane-mail-prod = bridge "https://mail.humane.tools";
     humane-mail-dev = bridge "https://dev.mail.humane.tools";
@@ -121,8 +123,14 @@ in
       # /metrics on 127.0.0.1, scraped by vmagent (./metrics-shipper.nix).
       metricsPort = 3209;
       authServiceUrl = "https://todos.humane.tools";
+      # Sign-in through humane.tools accounts (ht's ADR-005, stage 2); the
+      # client secret is in ./humane-accounts.nix.
+      accountsUrl = "https://accounts.humane.tools";
       environmentFile = config.clan.core.vars.generators.humane-mail-prod.files.mail_env.path;
-      extraEnvironmentFiles = [ googleEnv ];
+      extraEnvironmentFiles = [
+        googleEnv
+        config.clan.core.vars.generators.humane-accounts-mail.files.mail_env.path
+      ];
       autoUpdate = common.autoUpdate // {
         strategy = "tag";
         tagPattern = "v*";

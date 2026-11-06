@@ -17,8 +17,16 @@ let
   # so both sides of the bridge hold the same token.
   mailBridgeEnv =
     instance: config.clan.core.vars.generators."humane-mail-${instance}".files.todo_env.path;
+  # The accounts provider's client secrets (./humane-accounts.nix), prod only.
+  accountsEnv = map (gen: config.clan.core.vars.generators.${gen}.files.todo_env.path) [
+    "humane-accounts-todos"
+    "humane-accounts-mail"
+    "humane-accounts-notable"
+  ];
 in
 {
+  imports = [ ./humane-accounts.nix ];
+
   clan.core.vars.generators = {
     todo-home-better-auth = {
       share = true;
@@ -80,7 +88,16 @@ in
     domain = "todos.humane.tools";
     frontend = inputs.ht.packages.x86_64-linux.frontend-deploy;
     backend = inputs.ht.packages.x86_64-linux.backend;
-    envFiles = envFiles ++ [ (mailBridgeEnv "prod") ];
+    envFiles = envFiles ++ [ (mailBridgeEnv "prod") ] ++ accountsEnv;
+    # humane.tools accounts as an OIDC provider (ht's docs/adr/ADR-005, stage
+    # 2): sign-in moves to accounts.humane.tools (DNS: A record to orthanc,
+    # DNS-only). Todos, Mail and Notable are its clients. The shared cookie
+    # below stays until stage 3: Flow's core and notes.humane.tools still sign
+    # in with it.
+    accountsDomain = "accounts.humane.tools";
+    mailOrigins = [ "https://mail.humane.tools" ];
+    # Notable on formenos (./notable.nix).
+    notableOrigins = [ "https://notable.hagenlocher.me" ];
     # Shared sessions with mail.humane.tools (ht/apps/mail/README.md, "Running
     # against a real account"): the parent cookie domain lets a Todo login
     # carry over to Mail; the prefix is new, so every user signs in once more

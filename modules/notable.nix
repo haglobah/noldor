@@ -25,6 +25,8 @@ let
   '';
 in
 {
+  imports = [ ./humane-accounts-notable-secret.nix ];
+
   services.notable-server = {
     enable = true;
     # 3030 is todo-home's sync port elsewhere in the clan; keep them apart.
@@ -39,6 +41,18 @@ in
     humaneToolsUrl = "https://todos.humane.tools";
     # The same humane tools account as Flow's allowlist (./flow.nix).
     humaneToolsLinks.beat = "hagenlob@posteo.de";
+    # "Sign in with humane tools" through the accounts provider (ht's
+    # ADR-005; todo-home prod on orthanc registers `notable` with
+    # notableOrigins). The secret is shared with orthanc.
+    accountsUrl = "https://accounts.humane.tools";
+    environmentFile = config.clan.core.vars.generators.humane-accounts-notable.files.notable_env.path;
+    # Flow connects to the library through it (Flow's AGENTS.md "Notable"):
+    # on cirdan, and on gondor's local server.
+    connectClients.flow = [
+      "https://flow.humane.tools/api/notable/callback"
+      "http://127.0.0.1:8040/api/notable/callback"
+      "http://localhost:8040/api/notable/callback"
+    ];
   };
 
   services.caddy = {
