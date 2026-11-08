@@ -4,7 +4,7 @@
 # Line format: shortcut[:mode],command,[wm_class],[title]
 # wm_class and title are case sensitive; regexes go between slashes.
 # How to know a window's wm_class? Use xprop or the looking glass tool.
-{ lib, ... }:
+{ config, lib, ... }:
 
 let
   inherit (lib) concatMap concatStringsSep escapeRegex;
@@ -15,20 +15,12 @@ let
   anyOf = patterns: "/^.*(${concatStringsSep "|" patterns}).*$/";
   noneOf = patterns: "/^((?!${concatStringsSep "|" patterns}).)*$/";
 
-  # Chromium's id of the web app with this manifest id: its SHA-256, the
-  # first 32 hex digits as a-p (as chromium-app in browsers.nix computes it).
-  chromiumAppId =
-    manifestId:
-    builtins.replaceStrings (lib.stringToCharacters "0123456789abcdef") (lib.stringToCharacters "abcdefghijklmnop") (
-      builtins.substring 0 32 (builtins.hashString "sha256" manifestId)
-    );
-
   # A site opened with chromium-app: an --app window's class is the host, an
   # installed web app's carries its app id (crx_<id> under X11,
   # chrome-<id>-Default under Wayland).
   chromiumApp = host: {
     command = "chromium-app https://${host}";
-    wmClass = "/^(${escapeRegex host}|.*${chromiumAppId "https://${host}/"}.*)$/";
+    wmClass = "/^(${escapeRegex host}|.*${config.chromiumApps.${host}.appId}.*)$/";
   };
 
   line =

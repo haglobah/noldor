@@ -19,6 +19,7 @@
     ../../modules/catppuccin-cache.nix
     ../../modules/nix-builder-operator.nix
     ../../modules/gnome.nix
+    ../../modules/chromium-web-apps.nix
     ../../modules/protonvpn.nix
     ../../modules/airplay-receiver.nix
     inputs.home-manager.nixosModules.home-manager
