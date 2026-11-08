@@ -192,24 +192,25 @@
               inherit (pkgs) lib;
             };
 
+            # clan-core pins nix_2_31, which nixpkgs has removed, and
+            # passes "--unset VAR" as one makeWrapper argument, which
+            # buildPythonApplication no longer word-splits.
+            packages.clan-cli =
+              (clan-core.packages.${system}.clan-cli.override { nix = pkgs.nixVersions.nix_2_34; })
+              .overridePythonAttrs
+                (old: {
+                  makeWrapperArgs = pkgs.lib.concatMap (
+                    arg: if pkgs.lib.hasPrefix "--unset " arg then pkgs.lib.splitString " " arg else [ arg ]
+                  ) old.makeWrapperArgs;
+                });
+
             devShells.default = pkgs.mkShell {
               packages = [
                 pkgs.just
                 pkgs.nixfmt
                 # needed for backup testing
                 pkgs.borgbackup
-                # clan-core pins nix_2_31, which nixpkgs has removed, and
-                # passes "--unset VAR" as one makeWrapper argument, which
-                # buildPythonApplication no longer word-splits.
-                (
-                  (clan-core.packages.${system}.clan-cli.override { nix = pkgs.nixVersions.nix_2_34; })
-                  .overridePythonAttrs
-                    (old: {
-                      makeWrapperArgs = pkgs.lib.concatMap (
-                        arg: if pkgs.lib.hasPrefix "--unset " arg then pkgs.lib.splitString " " arg else [ arg ]
-                      ) old.makeWrapperArgs;
-                    })
-                )
+                self'.packages.clan-cli
                 pkgs.kanidm_1_11
               ];
 

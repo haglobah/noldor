@@ -226,6 +226,7 @@
   environment.systemPackages = with pkgs; [
     git
     asdbctl
+    inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.clan-cli
   ];
 
   # Apple Studio Display brightness: asdbctl ships a hidraw rule with
