@@ -5,7 +5,6 @@
       "Bash(nix flake check:*)",
       "Bash(dconf dump:*)",
       "WebFetch(domain:docs.clan.lol)",
-      "WebFetch(domain:donethat.ai)",
       "Bash(nix build *)",
       "Read(//home/beat/.config/xdg-desktop-portal/**)",
       "Read(//home/beat/.local/share/flatpak/db/**)",
