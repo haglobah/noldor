@@ -119,6 +119,13 @@ in
         openssl rand -hex 32 | tr -d '\n' > "$out/webhook-secret"
       '';
     };
+  }
+  # The scheduler reads the topic itself, as its own user.
+  // lib.optionalAttrs (settings.ntfyGenerator != null) {
+    ${settings.ntfyGenerator}.files.env_file = {
+      group = "nix-builds";
+      mode = "0440";
+    };
   };
 
   warnings = lib.optional (!ready) ''
