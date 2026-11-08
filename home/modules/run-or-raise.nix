@@ -74,7 +74,7 @@ let
     ({ key = "<Super>h"; } // chromiumApp "todos.humane.tools")
     ({ key = "<Super>comma"; } // chromiumApp "links.humane.tools")
     ({ key = "<Super>m"; } // chromiumApp "mail.humane.tools")
-    ({ key = "<Super>o"; } // chromiumApp "flow.humane.tools")
+    ({ key = "<Super>i"; } // chromiumApp "flow.humane.tools")
   ];
 
   # Apps whose windows are split between shortcuts: each claim grabs the
@@ -149,7 +149,7 @@ let
       };
       claims = [
         {
-          key = "<Super>i";
+          key = "<Super>o";
           command = ''emacs --name "mycelium"'';
           wmClass = "";
           titles = [ "mycelium" ];
