@@ -252,7 +252,7 @@
     "claude-code-bin": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-5lvPgsMstHLv3sfniBvJq9DLDd/4cvkOjXaaFzhNCzw=",
+        "narHash": "sha256-g6s+a1zq0xOGpFuwsJBYMKbsZ6B74yoMf5RRskcf3qU=",
         "type": "tarball",
         "url": "https://github.com/anthropics/claude-code/releases/latest/download/claude-linux-x64.tar.gz"
       },
@@ -264,7 +264,7 @@
     "claude-code-version": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-f0m/UxXXGj/Zo8WcF4IeEndtn4yErndDR50lSVPYHF0=",
+        "narHash": "sha256-WTsqr0SJW2FffAJVmZStkW6+ODP0ml/JgZ/Qtw5PCEs=",
         "type": "file",
         "url": "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/latest"
       },
