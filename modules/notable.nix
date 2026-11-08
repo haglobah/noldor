@@ -47,7 +47,10 @@ in
     accountsUrl = "https://accounts.humane.tools";
     environmentFile = config.clan.core.vars.generators.humane-accounts-notable.files.notable_env.path;
     # Flow connects to the library through it (Flow's AGENTS.md "Notable"):
-    # on cirdan, and on gondor's local server.
+    # on cirdan, and on gondor's local server (./flow-gondor.nix, on
+    # 127.0.0.1:8040 and using this Notable), which needs the plain-http
+    # localhost URLs. Notable asks before it sends a code to any of them, so
+    # no page can have one sent to whatever listens on that port.
     connectClients.flow = [
       "https://flow.humane.tools/api/notable/callback"
       "http://127.0.0.1:8040/api/notable/callback"
