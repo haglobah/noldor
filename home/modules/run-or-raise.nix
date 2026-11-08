@@ -7,13 +7,29 @@
 { lib, ... }:
 
 let
-  inherit (lib) concatMap concatStringsSep;
+  inherit (lib) concatMap concatStringsSep escapeRegex;
 
   mode = "switch-back-when-focused";
 
   # Title regexes: match windows whose title contains any / none of the patterns.
   anyOf = patterns: "/^.*(${concatStringsSep "|" patterns}).*$/";
   noneOf = patterns: "/^((?!${concatStringsSep "|" patterns}).)*$/";
+
+  # Chromium's id of the web app with this manifest id: its SHA-256, the
+  # first 32 hex digits as a-p (as chromium-app in browsers.nix computes it).
+  chromiumAppId =
+    manifestId:
+    builtins.replaceStrings (lib.stringToCharacters "0123456789abcdef") (lib.stringToCharacters "abcdefghijklmnop") (
+      builtins.substring 0 32 (builtins.hashString "sha256" manifestId)
+    );
+
+  # A site opened with chromium-app: an --app window's class is the host, an
+  # installed web app's carries its app id (crx_<id> under X11,
+  # chrome-<id>-Default under Wayland).
+  chromiumApp = host: {
+    command = "chromium-app https://${host}";
+    wmClass = "/^(${escapeRegex host}|.*${chromiumAppId "https://${host}/"}.*)$/";
+  };
 
   line =
     {
@@ -55,26 +71,10 @@ let
       command = "pcmanfm";
       wmClass = "pcmanfm";
     }
-    {
-      key = "<Super>h";
-      command = "chromium-app https://todos.humane.tools";
-      wmClass = "todos.humane.tools";
-    }
-    {
-      key = "<Super>comma";
-      command = "chromium-app https://links.humane.tools";
-      wmClass = "links.humane.tools";
-    }
-    {
-      key = "<Super>m";
-      command = "chromium-app https://mail.humane.tools";
-      wmClass = "mail.humane.tools";
-    }
-    {
-      key = "<Super>o";
-      command = "chromium-app https://flow.humane.tools";
-      wmClass = "flow.humane.tools";
-    }
+    ({ key = "<Super>h"; } // chromiumApp "todos.humane.tools")
+    ({ key = "<Super>comma"; } // chromiumApp "links.humane.tools")
+    ({ key = "<Super>m"; } // chromiumApp "mail.humane.tools")
+    ({ key = "<Super>o"; } // chromiumApp "flow.humane.tools")
   ];
 
   # Apps whose windows are split between shortcuts: each claim grabs the
