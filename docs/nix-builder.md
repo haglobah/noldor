@@ -30,8 +30,9 @@ Hetzner bills every started hour while a server exists, even powered off.
 Prices since 15 June 2026, Germany, without VAT:
 
 - **CX53** (16 shared vCPU, 32 GB): about €0.047/h. Tried first; often
-  sold out since September 2026.
-- **CCX33** (8 dedicated vCPU, 32 GB): €0.2219/h. The fallback.
+  sold out since September 2026, and refused while the project's shared core
+  limit is full.
+- **CCX33** (8 dedicated vCPU, 32 GB): €0.2219/h. The fallback for both.
 - **Snapshot**: billed per GB per month (unverified: about $0.014/GB).
 
 ## Self-deletion

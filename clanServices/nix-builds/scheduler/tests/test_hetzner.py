@@ -11,10 +11,17 @@ SERVER = {
 
 
 class FakeApi:
-    def __init__(self, servers=(), snapshots=(5,), refuse=()):
+    def __init__(
+        self,
+        servers=(),
+        snapshots=(5,),
+        refuse=(),
+        refusal=ApiError(412, "resource_unavailable"),
+    ):
         self.servers = list(servers)
         self.snapshots = list(snapshots)
         self.refuse = set(refuse)  # (type, location) pairs Hetzner turns down
+        self.refusal = refusal
         self.created = []
 
     def __call__(self, method, path, body=None):
@@ -30,7 +37,7 @@ class FakeApi:
         if method == "POST" and path == "/servers":
             key = (body["server_type"], body["location"])
             if key in self.refuse:
-                raise ApiError(412, "resource_unavailable")
+                raise self.refusal
             self.created.append(body)
             server = dict(SERVER, public_net={"ipv4": {"ip": "5.6.7.8"}})
             self.servers = [server]
@@ -65,6 +72,17 @@ class Ensure(unittest.TestCase):
 
     def test_falls_back_through_locations_then_types(self):
         api = FakeApi(refuse={("cx53", "fsn1"), ("cx53", "nbg1")})
+        hetzner(api).ensure()
+        self.assertEqual(
+            (api.created[0]["server_type"], api.created[0]["location"]),
+            ("ccx33", "fsn1"),
+        )
+
+    def test_a_full_core_limit_falls_back_to_the_next_type(self):
+        api = FakeApi(
+            refuse={("cx53", "fsn1"), ("cx53", "nbg1")},
+            refusal=ApiError(403, "resource_limit_exceeded"),
+        )
         hetzner(api).ensure()
         self.assertEqual(
             (api.created[0]["server_type"], api.created[0]["location"]),

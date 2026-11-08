@@ -26,9 +26,12 @@ class NoCapacity(Exception):
     pass
 
 
-# Codes Hetzner answers when a type is sold out or not offered somewhere.
+# Codes Hetzner answers when a type is sold out or not offered somewhere, or
+# when the project's limit covers it. Limits are per kind of core: a full
+# shared core limit refuses CX53 but not the dedicated CCX33.
 CAPACITY_CODES = {
     "resource_unavailable",
+    "resource_limit_exceeded",
     "server_type_unavailable",
     "placement_error",
     "unsupported_location",
