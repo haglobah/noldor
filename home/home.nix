@@ -32,6 +32,7 @@
     # ./programs/nvf.nix
     ./programs/bash.nix
     ./programs/fish.nix
+    ./programs/clan-ssh.nix
     ./programs/shell-utils.nix
     ./programs/starship.nix
     # ./programs/obs.nix

@@ -73,9 +73,6 @@
         };
 
         "cl" = "clan";
-        "cs" = "clan ssh";
-        "csf" = "clan ssh formenos -c fish";
-        "cso" = "clan ssh orthanc -c fish";
         "cv" = "clan vars";
         "cm" = "clan machines";
         "cmu" = "clan machines update";
