@@ -23,6 +23,13 @@ let
     wmClass = "/^(${escapeRegex host}|.*${config.chromiumApps.${host}.appId}.*)$/";
   };
 
+  # A site in a window without any frame (frameless-app, browsers.nix): its
+  # class is the host with dashes for dots.
+  framelessApp = host: {
+    command = "frameless-app https://${host}";
+    wmClass = "/^${escapeRegex (lib.replaceStrings [ "." ] [ "-" ] host)}$/";
+  };
+
   line =
     {
       key,
@@ -66,7 +73,7 @@ let
     ({ key = "<Super>h"; } // chromiumApp "todos.humane.tools")
     ({ key = "<Super>comma"; } // chromiumApp "links.humane.tools")
     ({ key = "<Super>m"; } // chromiumApp "mail.humane.tools")
-    ({ key = "<Super>i"; } // chromiumApp "flow.humane.tools")
+    ({ key = "<Super>i"; } // framelessApp "flow.humane.tools")
   ];
 
   # Apps whose windows are split between shortcuts: each claim grabs the

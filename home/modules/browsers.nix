@@ -65,6 +65,18 @@
         --no-default-browser-check \
         "''${app[@]}"
     '')
+    # A site in an Electron window without any frame: no title bar and no
+    # window controls, which a Chromium app window always keeps
+    # (frameless-app/main.js).
+    # Electron names the window after the app's package.json, so each site gets
+    # one of its own, named after its host (--class has no effect).
+    (pkgs.writeShellScriptBin "frameless-app" ''
+      host=$(printf '%s' "$1" | ${pkgs.gnused}/bin/sed -E 's#^https?://([^/]+).*#\1#')
+      dir="''${XDG_CACHE_HOME:-$HOME/.cache}/frameless-apps/$host"
+      mkdir -p "$dir"
+      printf '{"name":"%s","main":"%s/main.js"}\n' "$host" "${./frameless-app}" > "$dir/package.json"
+      exec ${pkgs.electron}/bin/electron --ozone-platform-hint=auto "$dir" "$1"
+    '')
   ];
 
   config.programs.firefox =
