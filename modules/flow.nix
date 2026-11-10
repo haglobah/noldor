@@ -10,6 +10,9 @@
 # only; the core checks it, so no version can drop it. todo-home's
 # trustedOrigins on orthanc lists this origin (./todo-home.nix).
 # DNS: flow.humane.tools needs a DNS-only A record to cirdan.
+# The garden: beathagenlocher.com is served by the version (hotlustre's
+# server/garden), readable without sign-in (publicHosts); www redirects to
+# it. Both need DNS-only A records to cirdan (Cloudflare, grey cloud).
 # Claude runs on Beat's subscription (var flow-claude, from
 # `claude setup-token`). beat's GitHub key (var flow-github) is a key of
 # Beat's GitHub account: it can push to every repository.
@@ -21,6 +24,7 @@
 }:
 let
   domain = "flow.humane.tools";
+  garden = "beathagenlocher.com";
   cfg = config.services.hotlustre;
   vars = config.clan.core.vars.generators;
   home = "/home/beat";
@@ -99,6 +103,7 @@ in
 
   services.hotlustre = {
     enable = true;
+    publicHosts = [ garden ];
     user = "beat";
     inherit checkout;
     dataDir = "${checkout}/data";
@@ -164,6 +169,12 @@ in
     enable = true;
     virtualHosts.${domain}.extraConfig = ''
       reverse_proxy 127.0.0.1:${toString cfg.port}
+    '';
+    virtualHosts.${garden}.extraConfig = ''
+      reverse_proxy 127.0.0.1:${toString cfg.port}
+    '';
+    virtualHosts."www.${garden}".extraConfig = ''
+      redir https://${garden}{uri} permanent
     '';
   };
 }
