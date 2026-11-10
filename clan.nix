@@ -138,6 +138,9 @@ in
     };
 
     # https://docs.clan.lol/services/official/borgbackup/
+    # The key lives under vars/per-machine/<machine>/: with the older
+    # /run/secrets/vars/borgbackup/ path no backup ran from at least
+    # 2026-10-04 (formenos) and 2026-10-16 (orthanc) until 2026-11-10.
     borgbackup = {
       module = {
         name = "borgbackup";
@@ -146,13 +149,13 @@ in
       roles.client.machines."formenos".settings = {
         destinations."storagebox" = {
           repo = "u366465-sub5@u366465-sub5.your-storagebox.de:/./borgbackup/formenos";
-          rsh = "ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/borgbackup/borgbackup.ssh";
+          rsh = "ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/per-machine/formenos/borgbackup/borgbackup.ssh";
         };
       };
       roles.client.machines."orthanc".settings = {
         destinations."storagebox" = {
           repo = "u366465-sub5@u366465-sub5.your-storagebox.de:/./borgbackup/orthanc";
-          rsh = "ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/borgbackup/borgbackup.ssh";
+          rsh = "ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/per-machine/orthanc/borgbackup/borgbackup.ssh";
         };
       };
     };
