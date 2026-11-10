@@ -4,8 +4,7 @@
 # with a network of its own, NATed out through orthanc, and reaches the app
 # through its public origin like any client. Of orthanc's secrets it sees
 # only the two it needs, bind-mounted read-only: the CLI token of Beat's
-# account (shared with the code agent, pushout-notes.nix) and Beat's Claude
-# subscription token.
+# account and Beat's Claude subscription token (generators below).
 #
 #   nixos-container root-login agents        a shell inside
 #   journalctl -M agents -u notes-agent      the worker's log
@@ -59,6 +58,26 @@ in
         concurrency = 1;
       };
     };
+  };
+
+  # Made for pushout-notes' code agent when notes.humane.tools still ran here
+  # (./pushout-notes.nix, now on cirdan, agent off); the worker shares them.
+  clan.core.vars.generators.pushout-notes-agent = {
+    files.notes-token = { };
+    prompts.notes-token = {
+      type = "hidden";
+      description = "A CLI token of Beat's notes.humane.tools account: `pushout-notes-admin token EMAIL agent` on cirdan";
+    };
+    script = ''cp "$prompts/notes-token" "$out/notes-token"'';
+  };
+  # Beat's Claude subscription, which the worker's Claude Code runs on.
+  clan.core.vars.generators.pushout-notes-agent-claude = {
+    files.claude-token = { };
+    prompts.claude-token = {
+      type = "hidden";
+      description = "Beat's Claude subscription token for the notes agents: `claude setup-token`";
+    };
+    script = ''cp "$prompts/claude-token" "$out/claude-token"'';
   };
 
   # The worker's docs, the jobs' workspaces and Claude Code's sessions.

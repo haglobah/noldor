@@ -158,6 +158,13 @@ in
           rsh = "ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/per-machine/orthanc/borgbackup/borgbackup.ssh";
         };
       };
+      # For pushout-notes (./modules/pushout-notes.nix).
+      roles.client.machines."cirdan".settings = {
+        destinations."storagebox" = {
+          repo = "u366465-sub5@u366465-sub5.your-storagebox.de:/./borgbackup/cirdan";
+          rsh = "ssh -p 23 -oStrictHostKeyChecking=accept-new -i /run/secrets/vars/per-machine/cirdan/borgbackup/borgbackup.ssh";
+        };
+      };
     };
     # Docs: https://docs.clan.lol/reference/clanServices/zerotier/
     # The lines below will define a zerotier network and add all machines as 'peer' to it.
@@ -209,8 +216,6 @@ in
           ./modules/todo-home.nix
           inputs.ht.nixosModules.mail
           ./modules/humane-mail.nix
-          inputs.pushout.nixosModules.notes
-          ./modules/pushout-notes.nix
           ./modules/agents-container.nix
           inputs.media-inbox.nixosModules.worker
           ./modules/links-worker.nix
@@ -287,6 +292,10 @@ in
           inputs.hotlustre.nixosModules.default
           ./modules/flow.nix
           ./modules/repo-command.nix
+          # The hub hotlustre's notes sync through, until they sync directly.
+          inputs.pushout.nixosModules.notes
+          ./modules/pushout-notes.nix
+          ./modules/updater-alerts.nix
         ];
 
         environment.systemPackages = with pkgs; [
