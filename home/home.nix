@@ -127,14 +127,24 @@
         zed-editor
         chromium
         librewolf
-        obsidian
+        # Electron apps whose logins hang on a keyring password (pkgs/keyring-gated).
+        (pkgs.callPackage ./pkgs/keyring-gated { } {
+          package = obsidian;
+          application = "obsidian";
+        })
         discord
-        signal-desktop
+        (pkgs.callPackage ./pkgs/keyring-gated { } {
+          package = signal-desktop;
+          application = "Signal";
+        })
         telegram-desktop
         zoom-us
         gnome-tweaks
         teams-for-linux
-        slack
+        (pkgs.callPackage ./pkgs/keyring-gated { } {
+          package = slack;
+          application = "Slack";
+        })
 
         # Useful for login networks: https://discourse.nixos.org/t/does-wifionice-wifi-on-deutsche-bahn-german-railway-work-for-you/41646
         captive-browser
