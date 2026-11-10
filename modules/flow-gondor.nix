@@ -27,4 +27,8 @@ in
       peer = "cirdan=ssh://beat@2.29.126.128:443${checkout}/data/core/repo.git";
     };
   };
+
+  # Notes sync with cirdan's instance directly (./flow-notes-peer.nix).
+  imports = [ ./flow-notes-peer.nix ];
+  systemd.services.hotlustre.environment.HOTLUSTRE_NOTES_PEER = "wss://flow.humane.tools/sync";
 }

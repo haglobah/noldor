@@ -86,6 +86,8 @@ in
       defaultBranch = main
   '';
 
+  imports = [ ./flow-notes-peer.nix ];
+
   clan.core.vars.generators.flow-github = {
     files.key.owner = "beat";
     files."key.pub".secret = false;
