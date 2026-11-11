@@ -13,6 +13,13 @@
 # The garden: beathagenlocher.com is served by the version (hotlustre's
 # server/garden), readable without sign-in (publicHosts); www redirects to
 # it. Both need DNS-only A records to cirdan (Cloudflare, grey cloud).
+# The preview: preview.beathagenlocher.com, another site than flow's, so the
+# browser runs the preview pane's pages in a process of their own and no dev
+# page can block the app's main thread (hotlustre's server/frame-host.ts);
+# the core lets it through without sign-in (frameHosts), the version admits
+# only frames that came with a ticket from the app. DNS-only A record too.
+# The core runs from the checkout: a deploy fast-forwards it to the locked
+# hotlustre revision (flow-update-hotlustre) and restarts the core on a new one.
 # Claude runs on Beat's subscription (var flow-claude, from
 # `claude setup-token`). beat's GitHub key (var flow-github) is a key of
 # Beat's GitHub account: it can push to every repository.
@@ -20,11 +27,15 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 let
   domain = "flow.humane.tools";
   garden = "beathagenlocher.com";
+  preview = "preview.${garden}";
+  # The hotlustre revision this deploy locks (flake.lock): the checkout's core goes there.
+  coreRev = inputs.hotlustre.rev;
   cfg = config.services.hotlustre;
   vars = config.clan.core.vars.generators;
   home = "/home/beat";
@@ -106,6 +117,7 @@ in
   services.hotlustre = {
     enable = true;
     publicHosts = [ garden ];
+    frameHosts = [ preview ];
     user = "beat";
     inherit checkout;
     dataDir = "${checkout}/data";
@@ -133,7 +145,44 @@ in
       "${checkout}/bin/hotlustre"
       "${cfg.dataDir}/core/repo.git"
     ];
-    after = [ "flow-clone-hotlustre.service" ];
+    after = [
+      "flow-clone-hotlustre.service"
+      "flow-update-hotlustre.service"
+    ];
+    wants = [ "flow-update-hotlustre.service" ];
+    restartTriggers = [ coreRev ];
+  };
+
+  # A deploy moves the checkout to the locked revision when that is a fast
+  # forward; otherwise (local commits, another branch) it stays as it is.
+  systemd.services.flow-update-hotlustre = {
+    description = "Fast-forward the hotlustre checkout to the deployed revision";
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "flow-clone-hotlustre.service"
+      "network-online.target"
+    ];
+    wants = [ "network-online.target" ];
+    restartTriggers = [ coreRev ];
+    unitConfig.ConditionPathIsDirectory = "${checkout}/.git";
+    path = [
+      pkgs.git
+      pkgs.openssh
+    ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      User = "beat";
+      WorkingDirectory = checkout;
+    };
+    script = ''
+      git cat-file -e ${coreRev}^{commit} 2>/dev/null || git fetch --quiet origin
+      if git merge-base --is-ancestor HEAD ${coreRev}; then
+        git merge --ff-only --quiet ${coreRev}
+      else
+        echo "the checkout is not behind ${coreRev}: left as it is"
+      fi
+    '';
   };
 
   systemd.services.flow-clone-hotlustre = {
@@ -177,6 +226,9 @@ in
     '';
     virtualHosts."www.${garden}".extraConfig = ''
       redir https://${garden}{uri} permanent
+    '';
+    virtualHosts.${preview}.extraConfig = ''
+      reverse_proxy 127.0.0.1:${toString cfg.port}
     '';
   };
 }
