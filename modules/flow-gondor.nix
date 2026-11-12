@@ -5,7 +5,7 @@
 # login`). gondor can reach cirdan but not the other way round, so this
 # instance fetches and pushes; cirdan merges when the two diverged.
 # Needs inputs.hotlustre.nixosModules.default, imported in clan.nix.
-{ config, ... }:
+{ config, pkgs, ... }:
 let
   checkout = "/home/beat/projects/hotlustre";
 in
@@ -20,6 +20,8 @@ in
     extraPackages = [
       config.system.path
       config.home-manager.users.beat.home.path
+      # Antithesis' CLI, for the antithesis-* skills in the agent's claude config.
+      pkgs.snouty
     ];
     sync = {
       instance = "gondor";

@@ -50,6 +50,8 @@ let
     gcc
     python3
     nodejs
+    # Antithesis' CLI, for the antithesis-* skills in the agent's claude config.
+    snouty
   ];
 
   # The version graph and the project repository to GitHub; nothing forced,
