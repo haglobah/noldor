@@ -10,11 +10,11 @@
 +    if name == "nix" && std::env::var_os("NIX_GET_COMPLETIONS").is_some() {
 +        exec_real(name, argv)
 +    }
-     match name {
-         "nix-instantiate" => instantiate::main(argv),
-         "nix-build" => build::main(argv),
-@@ -52,6 +58,11 @@
-         log::line(&format!("iets: no-fallback is set, not running {name}"));
+     if Session::current().settings().nix_fallback == NixFallback::Always {
+         fallback(name, argv, "nix-fallback is always");
+     }
+@@ -55,6 +61,11 @@
+         log::line(&format!("iets: nix-fallback is never, not running {name}"));
          exit(1)
      }
 +    exec_real(name, argv)
