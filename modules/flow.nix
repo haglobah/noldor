@@ -99,7 +99,10 @@ in
       defaultBranch = main
   '';
 
-  imports = [ ./flow-notes-peer.nix ];
+  imports = [
+    ./flow-notes-peer.nix
+    ./snouty.nix
+  ];
 
   clan.core.vars.generators.flow-github = {
     files.key.owner = "beat";

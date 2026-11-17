@@ -31,6 +31,9 @@ in
   };
 
   # Notes sync with cirdan's instance directly (./flow-notes-peer.nix).
-  imports = [ ./flow-notes-peer.nix ];
+  imports = [
+    ./flow-notes-peer.nix
+    ./snouty.nix
+  ];
   systemd.services.hotlustre.environment.HOTLUSTRE_NOTES_PEER = "wss://flow.humane.tools/sync";
 }
