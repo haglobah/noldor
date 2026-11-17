@@ -52,6 +52,12 @@
       flake = false;
     };
 
+    # Latest Bombadil release binary. See home/pkgs/bombadil.
+    bombadil-bin = {
+      url = "file+https://github.com/antithesishq/bombadil/releases/latest/download/bombadil-x86_64-linux";
+      flake = false;
+    };
+
     # difftastic with a faster graph search. See home/pkgs/difftastic.
     difftastic-src = {
       url = "github:haglobah/difftastic/faster-graph-search";

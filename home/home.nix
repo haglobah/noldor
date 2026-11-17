@@ -91,6 +91,8 @@
         claude-agent-acp
         (pkgs.callPackage ./pkgs/codex { inherit (inputs) codex-bin; })
         codex-acp
+        # Property-based testing for web UIs, latest GitHub release
+        (pkgs.callPackage ./pkgs/bombadil { inherit (inputs) bombadil-bin; })
         antigravity-cli
         opencode
         # For claude code voice mode
