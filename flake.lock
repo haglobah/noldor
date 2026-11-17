@@ -264,7 +264,7 @@
     "claude-code-bin": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-LLbMP6ohfGdURU3/T9tCBGGpiy+P2vRRjT/5lDj6s70=",
+        "narHash": "sha256-kKSlvgRJ4iNnVqOFEktOP1NEG4H5h5bKCeHgVrUObN8=",
         "type": "tarball",
         "url": "https://github.com/anthropics/claude-code/releases/latest/download/claude-linux-x64.tar.gz"
       },
@@ -276,7 +276,7 @@
     "claude-code-version": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-orCIg8UycXMHEo2mzBHApBKdvnTa5X+hF/VICpAR3AM=",
+        "narHash": "sha256-BpsuIJuC2U6q5rR39X04W147XVsqGVR0+Mj8aUxu9g0=",
         "type": "file",
         "url": "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/latest"
       },
@@ -490,11 +490,11 @@
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
-        "lastModified": 1794801771,
-        "narHash": "sha256-TdlskgDOwOwH+cXD1Hs1eiaCi0uLnYYxbBlLckFoNOU=",
+        "lastModified": 1794888279,
+        "narHash": "sha256-Sg9byhoKo66ftwK7r7p8bhxeD4/t6nGvKU+U/O/W8Lw=",
         "owner": "rycee",
         "repo": "nur-expressions",
-        "rev": "2060a2a111cee4c855ba08e3df37173321d9d589",
+        "rev": "1f39e7ebb068f7b3ba489137ccfbcbc108d6e58b",
         "type": "gitlab"
       },
       "original": {
@@ -878,11 +878,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794715309,
-        "narHash": "sha256-awkBBs5ctFKgEYjpNGpi3t/VqF589n5EWfdinRb2gNI=",
+        "lastModified": 1794897420,
+        "narHash": "sha256-hMI9Xg+lxS8kbnxIxL/jPQn688dstoxQAcMEbCb1ax0=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "a1293da7dd8e497e08d26173f97e2976b36a31ea",
+        "rev": "5b76c5b8eec25fdbce4f43309b3ee10584374a26",
         "type": "github"
       },
       "original": {
@@ -939,11 +939,11 @@
         "portless": "portless"
       },
       "locked": {
-        "lastModified": 1794507037,
-        "narHash": "sha256-DWKHB2ENq3fv93mvNcnm44AdB6gIyBk2zsy3gS+wipI=",
+        "lastModified": 1794852503,
+        "narHash": "sha256-mgwCGN8d8VszfJK/z5nxvq/lr7elluXwM/n7XDP9Lr8=",
         "ref": "refs/heads/main",
-        "rev": "5e981b6e6e5fca8cad97285f720a263a138c6b44",
-        "revCount": 864,
+        "rev": "9008336b619cb240c937de210969dead12717d02",
+        "revCount": 865,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/ht.git"
       },
@@ -1003,11 +1003,11 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1794233832,
-        "narHash": "sha256-D4Nk10UE0skqk3KRasLFaHgghI1Sh60ipIRcmAnM5/g=",
+        "lastModified": 1794480670,
+        "narHash": "sha256-QQrFfm9F0YgucSzxfKXlZ2UuRoU46qQVnHHl5vg1uLA=",
         "ref": "refs/heads/main",
-        "rev": "90fa15c03ceb5ceb6c0d6cca35105ffd025cf7ce",
-        "revCount": 332,
+        "rev": "9dcb3c9a221bf12dde3be299ebb7329885281a8a",
+        "revCount": 333,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/media-inbox.git"
       },
