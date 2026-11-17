@@ -112,6 +112,15 @@ in
       # hotlustre on cirdan (./flow.nix)
       "https://flow.humane.tools"
     ];
+    # Apps of Beat's that connect his whole list with one click (ht ADR-006
+    # §6, /api/connect): Flow's callback per instance, exact URLs. cirdan
+    # (./flow.nix) keeps notes' task lines and todos in step; gondor's
+    # (./flow-gondor.nix) is opened at either loopback name.
+    connectClients.flow = [
+      "https://flow.humane.tools/api/objects/callback"
+      "http://127.0.0.1:8040/api/objects/callback"
+      "http://localhost:8040/api/objects/callback"
+    ];
     authPort = 3001;
     syncPort = 3030;
     # Loopback only; vmagent scrapes it (./metrics-shipper.nix).
