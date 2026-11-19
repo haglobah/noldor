@@ -2,8 +2,8 @@
 # (hotlustre's docs/adr/ADR-003-apps.md), a core of its own beside Flow's
 # (./flow.nix), from the same checkout and as the same user: unit
 # hotlustre-review.service, port 8050, data in ~/apps/review. It has its own
-# version graph, state and claude login (~/apps/review/appdata/claude-config,
-# made once with `claude auth login`), the same humane tools sign-in as Flow,
+# version graph and state, Flow's Claude token (var flow-claude; or a login of
+# its own in ~/apps/review/appdata/claude-config), the same humane tools sign-in as Flow,
 # and a memory limit of its own: it is killed alone, Flow is not.
 # Imported by ./flow.nix.
 #
@@ -63,6 +63,10 @@ in
       port = 8050;
       user = "beat";
       inherit (flow) checkout extraPackages;
+      # Claude for the analysis: the same subscription token as Flow's agent
+      # (var flow-claude, CLAUDE_CODE_OAUTH_TOKEN in the unit's environment), so
+      # no login is made by hand. A token pasted on Review's settings wins over it.
+      inherit (flow) environmentFile;
       dataDir = "${home}/apps/review";
       seed = "${home}/apps/review-seed";
       ht = {
