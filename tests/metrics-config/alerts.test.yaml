@@ -178,3 +178,66 @@ tests:
             exp_annotations:
               summary: "orthanc /: 5% disk free"
 
+
+  - name: host disk filling fast, OOM kills, failed units
+    interval: 1m
+    input_series:
+      # Loses 1 a minute: full in 85 minutes, 21% free at 15m.
+      - series: 'node_filesystem_avail_bytes{job="node",machine="cirdan",mountpoint="/",device="/dev/nvme0n1p2",fstype="ext4"}'
+        values: "100-1x20"
+      - series: 'node_filesystem_size_bytes{job="node",machine="cirdan",mountpoint="/",device="/dev/nvme0n1p2",fstype="ext4"}'
+        values: "400x20"
+      # Same rate on a roomy disk (75% free): quiet.
+      - series: 'node_filesystem_avail_bytes{job="node",machine="formenos",mountpoint="/",device="/dev/sda1",fstype="ext4"}'
+        values: "300-1x20"
+      - series: 'node_filesystem_size_bytes{job="node",machine="formenos",mountpoint="/",device="/dev/sda1",fstype="ext4"}'
+        values: "400x20"
+      - series: 'node_vmstat_oom_kill{job="node",machine="cirdan"}'
+        values: "28x5 29x15"
+      - series: 'node_vmstat_oom_kill{job="node",machine="formenos"}'
+        values: "3x20"
+      - series: 'node_systemd_unit_state{job="node",machine="cirdan",name="flow-backup.service",state="failed",type="oneshot"}'
+        values: "1x20"
+      - series: 'node_systemd_unit_state{job="node",machine="cirdan",name="hotlustre.service",state="failed",type="simple"}'
+        values: "0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: HostDiskFillingFast
+        exp_alerts:
+          - exp_labels:
+              severity: page
+              job: node
+              machine: cirdan
+              mountpoint: /
+              device: /dev/nvme0n1p2
+              fstype: ext4
+            exp_annotations:
+              summary: "cirdan /: disk full within 6 h at the last hour's rate"
+      - eval_time: 7m
+        alertname: HostOomKill
+        exp_alerts:
+          - exp_labels:
+              severity: page
+              job: node
+              machine: cirdan
+            exp_annotations:
+              summary: "cirdan: the kernel OOM-killed a process (1 in 10m)"
+      # Ten minutes on, the kill is out of the window.
+      - eval_time: 17m
+        alertname: HostOomKill
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: SystemdUnitFailed
+        exp_alerts: []
+      - eval_time: 16m
+        alertname: SystemdUnitFailed
+        exp_alerts:
+          - exp_labels:
+              severity: page
+              job: node
+              machine: cirdan
+              name: flow-backup.service
+              state: failed
+              type: oneshot
+            exp_annotations:
+              summary: "cirdan: flow-backup.service failed"

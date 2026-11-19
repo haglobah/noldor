@@ -156,6 +156,11 @@ in
     ];
     wants = [ "flow-update-hotlustre.service" ];
     restartTriggers = [ coreRev ];
+    # Agents' builds, claude CLIs and headless browsers all run in this
+    # unit. With the default OOMPolicy=stop, the kernel OOM-killing any one
+    # of them stopped the whole unit, core and every version with it
+    # (2026-11-19, oom_kill 28 since boot). The core restarts what it needs.
+    serviceConfig.OOMPolicy = "continue";
   };
 
   # A deploy moves the checkout to the locked revision when that is a fast

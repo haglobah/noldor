@@ -1,5 +1,6 @@
 # External uptime probe for todos.humane.tools (see
-# ht/apps/todos/docs/design/monitoring.md for the health endpoints it hits).
+# ht/apps/todos/docs/design/monitoring.md for the health endpoints it hits)
+# and for Flow on cirdan (./flow.nix).
 #
 # Gatus runs here on formenos, outside orthanc, so a dead host still gets
 # reported. Alerts go to a secret topic on the public ntfy.sh; the ntfy app
@@ -56,6 +57,10 @@
             priority = 3;
             click = "https://dev.todos.humane.tools/";
           }
+          {
+            group = "flow";
+            click = "https://flow.humane.tools/";
+          }
         ];
       };
       endpoints =
@@ -81,8 +86,28 @@
               "[BODY].ok == true"
             ])
           ];
+          # Flow on cirdan: on 2026-11-19 its version server died on a full
+          # disk and the OOM killer took the whole unit down, and nothing
+          # off the box noticed. One group for its hosts.
+          flowProbe =
+            domain: name: conditions:
+            probe domain name "/" conditions // { group = "flow"; };
+          flow = [
+            # The garden, served by Flow's current version without sign-in.
+            (flowProbe "beathagenlocher.com" "garden" [
+              "[STATUS] == 200"
+              "[CERTIFICATE_EXPIRATION] > 168h"
+            ])
+            # The core: sign-in in front, so it answers 401 unauthenticated.
+            # Any answer below 500 is the core's; Caddy answers 502 when the
+            # core is down.
+            (flowProbe "flow.humane.tools" "core" [
+              "[STATUS] < 500"
+              "[CERTIFICATE_EXPIRATION] > 168h"
+            ])
+          ];
         in
-        instance "todos.humane.tools" ++ instance "dev.todos.humane.tools";
+        instance "todos.humane.tools" ++ instance "dev.todos.humane.tools" ++ flow;
     };
   };
 }

@@ -8,6 +8,8 @@
 let
   appName = "{{ $labels.app }} {{ $labels.instance }}";
   pct = ''{{ printf "%.0f" $value }}'';
+  # Filesystems on disk; the virtual ones are always "full".
+  realFs = ''fstype!~"tmpfs|ramfs|overlay|squashfs|nsfs|efivarfs"'';
 
   # One rule per instance: prod pages, dev warns. `expr` gets the label
   # matcher that selects the instance.
@@ -115,11 +117,44 @@ in
       {
         alert = "HostDiskLow";
         expr = ''
-          node_filesystem_avail_bytes{fstype!~"tmpfs|ramfs|overlay|squashfs|nsfs|efivarfs"}
+          node_filesystem_avail_bytes{${realFs}}
           / node_filesystem_size_bytes * 100 < 10'';
         "for" = "15m";
         labels.severity = "page";
         annotations.summary = "{{ $labels.machine }} {{ $labels.mountpoint }}: ${pct}% disk free";
+      }
+      {
+        # On 2026-11-19 agents' worktrees filled cirdan's disk faster than
+        # HostDiskLow's 15 minutes below 10% could warn. Pages when the last
+        # hour's rate fills the disk within 6 h; only below 30% free, so a
+        # big download on a roomy disk stays quiet.
+        alert = "HostDiskFillingFast";
+        expr = ''
+          predict_linear(node_filesystem_avail_bytes{${realFs}}[1h], 6 * 3600) < 0
+          and node_filesystem_avail_bytes{${realFs}} / node_filesystem_size_bytes * 100 < 30'';
+        "for" = "10m";
+        labels.severity = "page";
+        annotations.summary = "{{ $labels.machine }} {{ $labels.mountpoint }}: disk full within 6 h at the last hour's rate";
+      }
+      {
+        # The kernel killed a process for memory. On cirdan that stopped
+        # Flow's whole unit (2026-11-19) before HostMemoryLow's 10 minutes.
+        # increase_prometheus, not increase: MetricsQL's increase counts a
+        # small counter that (re)appears, after a gap in shipping, as having
+        # risen from 0, and a machine with 3 kills since boot would page.
+        alert = "HostOomKill";
+        expr = "increase_prometheus(node_vmstat_oom_kill[10m]) > 0";
+        labels.severity = "page";
+        annotations.summary = "{{ $labels.machine }}: the kernel OOM-killed a process (${pct} in 10m)";
+      }
+      {
+        # node_exporter's systemd collector (./metrics-shipper.nix,
+        # ../metrics.nix): services, timers, sockets; not mounts or scopes.
+        alert = "SystemdUnitFailed";
+        expr = ''node_systemd_unit_state{state="failed"} == 1'';
+        "for" = "15m";
+        labels.severity = "page";
+        annotations.summary = "{{ $labels.machine }}: {{ $labels.name }} failed";
       }
     ];
   }
