@@ -87,6 +87,7 @@ let
     enable = true;
     frontend = mailPackages.mail-frontend;
     backend = mailPackages.mail-backend;
+    linksWorkerUrl = "https://worker.links.humane.tools";
     autoUpdate = {
       enable = true;
       repo = "git@github.com:haglobah/ht.git";
