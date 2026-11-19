@@ -917,11 +917,11 @@
         "nixpkgs": "nixpkgs_6"
       },
       "locked": {
-        "lastModified": 1794343042,
-        "narHash": "sha256-F3uP0tS1PUL0rxTGmQZQRiOrX8hUXNWhR3krznU4Ymo=",
+        "lastModified": 1795102736,
+        "narHash": "sha256-BWRzLVViw3XyHbrmYwdan4rqNJMLUDrkPF8ouodgDJs=",
         "ref": "main",
-        "rev": "28f8b9c79e3f9cdb1d810105068beada4a30b83c",
-        "revCount": 41,
+        "rev": "da4277de1ab4f2eca5e6297178fc7372a0441687",
+        "revCount": 42,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/hotlustre.git"
       },
