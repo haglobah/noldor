@@ -1,6 +1,6 @@
 # External uptime probe for todos.humane.tools (see
 # ht/apps/todos/docs/design/monitoring.md for the health endpoints it hits)
-# and for Flow on cirdan (./flow.nix).
+# and for Flow and Review on cirdan (./flow.nix, ./review.nix).
 #
 # Gatus runs here on formenos, outside orthanc, so a dead host still gets
 # reported. Alerts go to a secret topic on the public ntfy.sh; the ntfy app
@@ -61,6 +61,10 @@
             group = "flow";
             click = "https://flow.humane.tools/";
           }
+          {
+            group = "review.humane.tools";
+            click = "https://review.humane.tools/";
+          }
         ];
       };
       endpoints =
@@ -92,6 +96,14 @@
           flowProbe =
             domain: name: conditions:
             probe domain name "/" conditions // { group = "flow"; };
+          # Review, the second core on cirdan (./review.nix): sign-in in
+          # front as on Flow's.
+          review = [
+            (probe "review.humane.tools" "core" "/" [
+              "[STATUS] < 500"
+              "[CERTIFICATE_EXPIRATION] > 168h"
+            ])
+          ];
           flow = [
             # The garden, served by Flow's current version without sign-in.
             (flowProbe "beathagenlocher.com" "garden" [
@@ -107,7 +119,7 @@
             ])
           ];
         in
-        instance "todos.humane.tools" ++ instance "dev.todos.humane.tools" ++ flow;
+        instance "todos.humane.tools" ++ instance "dev.todos.humane.tools" ++ flow ++ review;
     };
   };
 }

@@ -6,9 +6,11 @@
 #   e.g. flow-backup ~/projects/hotlustre refs/heads -- repo.git refs/heads refs/versions
 # Each PREFIX/* is pushed to the same names on the repository's origin.
 # Environment: STATE_DIRECTORY (default ~/.local/state/flow-backup),
-# NTFY_TOPIC (unset: only log), NTFY_SERVER (default https://ntfy.sh).
+# NTFY_TOPIC (unset: only log), NTFY_SERVER (default https://ntfy.sh),
+# BACKUP_NAME (the notifications' name for it, default flow-backup).
 
 state=${STATE_DIRECTORY:-$HOME/.local/state/flow-backup}
+name=${BACKUP_NAME:-flow-backup}
 server=${NTFY_SERVER:-https://ntfy.sh}
 host=$(uname -n)
 host=${host%%.*}
@@ -124,14 +126,14 @@ notify() {
 if [ "$now" != "$before" ]; then
   if [ -n "$now" ]; then
     names=$(printf '%s\n' "$now" | cut -f2 | sed 's|^refs/heads/||; s|^refs/||' | sort -u | paste -sd, - | sed 's/,/, /g')
-    title="$host: flow-backup: $names diverged from GitHub"
+    title="$host: $name: $names diverged from GitHub"
     message="GitHub rejected these, and it and $host each have commits the other lacks. Nothing is lost: ours is on GitHub under refs/backup/$host/, kept up to date each run."
     while IFS=$'\t' read -r repo ref; do
       message+=$'\n\n'"$repo $ref -> refs/backup/$host/${ref#refs/}"$'\n'"See: git -C $repo fetch origin $ref && git -C $repo log --oneline --graph $ref FETCH_HEAD"
     done <<<"$now"
     message+=$'\n\n'"To reconcile, start an agent on it: merge or rebase, push, and delete the backup ref."
   else
-    title="$host: flow-backup: resolved, nothing diverged"
+    title="$host: $name: resolved, nothing diverged"
     message="Every ref that had diverged from GitHub is pushed again (or gone). Leftover refs/backup/$host/* on GitHub can be deleted: git push origin --delete refs/backup/$host/..."
   fi
   if notify "$title" "$message"; then
