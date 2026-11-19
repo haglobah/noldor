@@ -54,20 +54,9 @@ let
     snouty
   ];
 
-  # The version graph and the project repository to GitHub; nothing forced,
-  # a rejected push fails the unit visibly.
-  backup = pkgs.writeShellApplication {
-    name = "flow-backup";
-    runtimeInputs = [
-      pkgs.git
-      pkgs.openssh
-    ];
-    text = ''
-      git -C ${checkout} push --quiet origin 'refs/heads/*:refs/heads/*'
-      git -C ${cfg.dataDir}/core/repo.git push --quiet origin \
-        'refs/heads/*:refs/heads/*' 'refs/versions/*:refs/versions/*'
-    '';
-  };
+  # The version graph and the project repository to GitHub, ref by ref,
+  # never forced; diverged refs go to refs/backup/ (./flow-backup.nix).
+  backup = pkgs.callPackage ./flow-backup.nix { };
 in
 {
   users.users.beat = {
@@ -214,7 +203,19 @@ in
     serviceConfig = {
       Type = "oneshot";
       User = "beat";
-      ExecStart = lib.getExe backup;
+      ExecStart = lib.escapeShellArgs [
+        (lib.getExe backup)
+        checkout
+        "refs/heads"
+        "--"
+        "${cfg.dataDir}/core/repo.git"
+        "refs/heads"
+        "refs/versions"
+      ];
+      # The set of diverged refs, to post only when it changes.
+      StateDirectory = "flow-backup";
+      # NTFY_TOPIC (./updater-alerts.nix); read by systemd as root.
+      EnvironmentFile = vars.updater-alerts.files.env_file.path;
     };
   };
   systemd.timers.flow-backup = {

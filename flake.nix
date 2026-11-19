@@ -191,6 +191,9 @@
             # The nix-builds scheduler's unit tests run in its checkPhase.
             checks.nix-builds-scheduler = pkgs.callPackage ./clanServices/nix-builds/scheduler/package.nix { };
 
+            # cirdan's GitHub backup of Flow: rejected, ahead, diverged, offline.
+            checks.flow-backup = import ./tests/flow-backup.nix { inherit pkgs; };
+
             # Rule unit tests and dashboard lint for modules/metrics/, no VM.
             checks.metrics-config = import ./tests/metrics-config.nix {
               inherit pkgs;
