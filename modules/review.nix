@@ -50,6 +50,10 @@ let
   # and maria.review.humane.tools (DNS: an A record, or *.review once), and
   # wants https://maria.review.humane.tools in todo-home's trustedOrigins and
   # a claude login in /var/lib/hotlustre-review-maria/appdata/claude-config.
+  # No guest before hotlustre's package C4 is in (ADR-003 "Isolation"):
+  # today any local user can connect to another instance's version port on
+  # loopback, and a version believes what arrives there. With C4 a guest's
+  # instance reaches only itself; its entry then gets C4's option.
   guests = { };
   guestUser = name: "hl-review-${name}";
 in
@@ -134,6 +138,7 @@ in
   systemd.services.review-backup = {
     description = "Push Review's version graph to GitHub";
     unitConfig.ConditionPathIsDirectory = repo;
+    environment.BACKUP_NAME = "review-backup";
     serviceConfig = {
       Type = "oneshot";
       User = "beat";
