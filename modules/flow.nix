@@ -91,6 +91,8 @@ in
   imports = [
     ./flow-notes-peer.nix
     ./snouty.nix
+    # The second app on this core's checkout (hotlustre's ADR-003).
+    ./review.nix
   ];
 
   clan.core.vars.generators.flow-github = {
@@ -130,6 +132,16 @@ in
       # todo-home prod's cookiePrefix (./todo-home.nix)
       cookiePrefix = "humane-shared";
     };
+    # Review (./review.nix) fetches the patches only Flow can resolve, with
+    # a bearer token the version checks; no sign-in, no cookies there.
+    bearerPaths = [ "/api/patches" ];
+    # Above it the unit is throttled and its page cache reclaimed, so the
+    # rest of the 16 GB (Review's 1G, pushout-notes-sync, nix builds in
+    # nix-daemon's cgroup, the kernel) keeps room. On 2026-11-19 with seven
+    # agents at work: 7.8G anon + 2.5G cache, 13.7G peak. No MemoryMax: the
+    # agents' claude CLIs and browsers run in this cgroup; one comes after a
+    # week of numbers (`systemctl show hotlustre -p MemoryPeak`).
+    memoryHigh = "12G";
   };
   # The checkout has to exist before the core can run from it, and so does
   # the version store, copied from gondor once: on an empty data directory

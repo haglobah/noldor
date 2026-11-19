@@ -109,8 +109,9 @@ in
     trustedOrigins = [
       "https://mail.humane.tools"
       "https://notes.humane.tools"
-      # hotlustre on cirdan (./flow.nix)
+      # hotlustre on cirdan (./flow.nix), and its Review app (./review.nix)
       "https://flow.humane.tools"
+      "https://review.humane.tools"
     ];
     # Apps of Beat's that connect his whole list with one click (ht ADR-006
     # §6, /api/connect): Flow's callback per instance, exact URLs. cirdan
