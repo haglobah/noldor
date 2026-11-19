@@ -292,6 +292,7 @@ in
           inputs.hotlustre.nixosModules.default
           ./modules/flow.nix
           ./modules/repo-command.nix
+          ./modules/projects-housekeeping.nix
           # The hub hotlustre's notes sync through, until they sync directly.
           inputs.pushout.nixosModules.notes
           ./modules/pushout-notes.nix
