@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   config = {
     services.caddy = {
@@ -17,6 +18,12 @@
     # https://wiki.nixos.org/wiki/Paperless-ngx
     services.paperless = {
       enable = true;
+      # paperless-ngx 3.4.2 pins torch<2.15, nixpkgs ships 2.15.0 (2026-11-13);
+      # its test suite still runs. Drop once nixpkgs relaxes it itself.
+      # overrideAttrs, not overridePythonAttrs: the module calls .override on it.
+      package = pkgs.paperless-ngx.overrideAttrs (old: {
+        pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "torch" ];
+      });
       consumptionDirIsPublic = true;
       settings = {
         PAPERLESS_CONSUMER_IGNORE_PATTERN = [
