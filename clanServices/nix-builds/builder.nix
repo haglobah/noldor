@@ -36,7 +36,8 @@ let
       # Busy: a client is connected to nix-daemon (each connection is a
       # child of the main daemon; builds, copies and substitutions all
       # run under one), the scheduler's ssh-ng session is open (nix-ssh),
-      # a push is uploading, or
+      # a push is uploading, a nix command runs (root's bypass the daemon:
+      # the `nix copy` to the target of `--build-host root@aule`), or
       # someone is logged in (clan machines update, a debugging shell).
       # Live process state, not a marker file: a marker that builds touch
       # goes stale when a build crashes or a client hangs mid-transfer.
@@ -45,6 +46,7 @@ let
         main=$(systemctl show --property MainPID --value nix-daemon.service)
         { [ "$main" != 0 ] && pgrep -P "$main" > /dev/null; } \
           || pgrep -u nix-ssh > /dev/null \
+          || pgrep -x nix > /dev/null \
           || systemctl is-active --quiet nix-cache-push.service \
           || [ -n "$(loginctl list-sessions --no-legend)" ]
       }
