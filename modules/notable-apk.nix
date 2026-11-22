@@ -35,6 +35,8 @@ let
   build = pkgs.writeShellApplication {
     name = "notable-apk-build";
     runtimeInputs = with pkgs; [
+      # publish-apk.sh's `#!/usr/bin/env bash` looks it up in PATH.
+      bash
       git
       openssh
       nix
