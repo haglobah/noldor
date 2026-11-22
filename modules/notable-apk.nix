@@ -4,9 +4,11 @@
 # where Notable's updater finds it (notable: docs/plans/self-update.md,
 # scripts/publish-apk.sh, which owns the build and the format).
 #
-# Every 10 minutes the timer fetches `main` into the unit's own clone (not
+# Every minute the timer fetches `main` into the unit's own clone (not
 # ~/projects/notable, where agents work) and runs the clone's
 # scripts/publish-apk.sh; a commit that is published already costs a fetch.
+# A push reaches the tablet within a minute plus the build (~5 min, most of it
+# R8 shrinking the release APK).
 # A build now: `notable-release` (as beat, polkit lets it start the unit);
 # the log: `journalctl -u notable-apk`.
 #
@@ -103,9 +105,9 @@ in
   systemd.timers.notable-apk = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnBootSec = "10min";
-      OnUnitInactiveSec = "10min";
-      RandomizedDelaySec = "1min";
+      OnBootSec = "2min";
+      OnUnitInactiveSec = "1min";
+      RandomizedDelaySec = "10s";
     };
   };
 
