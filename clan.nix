@@ -293,6 +293,8 @@ in
           ./modules/flow.nix
           ./modules/repo-command.nix
           ./modules/projects-housekeeping.nix
+          # Notable's APKs for the tablet's updater, at flow.humane.tools/notable/.
+          ./modules/notable-apk.nix
           # The hub hotlustre's notes sync through, until they sync directly.
           inputs.pushout.nixosModules.notes
           ./modules/pushout-notes.nix
