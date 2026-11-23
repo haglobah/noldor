@@ -153,6 +153,19 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    # Bluetooth headsets stay in A2DP: any app recording from the headset
+    # mic (e.g. Claude's voice input) switches it to HFP, which turns
+    # playback into mono call audio for as long as the app records.
+    # Without the HFP/HSP roles there is nothing to switch to; the laptop
+    # mic is the input.
+    wireplumber.extraConfig."51-bluetooth-a2dp-only" = {
+      "monitor.bluez.properties" = {
+        "bluez5.roles" = [
+          "a2dp_sink"
+          "a2dp_source"
+        ];
+      };
+    };
   };
 
   # User
