@@ -239,6 +239,11 @@
       {
         "org/gnome/desktop/input-sources" = {
           xkb-options = [ "terminate:ctrl_alt_bksp" ];
+          # us-lozenge is defined in machines/gondor/config.nix.
+          sources = [
+            (lib.hm.gvariant.mkTuple [ "xkb" "us-lozenge" ])
+            (lib.hm.gvariant.mkTuple [ "xkb" "de" ])
+          ];
         };
 
         "org/gnome/desktop/interface" = {

@@ -126,8 +126,24 @@
 
   # Keyboard
   services.xserver.xkb = {
-    layout = "us,de";
+    layout = "us-lozenge,de";
     variant = "";
+    # US with Right Alt as AltGr and AltGr+L typing ◊. GNOME picks the
+    # layout up through XKB_CONFIG_ROOT, which extraLayouts sets; the input
+    # source itself is chosen in home/home.nix.
+    extraLayouts.us-lozenge = {
+      description = "English (US, AltGr+L lozenge)";
+      languages = [ "eng" ];
+      symbolsFile = pkgs.writeText "us-lozenge" ''
+        default partial alphanumeric_keys
+        xkb_symbols "basic" {
+          include "us(basic)"
+          name[Group1] = "English (US, AltGr+L lozenge)";
+          key <AC09> { [ l, L, U25CA ] };
+          include "level3(ralt_switch)"
+        };
+      '';
+    };
   };
 
   # Swap caps lock and esc on the internal keyboard only. keyd works at the
