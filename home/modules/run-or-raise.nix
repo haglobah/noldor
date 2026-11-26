@@ -71,7 +71,13 @@ let
       wmClass = "pcmanfm";
     }
     ({ key = "<Super>h"; } // chromiumApp "todos.humane.tools")
-    ({ key = "<Super>comma"; } // chromiumApp "links.humane.tools")
+    # Links' desktop app (machines/gondor/config.nix); its X11 class and
+    # Wayland app id are links-desktop.
+    {
+      key = "<Super>comma";
+      command = "links-desktop";
+      wmClass = "links-desktop";
+    }
     ({ key = "<Super>m"; } // chromiumApp "mail.humane.tools")
     ({ key = "<Super>i"; } // framelessApp "flow.humane.tools")
   ];

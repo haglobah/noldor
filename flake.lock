@@ -999,15 +999,14 @@
         "bun2nix": "bun2nix_2",
         "flake-parts": "flake-parts_8",
         "nixpkgs": "nixpkgs_9",
-        "portless": "portless_2",
-        "rust-overlay": "rust-overlay_3"
+        "portless": "portless_2"
       },
       "locked": {
-        "lastModified": 1794480670,
-        "narHash": "sha256-QQrFfm9F0YgucSzxfKXlZ2UuRoU46qQVnHHl5vg1uLA=",
+        "lastModified": 1795728649,
+        "narHash": "sha256-3Qf0OYXA03sJnI0ZHQBIFHd1Mb9BJHz6TKkr1uROmS4=",
         "ref": "refs/heads/main",
-        "rev": "9dcb3c9a221bf12dde3be299ebb7329885281a8a",
-        "revCount": 333,
+        "rev": "8a359ba30e63cb0fbd19ab24145e9eb4d2ae1b5a",
+        "revCount": 353,
         "type": "git",
         "url": "ssh://git@github.com/haglobah/media-inbox.git"
       },
@@ -1720,27 +1719,6 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "rev": "c30ca201c5093540cf792f6982f81ba1aa0f3514",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "rust-overlay_3": {
-      "inputs": {
-        "nixpkgs": [
-          "media-inbox",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1790495762,
-        "narHash": "sha256-26FbceKgybcbwkIvs2yHsF5jHcWLEkITYg5g9WPSy64=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "edea2d6f98b1e5f64ce5ac21e19a96c603c20b8c",
         "type": "github"
       },
       "original": {

@@ -257,6 +257,10 @@
     git
     asdbctl
     inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.clan-cli
+    # Links' desktop app (media-inbox desktop/, Electron): `links-desktop` and
+    # its menu entry. It updates itself from media-inbox main over ssh into
+    # ~/.local/state/links-desktop, so this pin only seeds the first build.
+    inputs.media-inbox.packages.${pkgs.stdenv.hostPlatform.system}.desktop
   ];
 
   # Apple Studio Display brightness: asdbctl ships a hidraw rule with
