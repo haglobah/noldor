@@ -47,6 +47,22 @@ in
     '';
   };
 
+  # Its own generator so adding it never re-runs the one above (a new VAPID
+  # pair would make every device re-enable push). A fine-grained token with
+  # Issues read/write on haglobah/media-inbox: the minute cron files
+  # `errorReports` as issues (worker/src/errorIssues.ts), including the
+  # backlog from before the token existed.
+  clan.core.vars.generators.links-worker-issues = {
+    files."env" = { };
+    prompts."github-issues-token" = {
+      type = "hidden";
+      description = "Fine-grained GitHub token, Issues read/write on haglobah/media-inbox";
+    };
+    script = ''
+      echo "GITHUB_ISSUES_TOKEN=$(cat "$prompts/github-issues-token")" > "$out/env"
+    '';
+  };
+
   services.links-worker = {
     enable = true;
     # Releases ship with media-inbox's `just deploy-worker`, not a system
@@ -65,6 +81,9 @@ in
       EMAIL_FROM = "recommendations@media.humane.tools";
       VAPID_SUBJECT = "mailto:bah@posteo.de";
     };
-    environmentFiles = [ secrets.files."env".path ];
+    environmentFiles = [
+      secrets.files."env".path
+      config.clan.core.vars.generators.links-worker-issues.files."env".path
+    ];
   };
 }
